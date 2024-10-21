@@ -1,0 +1,145 @@
+:root {
+  /* Primary colors */
+  --primary: #e02957;
+  --light-primary: #ff8eab;
+  --dark-primary: #a41136;
+
+  /* Secondary colors */
+  --secondary: #131432;
+  --light-secondary: #41436f;
+  --vibrant-secondary: #41436f;
+
+  /* Tertiary colors */
+  --tertiary: #e5ecef;
+  --light-tertiary: #f2f5f7;
+  --dark-tertiary: #a4b9c2;
+}
+
+@font-face {
+  font-family: "Poppins";
+  src: url("/fonts/Poppins-Regular.woff2") format("woff2"),
+    url("/fonts/Poppins-Regular.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Poppins";
+  src: url("/fonts/Poppins-Bold.woff2") format("woff2"),
+    url("/fonts/Poppins-Bold.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Poppins";
+  src: url("/fonts/Poppins-ExtraBold.woff2") format("woff2"),
+    url("/fonts/Poppins-ExtraBold.woff") format("woff");
+  font-weight: 800;
+  font-style: normal;
+}
+
+/* Global settings for line-height */
+:root {
+  --line-height-headings: 110%;
+  --line-height-body: 120%;
+}
+
+/* Headings */
+h1 {
+  font-family: "Poppins", sans-serif;
+  font-size: 48px;
+  font-weight: 800; /* ExtraBold */
+  line-height: var(--line-height-headings);
+}
+
+h1.regular {
+  font-family: "Poppins", sans-serif;
+  font-size: 48px;
+  font-weight: 400; /* Regular */
+  line-height: var(--line-height-headings);
+}
+
+h2 {
+  font-family: "Poppins", sans-serif;
+  font-size: 32px;
+  font-weight: 700; /* Bold */
+  line-height: var(--line-height-headings);
+}
+
+h2.regular {
+  font-family: "Poppins", sans-serif;
+  font-size: 32px;
+  font-weight: 400; /* Regular */
+  line-height: var(--line-height-headings);
+}
+
+h3 {
+  font-family: "Poppins", sans-serif;
+  font-size: 24px;
+  font-weight: 700; /* Bold */
+  line-height: var(--line-height-headings);
+}
+
+h3.regular {
+  font-family: "Poppins", sans-serif;
+  font-size: 24px;
+  font-weight: 400; /* Regular */
+  line-height: var(--line-height-headings);
+}
+
+h4 {
+  font-family: "Poppins", sans-serif;
+  font-size: 16px;
+  font-weight: 700; /* Bold */
+  line-height: var(--line-height-headings);
+}
+
+h4.regular {
+  font-family: "Poppins", sans-serif;
+  font-size: 16px;
+  font-weight: 400; /* Regular */
+  line-height: var(--line-height-headings);
+}
+
+h5 {
+  font-family: "Poppins", sans-serif;
+  font-size: 12px;
+  font-weight: 700; /* Bold */
+  line-height: var(--line-height-headings);
+}
+
+h5.regular {
+  font-family: "Poppins", sans-serif;
+  font-size: 12px;
+  font-weight: 400; /* Regular */
+  line-height: var(--line-height-headings);
+}
+
+/* Body Text */
+body {
+  font-family: "Poppins", sans-serif;
+  font-size: 16px;
+  font-weight: 400; /* Regular */
+  line-height: var(--line-height-body);
+}
+
+body.text-14 {
+  font-size: 14px;
+}
+
+body.text-12 {
+  font-size: 12px;
+}
+
+body.text-10 {
+  font-size: 10px;
+}
+
+/* Overline */
+.overline {
+  font-family: "Poppins", sans-serif;
+  font-size: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1.6%;
+}
