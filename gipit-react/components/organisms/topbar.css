@@ -1,0 +1,27 @@
+.topbar-container {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  padding: 12px 24px;
+  align-items: center;
+  background-color: white;
+  color: var(--light-secondary);
+
+  .title-container {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    text-decoration: none;
+    color: var(--light-secondary);
+
+    &:hover {
+      color: var(--primary);
+    }
+  }
+
+  .user-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+}
