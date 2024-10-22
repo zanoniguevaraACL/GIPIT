@@ -1,0 +1,28 @@
+.userinfo-container {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+
+  .notifications-icon-container {
+    padding-right: 16px;
+    margin-right: 12px;
+    border-right: 2px solid rgba(0, 0, 0, 0.1);
+    color: var(--light-secondary);
+
+    &:hover {
+      color: var(--primary);
+    }
+  }
+}
+
+@keyframes bellRinging {
+  from {
+    color: var(--light-primary);
+  }
+  to {
+  }
+}
+
+.bell-ringing {
+  animation: bellRinging 0.5s infinite alternate ease-in-out;
+}
