@@ -1,0 +1,11 @@
+.acl-logo-container {
+  padding: 24px;
+  margin: 0 auto;
+}
+
+.secondary {
+  svg path {
+    fill: var(--light-tertiary);
+  }
+  background-color: var(--primary);
+}
