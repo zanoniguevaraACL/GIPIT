@@ -10,8 +10,8 @@ interface ButtonProps {
 
 export default function Button({ href, text, type = "primary" }: ButtonProps) {
   return (
-    <div className={`button ${type}`}>
-      <Link href={href}>{text}</Link>
-    </div>
+    <Link href={href}>
+      <div className={`button ${type}`}>{text}</div>
+    </Link>
   );
 }

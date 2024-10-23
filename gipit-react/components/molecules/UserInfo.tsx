@@ -1,9 +1,4 @@
-import {
-  IconBell,
-  IconBellBolt,
-  IconBellRingingFilled,
-  IconNotification,
-} from "@tabler/icons-react";
+import { IconBell, IconBellRingingFilled } from "@tabler/icons-react";
 import Avatar from "../atoms/Avatar";
 import UserNameAndRole from "../atoms/UserNameAndRole";
 import "./userInfo.css";

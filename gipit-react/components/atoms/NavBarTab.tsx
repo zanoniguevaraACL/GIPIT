@@ -1,24 +1,19 @@
 import Link from "next/link";
 import "./navBarTab.css";
+import { RouteItem } from "@/app/lib/types";
 
-function NavBarTab({
-  icon,
-  text,
-  href,
-  selected = false,
-}: {
-  icon: any;
-  text: string;
-  href: string;
-  selected?: boolean;
-}) {
+function NavBarTab({ icon, text, href, selected = false }: RouteItem) {
   return (
-    <div className={`tab-container ${selected ? "selected" : ""}`}>
-      <Link href={href} className="flex-row center-aligned gap-8">
+    <Link href={href} className="tab-linkt-item">
+      <div
+        className={`tab-container ${
+          selected ? "selected" : ""
+        } flex-row center-aligned gap-8`}
+      >
         {icon}
         <p className="text-14">{text}</p>
-      </Link>
-    </div>
+      </div>
+    </Link>
   );
 }
 

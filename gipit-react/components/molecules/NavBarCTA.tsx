@@ -1,13 +1,6 @@
 import Button from "../atoms/Button";
 import "./navBarCTA.css";
-
-interface NavBarCTAProps {
-  title: string;
-  description: string;
-  href: string;
-  cta: string;
-  icon: any;
-}
+import { NavBarCTAProps } from "@/app/lib/types";
 
 function NavBarCTA({ title, description, href, cta, icon }: NavBarCTAProps) {
   return (
