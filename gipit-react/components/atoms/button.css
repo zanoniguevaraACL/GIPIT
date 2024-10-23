@@ -6,19 +6,14 @@
   font-weight: 600;
   transition: all 0.2s ease-out;
   display: inline-block;
-
-  a {
-    text-decoration: none;
-    color: var(--primary);
-    transition: all 0.2s ease-out;
-  }
+  text-decoration: none;
+  color: var(--primary);
+  transition: all 0.2s ease-out;
 
   &.primary {
     background-color: var(--primary);
     font-weight: 500;
-    a {
-      color: var(--light-tertiary);
-    }
+    color: var(--light-tertiary);
   }
 
   &.secondary {
@@ -34,24 +29,18 @@
     background-color: var(--primary);
     transform: translateY(-2px) !important;
     box-shadow: var(--red-glow);
-    a {
-      color: var(--light-tertiary);
-    }
+    color: var(--light-tertiary);
   }
 
   &.over-red {
     background-color: transparent;
     color: var(--light-tertiary);
     border: 2px solid var(--light-tertiary);
-    a {
-      color: var(--light-tertiary);
-    }
+    color: var(--light-tertiary);
 
     &:hover {
       background-color: var(--light-tertiary);
-      a {
-        color: var(--primary);
-      }
+      color: var(--primary);
     }
   }
 }
