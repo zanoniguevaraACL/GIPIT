@@ -1,0 +1,4 @@
+.inner-tabs-container {
+  flex-shrink: 1;
+  min-width: 300px;
+}

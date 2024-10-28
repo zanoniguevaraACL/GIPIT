@@ -1,0 +1,17 @@
+.company-page-container {
+  display: flex;
+  gap: 24px;
+  margin: 0 auto;
+  max-width: 1440px;
+  align-items: stretch;
+  height: 87svh;
+  overflow: visible;
+}
+
+.company-details-container {
+  background-color: white;
+  padding: 24px;
+  flex-grow: 1;
+  border-radius: 12px;
+  height: 100%;
+}

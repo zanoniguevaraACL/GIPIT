@@ -1,11 +1,12 @@
 import FormBlock from "../atoms/FormBlock";
 import { FormBlockProps } from "@/app/lib/types";
+import "./modal.css";
 
-function Modal({ fields }: { fields: FormBlockProps[] }) {
+function Modal({ rows, onSubmit }: FormBlockProps) {
   return (
-    <div>
-      <div>
-        <FormBlock fields={fields} />
+    <div className="modal-overlay">
+      <div className="form-container">
+        <FormBlock rows={rows} onSubmit={onSubmit} />
       </div>
     </div>
   );

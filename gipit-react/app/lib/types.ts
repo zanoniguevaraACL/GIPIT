@@ -15,11 +15,29 @@ export interface UserInfoProps {
   newNotifications: boolean;
 }
 
-export interface FormBlockProps {
-  label: string;
-  placeholder: string;
-  type: string;
+export interface FormInputProps {
+  label?: string;
+  placeholder?: string;
+  name?: string;
+  type:
+    | "text"
+    | "number"
+    | "date"
+    | "submit"
+    | "textarea"
+    | "file"
+    | "chips"
+    | "cancel";
+  value?: string | number;
+  href?: string;
 }
+
+export type FormInputsRow = (FormInputProps | FormInputProps[])[];
+
+export type FormBlockProps = {
+  rows: FormInputsRow;
+  onSubmit: (formData: FormData) => Promise<{ message: string; route: string }>;
+};
 
 export interface NavBarCTAProps {
   title: string;
@@ -27,4 +45,11 @@ export interface NavBarCTAProps {
   href: string;
   cta: string;
   icon: ReactNode;
+}
+
+export interface InnerTabProps {
+  name: string;
+  id?: number | string;
+  root?: string;
+  selected?: boolean;
 }
