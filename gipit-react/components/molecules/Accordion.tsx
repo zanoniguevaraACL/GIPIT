@@ -1,5 +1,8 @@
 "use client";
+import { IconChevronDown, IconUserShield } from "@tabler/icons-react";
+import Button from "../atoms/Button";
 import "./accordion.css";
+import { useState } from "react";
 
 interface Integrante {
   name: string;
@@ -19,23 +22,41 @@ interface CompanyDetails {
 }
 
 function Accordion({ details }: { details: CompanyDetails }) {
-  console.log(details);
+  const [expanded, setExpanded] = useState<number>(0);
 
   return (
     <div>
       {details.jefaturas.map((jef, index: number) => {
         return (
-          <div key={index} className="management-container">
-            <h3>{jef.name}</h3>
-            {jef.integrantes.map((integ, i: number) => {
-              return (
-                <div key={i} className="management-user-row">
-                  <p>{integ.name}</p>
-                  <p>{integ.email}</p>
-                  <p>{integ.role}</p>
-                </div>
-              );
-            })}
+          <div
+            key={index}
+            className={`management-container ${
+              expanded == index ? "expanded" : ""
+            }`}
+          >
+            <div
+              className="management-name-container"
+              onClick={() => setExpanded(index)}
+            >
+              <h3>{jef.name}</h3>
+              <IconChevronDown className="management-chevron" />
+            </div>
+            <div className="users-container">
+              {jef.integrantes.map((integ, i: number) => {
+                return (
+                  <div key={i} className="management-user-row">
+                    <IconUserShield />
+                    <p>{integ.name}</p>
+                    <p>{integ.email}</p>
+                    <p>{integ.role}</p>
+                  </div>
+                );
+              })}
+              <div className="buttons-row">
+                <Button text="Editar Jefatura" href="#" type="secondary" />
+                <Button text="Nuevo Miembro" href="#" type="secondary" />
+              </div>
+            </div>
           </div>
         );
       })}

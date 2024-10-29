@@ -1,13 +1,12 @@
 "use client";
 import "./innerListTabs.css";
-import { useParams, usePathname } from "next/navigation";
 import { InnerTabProps } from "@/app/lib/types";
 import InnerTab from "../atoms/InnerTab";
+import { useParams, usePathname } from "next/navigation";
 
 function InnerListTabs({ tabs }: { tabs: InnerTabProps[] }) {
   const actualRoute = usePathname();
   const params = useParams();
-
   return (
     <div className="inner-tabs-container">
       {tabs.map((t, index: number) => {
