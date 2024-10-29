@@ -21,7 +21,7 @@ function NavBar({ routes }: { routes: RouteItem[] }) {
               icon={r.icon}
               text={r.text}
               href={r.href}
-              selected={actualRoute == r.href}
+              selected={actualRoute.startsWith(r.href)}
             />
           ) : (
             false

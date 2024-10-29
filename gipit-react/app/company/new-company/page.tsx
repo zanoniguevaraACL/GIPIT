@@ -1,14 +1,30 @@
+"use client";
 import Modal from "@/components/molecules/Modal";
-import { FormBlockProps } from "@/app/lib/types";
+import { FormInputsRow } from "@/app/lib/types";
+import { handleCreateCompany } from "@/app/actions/handleCreateCompany";
 
 function Page() {
-  const fields: FormBlockProps[] = [
-    { label: "campo 1", placeholder: "este es el campo 1", type: "text" },
-    { label: "campo 2", placeholder: "este es el campo 2", type: "text" },
-    { label: "campo 3", placeholder: "este es el campo 3", type: "text" },
+  const fields: FormInputsRow = [
+    { label: "Logo", type: "file", name: "logo" },
+    {
+      label: "Nombre",
+      placeholder: "Nombre de la empresa",
+      type: "text",
+      name: "name",
+    },
+    {
+      label: "Descripción",
+      name: "description",
+      placeholder: "Alguna nota relacionada al cliente",
+      type: "textarea",
+    },
+    [
+      { type: "cancel", value: "Cancelar", href: "/" },
+      { type: "submit", value: "Guardar" },
+    ],
   ];
 
-  return <Modal fields={fields} />;
+  return <Modal rows={fields} onSubmit={handleCreateCompany} />;
 }
 
 export default Page;

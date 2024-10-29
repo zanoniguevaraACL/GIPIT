@@ -1,0 +1,22 @@
+.inner-tab-link {
+  text-decoration: none;
+}
+
+.inner-tab-container {
+  padding: 16px 24px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  color: var(--light-secondary);
+  background-color: white;
+
+  &.selected {
+    background-color: var(--primary);
+    box-shadow: var(--red-glow);
+    pointer-events: none;
+    color: var(--light-tertiary);
+  }
+
+  &:hover {
+    color: var(--primary);
+  }
+}

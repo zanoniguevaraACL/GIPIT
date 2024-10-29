@@ -1,7 +1,7 @@
 import NavBar from "@/components/organisms/NavBar";
 import "./globals.css";
 import TopBar from "@/components/organisms/TopBar";
-import { routes } from "@/app/lib/routes";
+import { clientRoutes, kamRoutes } from "@/app/lib/routes";
 
 export default function RootLayout({
   children,
@@ -12,9 +12,9 @@ export default function RootLayout({
     <html lang="es">
       <body>
         <div className="app-container">
-          <NavBar routes={routes} />
+          <NavBar routes={kamRoutes} />
           <main>
-            <TopBar routes={routes} />
+            <TopBar routes={kamRoutes} />
             <div className="children-container">{children}</div>
           </main>
         </div>
