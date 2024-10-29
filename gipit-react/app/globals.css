@@ -18,7 +18,7 @@
 
   /* Tertiary colors */
   --tertiary: #e5ecef;
-  --light-tertiary: #f2f5f7;
+  --light-tertiary: #f4f7f8;
   --dark-tertiary: #a4b9c2;
 
   /* global settings for line height*/
@@ -27,6 +27,29 @@
 
   /* effects */
   --red-glow: 0px 8px 24px 0px rgba(224, 41, 87, 0.24);
+
+  /* Estilizar la barra de desplazamiento completa */
+  ::-webkit-scrollbar {
+    width: 6px; /* Ancho de la barra */
+    height: 6px; /* Altura de la barra para el desplazamiento horizontal */
+  }
+
+  /* Estilizar el track de la barra (el fondo sobre el que se desplaza) */
+  ::-webkit-scrollbar-track {
+    background: var(--tertiary); /* Color del track #f1f1f1*/
+    border-radius: 10px; /* Bordes redondeados */
+  }
+
+  /* Estilizar el pulgar de la barra (el elemento que se mueve) */
+  ::-webkit-scrollbar-thumb {
+    background: var(--dark-tertiary); /* Color del pulgar */
+    border-radius: 10px; /* Bordes redondeados */
+  }
+
+  /* Estilizar el pulgar al hacer hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Cambia el color del pulgar al hacer hover */
+  }
 }
 
 @font-face {
