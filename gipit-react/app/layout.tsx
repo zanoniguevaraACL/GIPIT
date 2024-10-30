@@ -1,7 +1,7 @@
 import NavBar from "@/components/organisms/NavBar";
 import "./globals.css";
 import TopBar from "@/components/organisms/TopBar";
-import { clientRoutes, kamRoutes } from "@/app/lib/routes";
+import { kamRoutes } from "@/app/lib/routes";
 
 export default function RootLayout({
   children,
