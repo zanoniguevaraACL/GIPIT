@@ -53,10 +53,10 @@ export const fetchCDetails = async (id: number) => {
   await new Promise((resolve) => setTimeout(resolve, 2000));
 
   const response = {
+    id: id,
     name: "Cencosud",
     jefaturas: [
       {
-        id: id,
         name: "Operaciones",
         integrantes: [
           {
