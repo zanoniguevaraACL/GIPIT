@@ -1,4 +1,5 @@
 import { IconChevronDown } from "@tabler/icons-react";
+//Erick: Acá se puede obtener el nombre y el rol de las personas y mostrarlos en el navbar
 
 function UserNameAndRole({ name, role }: { name: string; role: string }) {
   return (
