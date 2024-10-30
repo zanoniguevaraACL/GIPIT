@@ -1,4 +1,4 @@
-import { FormInputsRow, FormInputProps, FormBlockProps } from "@/app/lib/types";
+import { FormInputProps, FormBlockProps } from "@/app/lib/types";
 import "./formBlock.css";
 import "./button.css";
 import Link from "next/link";
