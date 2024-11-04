@@ -13,8 +13,8 @@ export default async function Page(props: {
 }) {
   const { companyId } = props.params;
   const companyDetails = await fetchCompanyDetails(parseInt(companyId));
-  const searchParams = await props.searchParams;
-  const query = searchParams?.query || "";
+  //const searchParams = await props.searchParams;
+  //const query = searchParams?.query || "";
 
   return (
     <div className="company-details-container">
