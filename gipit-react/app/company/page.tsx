@@ -1,33 +1,11 @@
-"use client";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { redirect } from "next/navigation";
 import { fetchFirstCompany } from "../actions/fetchCompanies";
 
-const Page = () => {
-  const router = useRouter();
-  const [firstIndex, setFirstIndex] = useState<number | null>(null);
+const Page = async () => {
+  const firstIndex = await fetchFirstCompany();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const index = await fetchFirstCompany();
-      setFirstIndex(index);
-    };
-
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    if (firstIndex !== null) {
-      if (firstIndex > 0) {
-        router.push(`/company/${firstIndex}`);
-      }
-    }
-  }, [firstIndex, router]);
-
-  if (firstIndex === null) {
-    return <h1>Loading...</h1>;
-  } else if (firstIndex > 0) {
-    return <h1>redirecting</h1>;
+  if (firstIndex > 0) {
+    redirect(`/company/${firstIndex}`);
   } else {
     return <h1>crea tu compañia</h1>;
   }

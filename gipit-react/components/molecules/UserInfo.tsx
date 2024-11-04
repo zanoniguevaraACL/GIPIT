@@ -2,16 +2,12 @@ import { IconBell, IconBellRingingFilled } from "@tabler/icons-react";
 import Avatar from "../atoms/Avatar";
 import UserNameAndRole from "../atoms/UserNameAndRole";
 import "./userInfo.css";
-import { UserInfoProps } from "@/app/lib/types";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
-function UserInfo({
-  avatarSrc,
-  name,
-  role,
-  avatarType = "user",
-  newNotifications = false,
-}: UserInfoProps) {
+function UserInfo({ newNotifications = false }: { newNotifications: boolean }) {
+  const { data: session } = useSession();
+
   return (
     <div className="userinfo-container">
       <Link href="/notifications" className="notifications-icon-container">
@@ -21,8 +17,8 @@ function UserInfo({
           <IconBell />
         )}
       </Link>
-      <Avatar src={avatarSrc} type={avatarType} />
-      <UserNameAndRole name={name} role={role} />
+      <Avatar src={session?.user?.image} />
+      <UserNameAndRole name={session?.user?.name} role={session?.user?.email} />
     </div>
   );
 }

@@ -14,6 +14,10 @@
   }
 
   &.expanded {
+    .management-name-container {
+      pointer-events: none;
+    }
+
     .management-chevron {
       transform: rotate(180deg);
       opacity: 0;
@@ -27,6 +31,11 @@
   .management-name-container {
     display: flex;
     justify-content: space-between;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--primary);
+    }
   }
 
   .users-container {

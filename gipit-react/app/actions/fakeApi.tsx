@@ -57,6 +57,7 @@ export const fetchCDetails = async (id: number) => {
     name: "Cencosud",
     jefaturas: [
       {
+        id: 1,
         name: "Operaciones",
         integrantes: [
           {
@@ -72,6 +73,7 @@ export const fetchCDetails = async (id: number) => {
         ],
       },
       {
+        id: 2,
         name: "Comercial",
         integrantes: [
           {
