@@ -1,14 +1,9 @@
 import "./avatar.css";
 
-interface AvatarProps {
-  src: string;
-  type?: "logo" | "user";
-}
-
-function Avatar({ src, type = "user" }: AvatarProps) {
+function Avatar({ src }: { src: string | null | undefined }) {
   return (
-    <div className={`avatar-container ${type}`}>
-      <img src={src} />
+    <div className={`avatar-container user`}>
+      <img src={src ? src : ""} />
     </div>
   );
 }

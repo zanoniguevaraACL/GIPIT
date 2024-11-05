@@ -211,3 +211,10 @@ main {
     gap: 32px;
   }
 }
+
+.inner-page-container {
+  margin: 0 auto;
+  max-width: 1440px;
+  height: 87svh;
+  overflow: visible;
+}

@@ -1,7 +1,6 @@
 "use client";
 import { IconChevronLeft } from "@tabler/icons-react";
 import "./topbar.css";
-import nicole from "@/src/NicoleAvatar.jpeg";
 import UserInfo from "../molecules/UserInfo";
 import { RouteItem } from "@/app/lib/types";
 import { usePathname } from "next/navigation";
@@ -34,12 +33,7 @@ function TopBar({ routes }: { routes: RouteItem[] }) {
       ) : (
         <h4>{screenHeading}</h4>
       )}
-      <UserInfo
-        avatarSrc={nicole.src}
-        name="Nicole Cordova"
-        role="Key Account Manager"
-        newNotifications={true}
-      />
+      <UserInfo newNotifications={true} />
     </div>
   );
 }

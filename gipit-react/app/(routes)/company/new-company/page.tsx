@@ -19,7 +19,7 @@ function Page() {
       type: "textarea",
     },
     [
-      { type: "cancel", value: "Cancelar", href: "/" },
+      { type: "cancel", value: "Cancelar", href: "/company" },
       { type: "submit", value: "Guardar" },
     ],
   ];

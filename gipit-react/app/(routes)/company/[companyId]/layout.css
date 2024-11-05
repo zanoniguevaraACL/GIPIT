@@ -4,7 +4,7 @@
   margin: 0 auto;
   max-width: 1440px;
   align-items: stretch;
-  height: 87svh;
+  height: 80svh;
   overflow: visible;
 }
 
@@ -14,4 +14,10 @@
   flex-grow: 1;
   border-radius: 12px;
   height: 100%;
+}
+
+.company-details-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }

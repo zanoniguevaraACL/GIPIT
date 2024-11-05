@@ -12,6 +12,7 @@ interface Integrante {
 
 interface Jefatura {
   name: string;
+  id: number;
   integrantes: Integrante[];
 }
 
@@ -53,8 +54,16 @@ function Accordion({ details }: { details: CompanyDetails }) {
                 );
               })}
               <div className="buttons-row">
-                <Button text="Editar Jefatura" href="#" type="secondary" />
-                <Button text="Nuevo Miembro" href="#" type="secondary" />
+                <Button
+                  text="Editar Jefatura"
+                  href={`/company/${details.id}/${jef.id}/edit-management`}
+                  type="secondary"
+                />
+                <Button
+                  text="Nuevo Miembro"
+                  href={`/company/${details.id}/${jef.id}/new-user`}
+                  type="secondary"
+                />
               </div>
             </div>
           </div>
