@@ -1,0 +1,8 @@
+.data-grid-row {
+  display: grid;
+  padding: 16px 24px;
+  cursor: pointer;
+  &:hover {
+    background-color: var(--tertiary);
+  }
+}

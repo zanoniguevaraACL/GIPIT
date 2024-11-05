@@ -5,7 +5,13 @@ import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import Button from "@/components/atoms/Button";
 import { IconSearch } from "@tabler/icons-react";
 
-const SearchBar = ({ buttonLink }: { buttonLink: string }) => {
+const SearchBar = ({
+  buttonLink,
+  buttonText,
+}: {
+  buttonLink: string;
+  buttonText: string;
+}) => {
   const searchParams = useSearchParams();
   const iconRef = useRef<HTMLDivElement | null>(null);
   const pathname = usePathname();
@@ -32,7 +38,7 @@ const SearchBar = ({ buttonLink }: { buttonLink: string }) => {
         onChange={(e) => handleSearch(e.target.value)}
         defaultValue={searchParams.get("query")?.toString()}
       />
-      <Button href={buttonLink} text="Nuevo Cliente" type="tertiary" />
+      <Button href={buttonLink} text={buttonText} type="tertiary" />
     </div>
   );
 };

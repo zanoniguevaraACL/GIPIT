@@ -13,7 +13,7 @@ export default async function Layout({
 
   return (
     <>
-      <SearchBar buttonLink="/company/new-company" />
+      <SearchBar buttonLink="/company/new-company" buttonText="Nuevo Cliente" />
       <div className="company-page-container">
         <InnerListTabs tabs={companiesList} />
         {children}

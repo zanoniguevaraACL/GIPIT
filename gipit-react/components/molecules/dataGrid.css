@@ -1,0 +1,24 @@
+.data-grid-container {
+  background-color: white;
+  border-radius: 8px;
+  height: 92%;
+  overflow: auto;
+  position: relative;
+
+  .table-header {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    border-bottom: 1px solid var(--light-tertiary);
+    display: grid;
+    width: 100%;
+    justify-content: space-between;
+    padding: 24px 24px 16px 24px;
+
+    p {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+  }
+}

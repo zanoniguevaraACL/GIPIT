@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { fetchFirstCompany } from "../actions/fetchCompanies";
+import { fetchFirstCompany } from "../../actions/fetchCompanies";
 
 const Page = async () => {
   const firstIndex = await fetchFirstCompany();
