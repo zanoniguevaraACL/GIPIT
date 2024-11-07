@@ -18,7 +18,7 @@ type Company = {
 
 export const fetchAllCompanies = async (): Promise<InnerTabProps[]> => {
   try {
-    const response = await fetch(` http://localhost:3001/api/company`, {
+    const response = await fetch(` https://gipit-back.vercel.app/api/company`, {
        headers:{
         'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEwLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA5MjM4ODMsImV4cCI6MTczMDkyNzQ4M30.zstGs5R-CjI62d7qojWSwWQhoSFVgEICkyL1CoPwKu0',
         'Content-Type': 'application/json'
