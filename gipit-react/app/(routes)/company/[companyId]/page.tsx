@@ -21,7 +21,7 @@ export default async function Page(props: {
     <div className="company-details-container">
       <div className="company-details-header">
         <div className="flex-row gap-16 center-aligned">
-          <Image src={'/'} alt="company image" />
+          <Image src={'/'} alt="company image" width={10} height={1} />
           <h3>{companyDetails.name}</h3>
         </div>
         <div className="flex-row gap-16">
