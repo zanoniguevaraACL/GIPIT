@@ -31,7 +31,11 @@ export default async function Page(props: {
     page?: string;
   }>;
 }) {
-  const process = await fetchProcess();
+  const searchParams = await props.searchParams;
+  //const query = searchParams?.query || "";
+  const page = searchParams?.page ? parseInt(searchParams?.page) : 1;
+  const process = await fetchProcess(page);
+
   const data: ResponseData<Process> = {
     columns: [
       { name: "Nombre", key: "name", width: 2 },
@@ -45,9 +49,6 @@ export default async function Page(props: {
     total: process.total,
     batch: process.batch,
   };
-  //const searchParams = await props.searchParams;
-  //const query = searchParams?.query || "";
-  console.log(props);
 
   return (
     <div className="inner-page-container">

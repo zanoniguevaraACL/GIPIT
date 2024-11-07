@@ -215,6 +215,6 @@ main {
 .inner-page-container {
   margin: 0 auto;
   max-width: 1440px;
-  height: 87svh;
+  height: 85svh;
   overflow: visible;
 }

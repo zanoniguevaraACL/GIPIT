@@ -1,6 +1,7 @@
 import React from "react";
 import "./dataGrid.css";
 import DataGridRow from "../atoms/DataGridRow";
+import Pagination from "../molecules/Pagination";
 
 interface Column<T> {
   name: string;
@@ -32,13 +33,14 @@ const DataGrid = <T,>({ data }: Props<T>) => {
           </p>
         ))}
       </div>
-
       {/* Filas de datos */}
       <div>
         {data.batch.map((register, index) => (
           <DataGridRow key={index} data={register} columns={data.columns} />
         ))}
       </div>
+      {/* Componente de Paginación */}
+      <Pagination totalRecords={data.total} />
     </div>
   );
 };
