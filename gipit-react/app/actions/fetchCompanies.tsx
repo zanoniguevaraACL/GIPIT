@@ -1,6 +1,6 @@
 "use server";
 import { InnerTabProps } from "../lib/types";
-import { fetchFirstC, fetchAllC, fetchCDetails } from "./fakeApi";
+import { fetchFirstC, fetchCDetails } from "./fakeApi";
 
 export const fetchFirstCompany = async () => {
   const res = await fetchFirstC();
@@ -11,7 +11,10 @@ export const fetchFirstCompany = async () => {
 //   const res = await fetchAllC();
 //   return res;
 // };
-
+type Company = {
+  id: number;
+  name: string;
+};
 
 export const fetchAllCompanies = async (): Promise<InnerTabProps[]> => {
   try {
@@ -28,7 +31,7 @@ export const fetchAllCompanies = async (): Promise<InnerTabProps[]> => {
 
     const companies = await response.json();
     console.log(companies)
-    return companies.map((company: any) => ({
+    return companies.map((company: Company) => ({
       id: company.id,
       name: company.name,
     }));
