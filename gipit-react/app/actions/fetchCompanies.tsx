@@ -1,4 +1,5 @@
 "use server";
+
 import { InnerTabProps } from "../lib/types";
 import { fetchFirstC, fetchCDetails } from "./fakeApi";
 
@@ -18,9 +19,9 @@ type Company = {
 
 export const fetchAllCompanies = async (): Promise<InnerTabProps[]> => {
   try {
-    const response = await fetch(` https://gipit-back.vercel.app/api/company`, {
+    const response = await fetch(` ${process.env.NEXT_PUBLIC_API_URL}/company`, {
        headers:{
-        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEwLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA5MjM4ODMsImV4cCI6MTczMDkyNzQ4M30.zstGs5R-CjI62d7qojWSwWQhoSFVgEICkyL1CoPwKu0',
+        'Authorization': `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN}`,
         'Content-Type': 'application/json'
        }
     });
