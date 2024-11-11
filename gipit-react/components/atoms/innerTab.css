@@ -19,4 +19,21 @@
   &:hover {
     color: var(--primary);
   }
+
+  .tab-with-avatar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .tab-avatar {
+      background-color: rgba(0, 0, 0, 0.1);
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+  }
 }

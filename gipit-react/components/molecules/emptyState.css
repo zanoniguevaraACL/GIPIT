@@ -1,0 +1,11 @@
+.empty-state-container {
+  color: var(--light-secondary);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  gap: 4px;
+  opacity: 0.6;
+}
