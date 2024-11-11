@@ -5,7 +5,13 @@ import InnerTab from "../atoms/InnerTab";
 import { useParams, usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 
-function InnerListTabs({ tabs }: { tabs: InnerTabProps[] }) {
+function InnerListTabs({
+  tabs,
+  paramToCheck,
+}: {
+  tabs: InnerTabProps[];
+  paramToCheck: string;
+}) {
   const actualRoute = usePathname();
   const params = useParams();
   const container = useRef<HTMLDivElement | null>(null);
@@ -20,15 +26,28 @@ function InnerListTabs({ tabs }: { tabs: InnerTabProps[] }) {
   return (
     <div className="inner-tabs-container" ref={container}>
       {tabs.map((t, index: number) => {
-        return (
-          <InnerTab
-            key={index}
-            name={t.name}
-            id={t.id}
-            root={actualRoute.split("/").slice(0, -1).join("/")}
-            selected={params.companyId == t.id}
-          />
-        );
+        if (t.match) {
+          return (
+            <InnerTab
+              key={index}
+              name={t.name}
+              match={t.match}
+              id={t.id}
+              root={actualRoute.split("/").slice(0, -1).join("/")}
+              selected={params[paramToCheck] == t.id}
+            />
+          );
+        } else {
+          return (
+            <InnerTab
+              key={index}
+              name={t.name}
+              id={t.id}
+              root={actualRoute.split("/").slice(0, -1).join("/")}
+              selected={params[paramToCheck] == t.id}
+            />
+          );
+        }
       })}
     </div>
   );

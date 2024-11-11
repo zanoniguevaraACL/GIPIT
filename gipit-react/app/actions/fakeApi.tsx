@@ -273,3 +273,80 @@ export const fetchProcess = async (page: number) => {
 
   return response;
 };
+
+export const fetchProcessDetails = async (id: number) => {
+  // Simula un retraso de 2 segundos
+  await new Promise((resolve) => setTimeout(resolve, 2000));
+  console.log(id);
+
+  const response = {
+    id: 15,
+    name: "Consultor en Ciberseguridad",
+    stage: "Entrevistas",
+    startAt: "05/12/2024",
+    endAt: null,
+    preFiltered: 10,
+    candidates: 4,
+    status: "activo",
+    candidatesIds: [4, 2, 3],
+  };
+
+  return response;
+};
+
+export const fetchProcessCandidates = async (ids: number[]) => {
+  // Simula un retraso de 2 segundos
+  await new Promise((resolve) => setTimeout(resolve, 2000));
+  console.log(ids);
+
+  const response = [
+    {
+      name: "Alfredo Espinosa Rodríguez",
+      id: "1", // Cambia los IDs a strings si `paramToCheck` devuelve un string
+      selected: true,
+      match: 98,
+    },
+    {
+      name: "Leonardo Marchant Rodríguez",
+      id: "2",
+      selected: false,
+      match: 32,
+    },
+    {
+      name: "Mariamelia Rodríguez Rodríguez",
+      id: "4",
+      selected: false,
+      match: 97,
+    },
+  ];
+
+  return response;
+};
+
+export const fetchCandidateDetails = async (id: number) => {
+  // Simula un retraso de 2 segundos
+  console.log("resolviendo id ", id);
+  await new Promise((resolve) => setTimeout(resolve, 2000));
+
+  // este endpoint busca el candidato por el ID y además el comentario asociado y trae el % de compatibilidad.
+  // IMPORTANTE: El % de compatibilidad solo se genera una vez, porque en distintos llamados GPT puede dar % diferentes.
+  const response = {
+    name: "Alfredo Espinosa Rodríguez",
+    match: 98,
+    totalExperience: 6,
+    sumary:
+      "Figma ipsum component variant main layer. Pixel team rotate draft slice scale asset stroke. Text pen rectangle bold opacity object slice ipsum asset figma. Underline team arrow hand line layout inspect team component auto. Scale draft edit main main create. Subtract slice effect list variant. Bullet group bullet ellipse style bullet. Edit rotate team main scrolling scale thumbnail. Main stroke rectangle overflow layer mask slice rotate duplicate. Component layout plugin hand union editor layer ellipse bullet mask. Layer layer create frame ellipse group. Flatten edit reesizing duplicate vertical export boolean boolean. Stroke pixel content asset blur opacity ellipse union.",
+    techSkills:
+      "Figma ipsum component variant main layer. Pixel team rotate draft slice scale asset stroke. Text pen rectangle bold opacity object slice ipsum asset figma. Underline team arrow hand line layout inspect team component auto. Scale draft edit main main create. Subtract slice effect list variant. Bullet group bullet ellipse style bullet. Edit rotate team main scrolling scale thumbnail. Main stroke rectangle overflow layer mask slice rotate duplicate. Component layout plugin hand union editor layer ellipse bullet mask. Layer layer create frame ellipse group. Flatten edit reesizing duplicate vertical export boolean boolean. Stroke pixel content asset blur opacity ellipse union.",
+    softSkills:
+      "Figma ipsum component variant main layer. Pixel team rotate draft slice scale asset stroke. Text pen rectangle bold opacity object slice ipsum asset figma. Underline team arrow hand line layout inspect team component auto. Scale draft edit main main create. Subtract slice effect list variant. Bullet group bullet ellipse style bullet. Edit rotate team main scrolling scale thumbnail. Main stroke rectangle overflow layer mask slice rotate duplicate. Component layout plugin hand union editor layer ellipse bullet mask. Layer layer create frame ellipse group. Flatten edit reesizing duplicate vertical export boolean boolean. Stroke pixel content asset blur opacity ellipse union.",
+    clientNote: {
+      tech: 7,
+      soft: 8,
+      comment:
+        "El candidato es muy bueno para el frontend y maneja muchos frameworks, pero es un poco más débil para el backend",
+    },
+  };
+
+  return response;
+};

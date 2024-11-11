@@ -52,4 +52,5 @@ export interface InnerTabProps {
   id?: number | string;
   root?: string;
   selected?: boolean;
+  match?: number; // lo usaremos para mostrar el por ciento de compatibilidad y al mismo tiempo como bandera para saber si es un tab de compañia o de candidato, porque las compañias no tienen compatibilidad.
 }

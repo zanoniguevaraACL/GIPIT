@@ -21,4 +21,8 @@
       letter-spacing: 0.1em;
     }
   }
+
+  .rows-container {
+    min-height: 87%;
+  }
 }

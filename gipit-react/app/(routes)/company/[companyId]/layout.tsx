@@ -15,7 +15,7 @@ export default async function Layout({
     <>
       <SearchBar buttonLink="/company/new-company" buttonText="Nuevo Cliente" />
       <div className="company-page-container">
-        <InnerListTabs tabs={companiesList} />
+        <InnerListTabs tabs={companiesList} paramToCheck="companyId" />
         {children}
       </div>
     </>

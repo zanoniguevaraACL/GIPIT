@@ -17,9 +17,13 @@ interface ResponseData<T> {
 
 interface Props<T> {
   data: ResponseData<T>;
+  baseUrl: string;
 }
 
-const DataGrid = <T,>({ data }: Props<T>) => {
+const DataGrid = <T extends { id: string | number }>({
+  data,
+  baseUrl,
+}: Props<T>) => {
   // Calcula el ancho de las columnas basado en `width`
   const spacing = data.columns.map((c) => `${c.width}fr`).join(" ");
 
@@ -34,9 +38,14 @@ const DataGrid = <T,>({ data }: Props<T>) => {
         ))}
       </div>
       {/* Filas de datos */}
-      <div>
-        {data.batch.map((register, index) => (
-          <DataGridRow key={index} data={register} columns={data.columns} />
+      <div className="rows-container">
+        {data.batch.map((register) => (
+          <DataGridRow
+            key={register.id} // Use a unique key based on `id`
+            data={register}
+            columns={data.columns}
+            baseUrl={baseUrl}
+          />
         ))}
       </div>
       {/* Componente de Paginación */}
