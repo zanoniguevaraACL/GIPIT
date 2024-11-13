@@ -55,10 +55,12 @@ export const fetchCDetails = async (id: number) => {
   const response = {
     id: id,
     name: "Cencosud",
+    description: "esta es la descripcion",
     jefaturas: [
       {
         id: 1,
         name: "Operaciones",
+        description: "esta es la descripcion",
         integrantes: [
           {
             name: " Pedro Romero",
@@ -75,6 +77,7 @@ export const fetchCDetails = async (id: number) => {
       {
         id: 2,
         name: "Comercial",
+        description: "esta es la descripcion",
         integrantes: [
           {
             name: " María Romero",
@@ -289,6 +292,8 @@ export const fetchProcessDetails = async (id: number) => {
     candidates: 4,
     status: "activo",
     candidatesIds: [4, 2, 3],
+    jobOffer:
+      "Este trabajo es un lorem ipsum dolor sit amet the quick brown fox jumps over the lazy dog. Este trabajo es un lorem ipsum dolor sit amet the quick brown fox jumps over the lazy dog. Este trabajo es un lorem ipsum dolor sit amet the quick brown fox jumps over the lazy dog. Este trabajo es un lorem ipsum dolor sit amet the quick brown fox jumps over the lazy dog. Este trabajo es un lorem ipsum dolor sit amet the quick brown fox jumps over the lazy dog. Este trabajo es un lorem ipsum dolor sit amet the quick brown fox jumps over the lazy dog. Este trabajo es un lorem ipsum dolor sit amet the quick brown fox jumps over the lazy dog. Este trabajo es un lorem ipsum dolor sit amet the quick brown fox jumps over the lazy dog",
   };
 
   return response;

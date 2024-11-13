@@ -21,7 +21,7 @@ function ProcessHeading({
   etapasToUse: {
     name: string;
     showCandidates: boolean;
-    stage: string;
+    status: string;
   }[];
   description: {
     title: string;
@@ -60,7 +60,7 @@ function ProcessHeading({
           <Button
             text="Revisar Vacante"
             type={contracted ? "secondary" : "tertiary"}
-            href="/"
+            href={`/process/${process.id}/view-offer`}
           />
         </div>
       </div>
@@ -71,7 +71,7 @@ function ProcessHeading({
           <p className="stages-title">Etapas</p>
           <div className="stages-row">
             {etapasToUse.map((et, index) => {
-              return <Stage key={index} name={et.name} estado={et.stage} />;
+              return <Stage key={index} name={et.name} estado={et.status} />;
             })}
           </div>
         </div>

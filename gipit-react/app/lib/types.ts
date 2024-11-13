@@ -29,14 +29,21 @@ export interface FormInputProps {
     | "chips"
     | "cancel";
   value?: string | number;
+  defaultValue?: string | number;
   href?: string;
+  height?: string;
 }
 
 export type FormInputsRow = (FormInputProps | FormInputProps[])[];
 
 export type FormBlockProps = {
   rows: FormInputsRow;
-  onSubmit: (formData: FormData) => Promise<{ message: string; route: string }>;
+  onSubmit: (
+    formData: FormData,
+    actualRoute: string
+  ) => Promise<{ message: string; route: string }>;
+  title?: string;
+  message?: string;
 };
 
 export interface NavBarCTAProps {

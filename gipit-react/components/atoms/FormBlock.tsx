@@ -1,9 +1,10 @@
+"use client";
 import { FormInputProps, FormBlockProps } from "@/app/lib/types";
 import "./formBlock.css";
 import "./button.css";
 import Link from "next/link";
 import { FormEvent } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 function FormRow({ row }: { row: FormInputProps[] }) {
   return row.map((row, index: number) => {
@@ -20,6 +21,8 @@ function FormItem({ field }: { field: FormInputProps }) {
           <textarea
             placeholder={field.placeholder}
             name={field.name ? field.name : ""}
+            defaultValue={field.defaultValue}
+            style={{ height: field.height }}
           />
         </label>
       );
@@ -63,6 +66,7 @@ function FormItem({ field }: { field: FormInputProps }) {
             key={field.label}
             placeholder={field.placeholder}
             value={field.value}
+            defaultValue={field.defaultValue}
           />
         </label>
       );
@@ -71,6 +75,7 @@ function FormItem({ field }: { field: FormInputProps }) {
 
 function FormBlock({ rows, onSubmit }: FormBlockProps) {
   const router = useRouter();
+  const actualRoute = usePathname();
   return (
     <form
       encType="multipart/form-data"
@@ -78,7 +83,7 @@ function FormBlock({ rows, onSubmit }: FormBlockProps) {
       onSubmit={async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
-        const response = await onSubmit(formData);
+        const response = await onSubmit(formData, actualRoute);
         alert(response.message);
         router.push(response.route);
       }}

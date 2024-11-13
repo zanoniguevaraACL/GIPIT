@@ -43,6 +43,7 @@
     border: 1px solid var(--tertiary);
     background-color: var(--light-tertiary);
     resize: vertical;
-    max-height: 150px;
+    height: max-content;
+    max-height: 60svh;
   }
 }

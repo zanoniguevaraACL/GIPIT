@@ -3,8 +3,15 @@ import "./candidateDetails.css";
 import CandidateClientNote from "../molecules/CandidateClientNote";
 import Button from "../atoms/Button";
 
-async function CandidateDetails({ id }: { id: number }) {
+async function CandidateDetails({
+  id,
+  processId,
+}: {
+  id: number;
+  processId: number;
+}) {
   const data = await fetchCandidateDetails(id);
+  const isInternal = true; // lo identificamos en la sesion, si el user es ACL mostramos el boton de editar candidato
 
   return (
     <div className="candidate-details-container">
@@ -28,17 +35,37 @@ async function CandidateDetails({ id }: { id: number }) {
         <h4>Habilidades Blandas</h4>
         <p className="text-14">{data.softSkills}</p>
       </div>
-      {data.clientNote && <CandidateClientNote note={data.clientNote} />}
+      {data.clientNote && (
+        <CandidateClientNote note={data.clientNote} isInternal={isInternal} />
+      )}
       <div className="buttons-container">
-        <Button text="Descalificar" href="/" type="secondary" />
+        <Button
+          text="Descalificar"
+          href={`/process/${processId}/${id}/disqualify`}
+          type="secondary"
+        />
 
         <div className="right-buttons-container">
+          {!isInternal ? (
+            <Button
+              text={data.clientNote ? "Editar Nota" : "Crear Nota"}
+              href={`/process/${processId}/${id}/${
+                data.clientNote ? "edit-note" : "new-note"
+              }`}
+              type="secondary"
+            />
+          ) : (
+            <Button
+              text="Editar Candidato"
+              href={`/process/${processId}/${id}/edit-candidate`}
+              type="secondary"
+            />
+          )}
           <Button
-            text={data.clientNote ? "Editar Nota" : "Crear Nota"}
-            href="/"
-            type="secondary"
+            text="Contratar Candidato"
+            href={`/process/${processId}/${id}/hire`}
+            type="primary"
           />
-          <Button text="Contratar Candidato" href="/" type="primary" />
         </div>
       </div>
     </div>
