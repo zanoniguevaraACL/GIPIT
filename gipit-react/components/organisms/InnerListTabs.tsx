@@ -22,7 +22,7 @@ function InnerListTabs({
       targetElement?.scrollIntoView({ block: "start" });
     }
   }, []);
-
+  console.log("Tabs before rendering:", tabs);
   return (
     <div className="inner-tabs-container" ref={container}>
       {tabs.map((t, index: number) => {
@@ -50,6 +50,7 @@ function InnerListTabs({
         }
       })}
     </div>
+  
   );
 }
 

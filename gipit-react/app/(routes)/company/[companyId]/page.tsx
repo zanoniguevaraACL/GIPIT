@@ -1,6 +1,9 @@
+
+
 import { fetchCompanyDetails } from "@/app/actions/fetchCompanies";
 import Button from "@/components/atoms/Button";
 import Accordion from "@/components/molecules/Accordion";
+import Image from "next/image";
 
 export default async function Page(props: {
   searchParams?: Promise<{
@@ -13,14 +16,17 @@ export default async function Page(props: {
 }) {
   const { companyId } = props.params;
   const companyDetails = await fetchCompanyDetails(parseInt(companyId));
-  //const searchParams = await props.searchParams;
-  //const query = searchParams?.query || "";
 
   return (
     <div className="company-details-container">
       <div className="company-details-header">
         <div className="flex-row gap-16 center-aligned">
-          <img src={"/"} alt="company image" width={10} height={1} />
+          <Image
+            src={companyDetails.logo || "/default-logo.png"}
+            alt="company image"
+            width={100} 
+            height={100} 
+          />
           <h3>{companyDetails.name}</h3>
         </div>
         <div className="flex-row gap-16">
@@ -36,7 +42,9 @@ export default async function Page(props: {
           />
         </div>
       </div>
+     
       <Accordion details={companyDetails} />
     </div>
   );
 }
+
