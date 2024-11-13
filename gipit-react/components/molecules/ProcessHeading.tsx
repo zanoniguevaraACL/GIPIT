@@ -3,6 +3,7 @@ import Button from "@/components/atoms/Button";
 import { IconChevronDown, IconChevronUp } from "@tabler/icons-react";
 import { useState } from "react";
 import "./processHeading.css";
+import Image from "next/image";
 
 const Stage = ({ name, estado }: { name: string; estado: string }) => {
   return (
@@ -78,7 +79,7 @@ function ProcessHeading({
         {/* Descripción de la etapa */}
         <div className="description-container">
           <div>
-            <img src={description.image} />
+            <Image src={description.image} alt="description conatiner" />
           </div>
           <div>
             <h3>{description.title}</h3>
