@@ -14,7 +14,7 @@ export const fetchFirstC = async () => {
   // Simula un retraso de 2 segundos
   await new Promise((resolve) => setTimeout(resolve, 2000));
 
-  const response = 5;
+  const response = 2;
   return response;
 };
 
