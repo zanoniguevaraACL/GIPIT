@@ -15,5 +15,14 @@
     min-width: 30svw;
     border-radius: 12px;
     padding: 24px;
+
+    h4 {
+      margin-bottom: 24px;
+    }
+
+    h3 {
+      text-align: center;
+      margin-bottom: 32px;
+    }
   }
 }

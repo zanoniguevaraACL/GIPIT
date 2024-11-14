@@ -145,6 +145,21 @@ body {
   background-color: var(--light-tertiary);
 }
 
+input,
+textarea {
+  font-family: "Poppins", sans-serif;
+  font-size: 14px;
+  font-weight: 400; /* Regular */
+  line-height: var(--line-height-body);
+}
+
+.button {
+  font-family: "Poppins", sans-serif;
+  font-size: 16px;
+  font-weight: 400; /* Regular */
+  line-height: var(--line-height-body);
+}
+
 .text-14 {
   font-size: 14px;
 }

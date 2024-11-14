@@ -1,34 +1,17 @@
 "use client";
 import Button from "@/components/atoms/Button";
-import { IconChevronDown, IconChevronUp } from "@tabler/icons-react";
-import { useState } from "react";
 import "./processHeading.css";
-import Image from "next/image";
-
-const Stage = ({ name, estado }: { name: string; estado: string }) => {
-  return (
-    <div className={`stage-container ${estado}`}>
-      <h5>{name}</h5>
-      <div className={`progress-bar`}></div>
-    </div>
-  );
-};
+import { useState } from "react";
 
 function ProcessInternalHeading({
   process,
   etapasToUse,
-  description,
 }: {
   etapasToUse: {
     name: string;
     showCandidates: boolean;
-    stage: string;
+    status: string;
   }[];
-  description: {
-    title: string;
-    image: string;
-    text: string;
-  };
   process: {
     id: number;
     name: string;
@@ -41,68 +24,108 @@ function ProcessInternalHeading({
     candidatesIds: number[];
   };
 }) {
-  const [contracted, setContracted] = useState(false);
-
-  const expand = () => {
-    setContracted(!contracted);
-  };
+  const [confirm, setConfirm] = useState({
+    visible: false,
+    data: { stage: process.stage, preFiltered: process.preFiltered },
+  });
 
   return (
-    <div className={`header-macro-container ${contracted && "contracted"}`}>
+    <div className={`header-macro-container contracted`}>
       {/* Cabecera */}
       <div className="process-header">
         <div className="title-and-sub">
           <h3 className="regular">
-            Estamos buscando un <b>{process.name}</b>
+            <b>{process.name}</b>
           </h3>
-          <p className="text-14">{`Hemos procesado ${process.preFiltered} perfiles`}</p>
         </div>
         <div className="buttons-container">
           <Button
             text="Revisar Vacante"
-            type={contracted ? "secondary" : "tertiary"}
-            href="/"
+            type={"secondary"}
+            href={`/process/${process.id}/view-offer`}
+          />
+          <Button
+            text="Nuevo Candidato"
+            type={"primary"}
+            href={`/process/${process.id}/new-candidate`}
           />
         </div>
       </div>
       {/* Detalles */}
       <div className="process-details-container">
-        {/* Etapas */}
-        <div className="stages-macro-container">
-          <p className="stages-title">Etapas</p>
-          <div className="stages-row">
-            {etapasToUse.map((et, index) => {
-              return <Stage key={index} name={et.name} estado={et.stage} />;
-            })}
-          </div>
-        </div>
-        {/* Descripción de la etapa */}
-        <div className="description-container">
-          <div>
-            <Image src={description.image} alt="description container image" />
-          </div>
-          <div>
-            <h3>{description.title}</h3>
-            <p>{description.text}</p>
-          </div>
-        </div>
-        {/* Boton de contraer - expandir */}
-        <div className="description-expander-container">
-          <p className="text-12 etapa-contracted">Etapa: {process.stage}</p>
-          <div className="description-expander" onClick={expand}>
-            {contracted ? (
-              <>
-                <p>Expandir</p>
-                <IconChevronDown />
-              </>
-            ) : (
-              <>
-                <p>Contraer</p>
-                <IconChevronUp />
-              </>
-            )}
-          </div>
-        </div>
+        <form onSubmit={() => alert(FormData)}>
+          <label>
+            Etapa
+            <select
+              onBlur={() => setConfirm({ ...confirm, visible: true })}
+              onChange={(e) =>
+                setConfirm({
+                  ...confirm,
+                  data: {
+                    ...confirm.data,
+                    stage: e.target.value,
+                  },
+                })
+              }
+              name="stage"
+              defaultValue={process.stage.toLowerCase()}
+            >
+              {etapasToUse.map((et) => {
+                return (
+                  <option value={et.name.toLowerCase()} key={et.name}>
+                    {et.name}
+                  </option>
+                );
+              })}
+            </select>
+          </label>
+          <label>
+            Candidatos pre filtrados
+            <input
+              defaultValue={process.preFiltered}
+              type="number"
+              name="preFiltered"
+              onBlur={() => setConfirm({ ...confirm, visible: true })}
+              onChange={(e) =>
+                setConfirm({
+                  ...confirm,
+                  data: {
+                    ...confirm.data,
+                    preFiltered: parseInt(e.target.value),
+                  },
+                })
+              }
+            />
+          </label>
+          {confirm.visible && (
+            <div className="overlay-layer">
+              <div className="confirm-message">
+                <h3>¿Deseas aplicar los cambios?</h3>
+                <br></br>
+                <p>
+                  <b>Etapa: </b> {confirm.data.stage.toUpperCase()}
+                </p>
+                <p>
+                  <b>Pre-Filtrados:</b> {confirm.data.preFiltered}
+                </p>
+                <br></br>
+                <div className="flex-row gap-16">
+                  <div
+                    className="button secondary"
+                    onClick={() => setConfirm({ ...confirm, visible: false })}
+                  >
+                    Cancelar
+                  </div>
+                  <input
+                    type="submit"
+                    value="Aplicar cambios"
+                    className="button primary"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+        </form>
       </div>
     </div>
   );

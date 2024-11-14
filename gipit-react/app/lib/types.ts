@@ -24,19 +24,29 @@ export interface FormInputProps {
     | "number"
     | "date"
     | "submit"
+    | "email"
     | "textarea"
     | "file"
     | "chips"
+    | "select"
     | "cancel";
   value?: string | number;
+  defaultValue?: string | number;
   href?: string;
+  height?: string;
+  options?: { name: string; value: number }[];
 }
 
 export type FormInputsRow = (FormInputProps | FormInputProps[])[];
 
 export type FormBlockProps = {
   rows: FormInputsRow;
-  onSubmit: (formData: FormData) => Promise<{ message: string; route: string }>;
+  onSubmit: (
+    formData: FormData,
+    actualRoute: string
+  ) => Promise<{ message: string; route: string }>;
+  title?: string;
+  message?: string;
 };
 
 export interface NavBarCTAProps {

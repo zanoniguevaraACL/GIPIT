@@ -17,7 +17,7 @@ export default async function Layout({
   children: React.ReactNode;
 }>) {
   const process = await fetchProcessDetails(1);
-  const isInternal: boolean = true;
+  const isInternal: boolean = true; // logica por el rol de la sesion
 
   const etapas = [
     {
@@ -54,7 +54,7 @@ export default async function Layout({
   const etapasToUse: {
     name: string;
     showCandidates: boolean;
-    stage: string;
+    status: string;
   }[] = [];
   let description: {
     title: string;
@@ -76,21 +76,21 @@ export default async function Layout({
           etapasToUse[e.order] = {
             name: e.name,
             showCandidates: e.showCandidates,
-            stage: "active",
+            status: "active",
           };
         } else if (et.order > e.order) {
           // estas son las pasadas
           etapasToUse[e.order] = {
             name: e.name,
             showCandidates: e.showCandidates,
-            stage: "done",
+            status: "done",
           };
         } else {
           // estas son las futuras
           etapasToUse[e.order] = {
             name: e.name,
             showCandidates: e.showCandidates,
-            stage: "toDo",
+            status: "toDo",
           };
         }
       });
@@ -106,11 +106,7 @@ export default async function Layout({
   return (
     <div className="inner-page-container">
       {isInternal ? (
-        <ProcessInternalHeading
-          process={process}
-          etapasToUse={etapasToUse}
-          description={description}
-        />
+        <ProcessInternalHeading process={process} etapasToUse={etapasToUse} />
       ) : (
         <ProcessHeading
           process={process}

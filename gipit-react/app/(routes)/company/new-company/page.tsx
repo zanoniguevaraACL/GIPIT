@@ -24,7 +24,9 @@ function Page() {
     ],
   ];
 
-  return <Modal rows={fields} onSubmit={handleCreateCompany} />;
+  return (
+    <Modal rows={fields} onSubmit={handleCreateCompany} title="Nuevo Cliente" />
+  );
 }
 
 export default Page;

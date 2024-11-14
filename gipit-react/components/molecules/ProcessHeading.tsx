@@ -3,7 +3,6 @@ import Button from "@/components/atoms/Button";
 import { IconChevronDown, IconChevronUp } from "@tabler/icons-react";
 import { useState } from "react";
 import "./processHeading.css";
-import Image from "next/image";
 
 const Stage = ({ name, estado }: { name: string; estado: string }) => {
   return (
@@ -22,7 +21,7 @@ function ProcessHeading({
   etapasToUse: {
     name: string;
     showCandidates: boolean;
-    stage: string;
+    status: string;
   }[];
   description: {
     title: string;
@@ -61,7 +60,7 @@ function ProcessHeading({
           <Button
             text="Revisar Vacante"
             type={contracted ? "secondary" : "tertiary"}
-            href="/"
+            href={`/process/${process.id}/view-offer`}
           />
         </div>
       </div>
@@ -72,14 +71,14 @@ function ProcessHeading({
           <p className="stages-title">Etapas</p>
           <div className="stages-row">
             {etapasToUse.map((et, index) => {
-              return <Stage key={index} name={et.name} estado={et.stage} />;
+              return <Stage key={index} name={et.name} estado={et.status} />;
             })}
           </div>
         </div>
         {/* Descripción de la etapa */}
         <div className="description-container">
           <div>
-            <Image src={description.image} alt="description conatiner" />
+            <img src={description.image} alt="description conatiner" />
           </div>
           <div>
             <h3>{description.title}</h3>
