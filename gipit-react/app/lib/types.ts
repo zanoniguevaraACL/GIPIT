@@ -24,14 +24,17 @@ export interface FormInputProps {
     | "number"
     | "date"
     | "submit"
+    | "email"
     | "textarea"
     | "file"
     | "chips"
+    | "select"
     | "cancel";
   value?: string | number;
   defaultValue?: string | number;
   href?: string;
   height?: string;
+  options?: { name: string; value: number }[];
 }
 
 export type FormInputsRow = (FormInputProps | FormInputProps[])[];

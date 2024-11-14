@@ -11,29 +11,43 @@ async function Page({
   const { processId, candidateId } = params;
   const routeToRedirect = `/process/${processId}/${candidateId}`;
 
-  const previousValues = await fetchCandidateDetails(parseInt(candidateId));
+  const candidateDetails = await fetchCandidateDetails(parseInt(candidateId));
 
   const fields: FormInputsRow = [
     {
-      label: "Conocimientos técnicos",
-      placeholder: "Inserte un valor numérico",
-      type: "number",
-      name: "techSkills",
-      defaultValue: previousValues.clientNote.tech,
+      label: "Nombre",
+      placeholder: "Nombre del Profesional",
+      type: "text",
+      name: "name",
+      defaultValue: candidateDetails.name,
     },
     {
-      label: "Habilidades blandas",
-      placeholder: "Inserte un valor numérico",
-      type: "number",
-      name: "softSkills",
-      defaultValue: previousValues.clientNote.soft,
+      label: "Teléfono",
+      placeholder: "+56 000 00000",
+      type: "text",
+      name: "phone",
+      defaultValue: candidateDetails.phone,
     },
     {
-      label: "Comentario",
-      placeholder: "Inserte una nota",
+      label: "Correo electrónico",
+      placeholder: "correo@server.com",
+      type: "email",
+      name: "email",
+      defaultValue: candidateDetails.email,
+    },
+    {
+      label: "Dirección",
+      placeholder: "# Calle, Ciudad, País",
+      type: "text",
+      name: "address",
+      defaultValue: candidateDetails.address,
+    },
+    {
+      label: "CV",
+      placeholder: "Detalles del cv",
       type: "textarea",
-      name: "comment",
-      defaultValue: previousValues.clientNote.comment,
+      name: "cv",
+      defaultValue: candidateDetails.sumary,
     },
     [
       { type: "cancel", value: "Cancelar", href: routeToRedirect },
@@ -41,7 +55,9 @@ async function Page({
     ],
   ];
 
-  return <Modal rows={fields} onSubmit={handleDisqualify} title="Nueva Nota" />;
+  return (
+    <Modal rows={fields} onSubmit={handleDisqualify} title="Nuevo Candidato" />
+  );
 }
 
 export default Page;

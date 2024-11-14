@@ -56,6 +56,22 @@ function FormItem({ field }: { field: FormInputProps }) {
         />
       );
       break;
+    case "select":
+      return (
+        <label>
+          <div>{field.label}</div>
+          <select>
+            {field.options?.map((option, index) => {
+              return (
+                <option key={index} value={option.value}>
+                  {option.name}
+                </option>
+              );
+            })}
+          </select>
+        </label>
+      );
+      break;
     default:
       return (
         <label key={field.label}>
