@@ -1,10 +1,10 @@
 import Modal from "@/components/molecules/Modal";
 import { FormInputsRow } from "@/app/lib/types";
 import { handleCreateProcess } from "@/app/actions/handleCreateProcess";
-import { fetchAllC } from "@/app/actions/fakeApi";
+import { fetchAllCompanies } from "@/app/actions/fetchCompanies";
 
 async function Page() {
-  const clientsList = await fetchAllC();
+  const clientsList = await fetchAllCompanies();
   console.log(clientsList);
   const selectFieldOptions = clientsList.map((client) => ({
     name: client.name,

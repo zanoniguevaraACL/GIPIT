@@ -1,4 +1,5 @@
 "use client";
+
 import { FormInputProps, FormBlockProps } from "@/app/lib/types";
 import "./formBlock.css";
 import "./button.css";
@@ -26,7 +27,6 @@ function FormItem({ field }: { field: FormInputProps }) {
           />
         </label>
       );
-      break;
     case "chips":
       return (
         <label key={field.label}>
@@ -34,7 +34,6 @@ function FormItem({ field }: { field: FormInputProps }) {
           <input placeholder={field.placeholder} />
         </label>
       );
-      break;
     case "cancel":
       return (
         <Link
@@ -45,7 +44,6 @@ function FormItem({ field }: { field: FormInputProps }) {
           {field.value}
         </Link>
       );
-      break;
     case "submit":
       return (
         <input
@@ -55,23 +53,19 @@ function FormItem({ field }: { field: FormInputProps }) {
           value={field.value}
         />
       );
-      break;
     case "select":
       return (
         <label>
           <div>{field.label}</div>
-          <select>
-            {field.options?.map((option, index) => {
-              return (
-                <option key={index} value={option.value}>
-                  {option.name}
-                </option>
-              );
-            })}
+          <select name={field.name} defaultValue={field.defaultValue || ""}>
+            {field.options?.map((option, index) => (
+              <option key={index} value={option.value}>
+                {option.name}
+              </option>
+            ))}
           </select>
         </label>
       );
-      break;
     default:
       return (
         <label key={field.label}>
@@ -92,6 +86,7 @@ function FormItem({ field }: { field: FormInputProps }) {
 function FormBlock({ rows, onSubmit }: FormBlockProps) {
   const router = useRouter();
   const actualRoute = usePathname();
+
   return (
     <form
       encType="multipart/form-data"
