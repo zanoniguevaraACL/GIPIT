@@ -1,6 +1,6 @@
 import Modal from "@/components/molecules/Modal";
 import { FormInputsRow } from "@/app/lib/types";
-import { handleCreateCompany } from "@/app/actions/handleCreateCompany";
+import { handleCreateProcess } from "@/app/actions/handleCreateProcess";
 import { fetchAllC } from "@/app/actions/fakeApi";
 
 async function Page() {
@@ -39,7 +39,7 @@ async function Page() {
   ];
 
   return (
-    <Modal rows={fields} onSubmit={handleCreateCompany} title="Nuevo Proceso" />
+    <Modal rows={fields} onSubmit={handleCreateProcess} title="Nuevo Proceso" />
   );
 }
 
