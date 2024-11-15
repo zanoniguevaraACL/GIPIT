@@ -2,7 +2,6 @@
 
 export const fetchProcess = async (page: number) => {
   try {
-    // Fetch processes from the backend with pagination (using page as a query param)
     const response = await fetch(`http://localhost:3001/api/process?page=${page}`, {
       method: 'GET',
       headers: {
@@ -16,18 +15,17 @@ export const fetchProcess = async (page: number) => {
 
     const data = await response.json();
 
-    // Return the data in the required format
     return {
       total: data.total,
       batch: data.batch.map((process: any) => ({
         id: process.id,
-        name: process.job_offer, // Map job_offer to 'name'
-        stage: process.status, // Map status to 'stage'
-        startAt: process.opened_at ? new Date(process.opened_at).toLocaleDateString() : '', // Format start date
-        endAt: process.closed_at ? new Date(process.closed_at).toLocaleDateString() : null, // Format end date
-        preFiltered: process.pre_filtered ? 1 : 0, // Convert boolean to number
-        candidates: process.candidate_process ? process.candidate_process.length : 0, // Count candidates
-        state: process.status, // Map status to 'state'
+        name: process.job_offer, 
+        stage: process.status,
+        startAt: process.opened_at ? new Date(process.opened_at).toLocaleDateString() : '', 
+        endAt: process.closed_at ? new Date(process.closed_at).toLocaleDateString() : null, 
+        preFiltered: process.pre_filtered ? 1 : 0, 
+        candidates: process.candidate_process ? process.candidate_process.length : 0,
+        state: process.status,
       })),
     };
   } catch (error) {
@@ -40,34 +38,51 @@ export const fetchProcess = async (page: number) => {
 };
 
 
-
-
 export const fetchProcessDetails = async (id: number) => {
-    try {
-      
-      const processResponse = await fetch(`http://localhost:3001/api/process/${id}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        cache: "no-store"
-      });
-  
-      if (!processResponse.ok) {
-        throw new Error("Error fetching process name");
-      }
-  
-      
-  
-     
-     
-    } catch (error) {
-      console.error("Error:", error);
-      return {
-        id: id,
-        name: "Nombre no disponible",
-        jefaturas: [],
-        logo:'/logopordefault.png'
-      };
+
+  try {
+    const response = await fetch(`http://localhost:3001/api/process/${id}`);
+
+    if (!response.ok) {
+      throw new Error('Error fetching process details');
     }
-  };
+
+    const processData = await response.json();
+
+    const candidatesIds = processData.candidate_process
+      ? processData.candidate_process.map((cp: any) => cp.candidates.id) 
+      : [];
+
+    return {
+      ...processData,
+      candidatesIds, 
+    };
+  } catch (error) {
+    console.error('Error fetching process details:', error);
+    throw error; 
+  }
+};
+
+
+
+
+export const fetchProcessCandidates = async (candidatesIds: number[]) => {
+
+  try {
+    const response = await fetch(`http://localhost:3001/api/candidates?ids=${candidatesIds.join(',')}`);
+
+    if (!response.ok) {
+      throw new Error('Error fetching candidates');
+    }
+
+    const candidatesData = await response.json();
+    
+    return candidatesData;
+  } catch (error) {
+    console.error('Error fetching candidates:', error);
+    throw error; 
+  }
+};
+
+
+
