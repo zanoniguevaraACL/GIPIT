@@ -21,6 +21,7 @@ export const handleCreateProcess = async (formData: FormData) => {
       throw new Error("Invalid company ID.");
     }
 
+    // Map the data to match your backend schema or Prisma model
     const mappedData = {
       job_offer: data.jobOffer, 
       job_offer_description: data.jobOfferDescription,
@@ -33,27 +34,36 @@ export const handleCreateProcess = async (formData: FormData) => {
 
     console.log("Transformed Form Data submitted:", mappedData);
 
-    // Sending the data to the backend
+    // Send the data to the backend API
     const response = await fetch("http://localhost:3001/api/process", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(mappedData),
+      body: JSON.stringify(mappedData),  // Send the mapped data
     });
 
+    // Check if the response is successful
     if (!response.ok) {
       const errorData = await response.json();
       console.error("Error creating process:", errorData);
       throw new Error(errorData.error || "Unknown error creating process");
     }
 
+    // Parse the response JSON data
     const result = await response.json();
     console.log("Process created successfully:", result);
 
-    return result;
+    // Return success message and route for redirect
+    return {
+      message: "Proceso cargado exitosamente", // Success message in Spanish
+      route: "/process",  // Redirect route (adjust as necessary)
+    };
+
   } catch (error) {
+    // Log the error for debugging
     console.error("Error creating process:", error);
+    // Return a structured error message
     throw new Error(`Error creating process: ${error.message || "Unknown error"}`);
   }
 };
