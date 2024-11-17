@@ -283,7 +283,7 @@ export const fetchProcessDetails = async (id: number) => {
   console.log(id);
 
   const response = {
-    id: 15,
+    id: 1,
     name: "Consultor en Ciberseguridad",
     stage: "Entrevistas",
     startAt: "05/12/2024",
