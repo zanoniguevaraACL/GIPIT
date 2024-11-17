@@ -1,99 +1,104 @@
 import ProcessHeading from "@/components/molecules/ProcessHeading";
-import ProcessInternalHeading from "@/components/molecules/ProcessInternalHeading";
-import ClientProvider from "@/contexts/ClientProvider";
-import { fetchProcessDetails, fetchProcessCandidates } from "@/app/actions/fetchProcess";
+import {
+  fetchProcessCandidates,
+  fetchProcessDetails,
+} from "@/app/actions/fetchProcess";
 import stage1 from "@/src/stage1.webp";
 import stage2 from "@/src/stage2.webp";
 import stage3 from "@/src/stage3.webp";
 import stage4 from "@/src/stage4.webp";
+import React from "react";
+import ClientProvider from "@/contexts/ClientProvider";
+import ProcessInternalHeading from "@/components/molecules/ProcessInternalHeading";
 
-type Etapa = {
-  name: string;
-  order: number;
-  showCandidates: boolean;
-  image: string;
-  text: string;
-};
-
-type ProcessDetails = {
-  id: number;
-  name: string;
-  stage: string;
-  startAt: string;
-  endAt: string | null;
-  preFiltered: number;
-  candidates: number;
-  status: string;
-  candidatesIds: number[];
-  jobOffer: string;
-};
-
-type LayoutProps = {
+export default async function Layout({
+  children,
+}: Readonly<{
   children: React.ReactNode;
-};
+}>) {
+  const process = await fetchProcessDetails(1);
+  const isInternal: boolean = true; // logica por el rol de la sesion
 
-export default async function Layout({ children }: LayoutProps) {
-  // Fetch process details from the server
-  const process = await fetchProcessDetails(1); // Replace with dynamic ID if needed
-  if (!process) {
-    return <div>Error loading process details.</div>;
-  }
-
-  const isInternal: boolean = true; // Logic for internal user role
-
-  // Define stages (etapas)
-  const etapas: Etapa[] = [
+  const etapas = [
     {
       name: "Reclutamiento",
       order: 0,
       showCandidates: false,
       image: stage1.src,
-      text: "En esta etapa identificamos y atraemos a los mejores talentos...",
+      text: "En esta etapa identificamos y atraemos a los mejores talentos con las habilidades y experiencia que tu empresa necesita. Analizamos a fondo cada perfil, asegurándonos de que los candidatos preseleccionados estén alineados con los requisitos técnicos y la cultura de tu empresa.",
     },
     {
       name: "Filtrado ACL",
       order: 1,
       showCandidates: false,
       image: stage2.src,
-      text: "En esta etapa revisamos cuidadosamente a los candidatos...",
+      text: "En esta etapa revisamos cuidadosamente a los candidatos que han superado el reclutamiento inicial, evaluando sus habilidades técnicas y su alineación con la cultura y valores de tu empresa. Solo los mejores talentos avanzan a la siguiente etapa.",
     },
     {
       name: "Entrevistas",
       order: 2,
       showCandidates: true,
       image: stage3.src,
-      text: "En esta etapa facilitamos un espacio para que conozcas a los candidatos...",
+      text: "En esta etapa facilitamos un espacio para que conozcas a los candidatos y evalúes tanto sus habilidades técnicas como su ajuste cultural. Nuestro equipo estará presente para resolver tus dudas y asegurar que se cumplan tus expectativas.",
     },
     {
       name: "Selección",
       order: 3,
       showCandidates: true,
       image: stage4.src,
-      text: "Tras el proceso de entrevistas y evaluaciones...",
+      text: "Tras el proceso de entrevistas y evaluaciones, te presentamos al candidato ideal, con un resumen de sus habilidades y compatibilidad con tu equipo. Facilitamos los pasos finales para asegurar una integración fluida y efectiva en tu empresa.",
     },
   ];
 
-  // Set up the etapasToUse array based on the current stage
-  const etapasToUse: { name: string; showCandidates: boolean; status: string }[] = [];
-  let description = { title: "", image: "", text: "" };
-  let showCandidates = -1;
-
-  // Fetch the candidates based on the process's candidates IDs
+  // variables del proceso para renderizar datos
+  const etapasToUse: {
+    name: string;
+    showCandidates: boolean;
+    status: string;
+  }[] = [];
+  let description: {
+    title: string;
+    image: string;
+    text: string;
+  } = { title: "", image: "", text: "" };
+  let showCandidates: number = -1;
   const candidatesTabs = await fetchProcessCandidates(process.candidatesIds);
 
   etapas.forEach((et) => {
+    // recorremos las etapas de base de arriba
     if (et.name.toLowerCase() === process.stage.toLowerCase()) {
+      /* cuando encontremos la etapa activa iniciamos otro loop para 
+      asignar "toDo" | "active" | "done" giandonos por si es mayor o 
+      menor el order asignado.*/
       etapas.forEach((e) => {
         if (et.order === e.order) {
-          etapasToUse[e.order] = { name: e.name, showCandidates: e.showCandidates, status: "active" };
+          // esta es la activa
+          etapasToUse[e.order] = {
+            name: e.name,
+            showCandidates: e.showCandidates,
+            status: "active",
+          };
         } else if (et.order > e.order) {
-          etapasToUse[e.order] = { name: e.name, showCandidates: e.showCandidates, status: "done" };
+          // estas son las pasadas
+          etapasToUse[e.order] = {
+            name: e.name,
+            showCandidates: e.showCandidates,
+            status: "done",
+          };
         } else {
-          etapasToUse[e.order] = { name: e.name, showCandidates: e.showCandidates, status: "toDo" };
+          // estas son las futuras
+          etapasToUse[e.order] = {
+            name: e.name,
+            showCandidates: e.showCandidates,
+            status: "toDo",
+          };
         }
       });
-
-      description = { title: et.name, image: et.image, text: et.text };
+      description = {
+        title: et.name,
+        image: et.image,
+        text: et.text,
+      };
       showCandidates = et.showCandidates ? process.candidatesIds[0] : -1;
     }
   });
@@ -103,10 +108,17 @@ export default async function Layout({ children }: LayoutProps) {
       {isInternal ? (
         <ProcessInternalHeading process={process} etapasToUse={etapasToUse} />
       ) : (
-        <ProcessHeading process={process} etapasToUse={etapasToUse} description={description} />
+        <ProcessHeading
+          process={process}
+          etapasToUse={etapasToUse}
+          description={description}
+        />
       )}
 
-      <ClientProvider showCandidates={showCandidates} candidatesTabs={candidatesTabs}>
+      <ClientProvider
+        showCandidates={showCandidates}
+        candidatesTabs={candidatesTabs}
+      >
         {children}
       </ClientProvider>
     </div>

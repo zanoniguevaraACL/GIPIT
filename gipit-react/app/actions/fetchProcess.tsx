@@ -77,14 +77,23 @@ export const fetchProcessDetails = async (id: number): Promise<any> => {
 
 
 // fetchProcessCandidates.ts
+// fetchProcessCandidates.ts
+
 export const fetchProcessCandidates = async (ids: number[]): Promise<any[]> => {
   try {
+    // Ensure that `ids` is a valid array and has at least one element
+    if (!Array.isArray(ids) || ids.length === 0) {
+      console.warn('No candidate IDs provided, skipping candidate fetch.');
+      return []; // Return an empty array if no IDs are provided
+    }
+
+    // Join the IDs to pass as a query string parameter
     const response = await fetch(`http://localhost:3001/api/candidates?ids=${ids.join(',')}`);
     
     if (!response.ok) {
       throw new Error('Error fetching candidates');
     }
-    
+
     const candidates = await response.json();
 
     return candidates.map((candidate: any) => ({
@@ -95,7 +104,7 @@ export const fetchProcessCandidates = async (ids: number[]): Promise<any[]> => {
     }));
   } catch (error) {
     console.error('Error fetching candidates:', error);
-    return [];
+    return []; // Return an empty array if an error occurs
   }
 };
 
