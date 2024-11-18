@@ -3,7 +3,7 @@ import { FormInputProps, FormBlockProps } from "@/app/lib/types";
 import "./formBlock.css";
 import "./button.css";
 import Link from "next/link";
-import { FormEvent } from "react";
+import { FormEvent, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
 function FormRow({ row }: { row: FormInputProps[] }) {
@@ -13,6 +13,22 @@ function FormRow({ row }: { row: FormInputProps[] }) {
 }
 
 function FormItem({ field }: { field: FormInputProps }) {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const evaluateInputRange = (ref: HTMLInputElement) => {
+    if (field.minMax && parseFloat(ref.value) > field.minMax[1]) {
+      ref.value = field.minMax[1].toString();
+    } else if (field.minMax && parseFloat(ref.value) < field.minMax[0]) {
+      ref.value = field.minMax[0].toString();
+    }
+  };
+
+  if (inputRef.current && field.minMax) {
+    inputRef.current.addEventListener("change", () => {
+      evaluateInputRange(inputRef.current as HTMLInputElement);
+    });
+  }
+
   switch (field.type) {
     case "textarea":
       return (
@@ -77,12 +93,15 @@ function FormItem({ field }: { field: FormInputProps }) {
         <label key={field.label}>
           <div>{field.label}</div>
           <input
+            ref={inputRef}
             name={field.name ? field.name : ""}
             type={field.type}
             key={field.label}
             placeholder={field.placeholder}
             value={field.value}
             defaultValue={field.defaultValue}
+            min={field.minMax ? field.minMax[0] : 0}
+            max={field.minMax ? field.minMax[1] : 999999999999}
           />
         </label>
       );

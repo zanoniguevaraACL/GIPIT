@@ -1,0 +1,61 @@
+.max-container {
+  height: 87svh;
+  overflow: auto;
+}
+
+.pro-details-container {
+  max-width: 1440px;
+  margin: 0 auto;
+
+  .pro-header {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+
+    .pro-avatar {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 18px;
+      font-weight: 600;
+      background-color: var(--tertiary);
+      border-radius: 50%;
+      color: var(--dark-tertiary);
+    }
+
+    .name-n-mail-container {
+      align-items: center;
+    }
+
+    .position {
+      margin-top: 2px;
+      color: var(--light-secondary);
+    }
+
+    .pro-buttons-container {
+      flex-grow: 1;
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+  }
+
+  /* dashboard de evaluaciones */
+  .section-title {
+    padding-left: 24px;
+    color: var(--dark-tertiary);
+    margin: 24px 0 12px 0;
+  }
+  .rates-dashboard {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    margin-bottom: 56px;
+
+    & > div:nth-child(1) {
+      grid-column: span 4;
+    }
+  }
+}

@@ -35,6 +35,7 @@ export interface FormInputProps {
   href?: string;
   height?: string;
   options?: { name: string; value: number }[];
+  minMax?: number[];
 }
 
 export type FormInputsRow = (FormInputProps | FormInputProps[])[];

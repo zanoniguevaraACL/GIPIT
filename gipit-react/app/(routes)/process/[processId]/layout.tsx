@@ -17,7 +17,7 @@ export default async function Layout({
   children: React.ReactNode;
 }>) {
   const process = await fetchProcessDetails(1);
-  const isInternal: boolean = true; // logica por el rol de la sesion
+  const isInternal: boolean = false; // logica por el rol de la sesion
 
   const etapas = [
     {
