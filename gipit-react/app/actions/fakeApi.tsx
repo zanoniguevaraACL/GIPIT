@@ -642,3 +642,260 @@ export const fetchProfessionals = async (page: number) => {
 
   return response;
 };
+
+export const fetchPro = async (id: number) => {
+  // Simula un retraso de 2 segundos
+  await new Promise((resolve) => setTimeout(resolve, 2000));
+
+  console.log(id);
+
+  const response = {
+    name: "Pedro García Romero",
+  };
+
+  return response;
+};
+
+export const fetchEvaluations = async (page: number) => {
+  // Simula un retraso de 2 segundos
+  await new Promise((resolve) => setTimeout(resolve, 2000));
+
+  // esta trae los registros de 10 en 10 !!!
+
+  console.log("actual page: ", page); // Usaremos la página para traer los 10 registros correspondientes
+
+  // Datos simulados para las distintas páginas
+  const dataPage1 = [
+    {
+      id: 1,
+      date: "2024-01-01",
+      stack: 5.2,
+      comunicacion: 6.8,
+      motivacion: 5.1,
+      cumplimiento: 5.3,
+      promedio: 6.8,
+      proyecction: "Excellent performance expected.",
+      acciones: "Continue with current workflow.",
+      clientComment: "Very satisfied with the progress.",
+      benefit: "Team bonus approved.",
+    },
+    {
+      id: 2,
+      date: "2024-01-15",
+      stack: 5.1,
+      comunicacion: 5.4,
+      motivacion: 6.3,
+      cumplimiento: 6.6,
+      promedio: 6.7,
+      proyecction: "Good, but room for improvement.",
+      acciones: "Enhance communication practices.",
+      clientComment: "Overall positive, but communication could improve.",
+      benefit: "Training provided.",
+    },
+    {
+      id: 3,
+      date: "2024-02-01",
+      stack: 6.1,
+      comunicacion: 5.3,
+      motivacion: 6.6,
+      cumplimiento: 5.2,
+      promedio: 6.4,
+      proyecction: "Consistently high performer.",
+      acciones: "Maintain consistency.",
+      clientComment: "Exceeded expectations.",
+      benefit: "Performance bonus awarded.",
+    },
+    {
+      id: 4,
+      date: "2024-02-15",
+      stack: 5.6,
+      comunicacion: 6.0,
+      motivacion: 6.4,
+      cumplimiento: 5.2,
+      promedio: 5.1,
+      proyecction: "Needs improvement.",
+      acciones: "Provide additional training.",
+      clientComment: "Some concerns about deadlines.",
+      benefit: "Coaching sessions planned.",
+    },
+    {
+      id: 5,
+      date: "2024-03-01",
+      stack: 5.9,
+      comunicacion: 6.7,
+      motivacion: 5.1,
+      cumplimiento: 5.6,
+      promedio: 6.2,
+      proyecction: "Steady growth observed.",
+      acciones: "Encourage collaboration.",
+      clientComment: "Great progress.",
+      benefit: "Team outing scheduled.",
+    },
+    {
+      id: 6,
+      date: "2024-03-15",
+      stack: 6.3,
+      comunicacion: 6.2,
+      motivacion: 6.5,
+      cumplimiento: 6.0,
+      promedio: 6.7,
+      proyecction: "Good trajectory.",
+      acciones: "Focus on communication skills.",
+      clientComment: "Promising results.",
+      benefit: "Additional resources allocated.",
+    },
+    {
+      id: 7,
+      date: "2024-04-01",
+      stack: 6.1,
+      comunicacion: 5.8,
+      motivacion: 5.4,
+      cumplimiento: 6.4,
+      promedio: 5.9,
+      proyecction: "High performer, consistent.",
+      acciones: "Promote leadership opportunities.",
+      clientComment: "Excellent execution.",
+      benefit: "Leadership training offered.",
+    },
+    {
+      id: 8,
+      date: "2024-04-15",
+      stack: 5.4,
+      comunicacion: 6.1,
+      motivacion: 5.5,
+      cumplimiento: 5.3,
+      promedio: 5.7,
+      proyecction: "Needs focused improvement.",
+      acciones: "Set clear milestones.",
+      clientComment: "Progressing slowly.",
+      benefit: "Support program initiated.",
+    },
+    {
+      id: 9,
+      date: "2024-05-01",
+      stack: 6.4,
+      comunicacion: 6.3,
+      motivacion: 6.0,
+      cumplimiento: 6.1,
+      promedio: 6.6,
+      proyecction: "Consistent performer.",
+      acciones: "Leverage strengths for new projects.",
+      clientComment: "Reliable and efficient.",
+      benefit: "Recognition in team meetings.",
+    },
+    {
+      id: 10,
+      date: "2024-05-15",
+      stack: 6.8,
+      comunicacion: 5.7,
+      motivacion: 6.3,
+      cumplimiento: 6.1,
+      promedio: 6.2,
+      proyecction: "At risk of underperforming.",
+      acciones: "Intensive skill-building sessions.",
+      clientComment: "Concerns raised about quality.",
+      benefit: "Performance improvement plan.",
+    },
+  ];
+
+  const dataPage2 = [
+    {
+      id: 16,
+      date: "2024-08-15",
+      stack: 92,
+      comunicacion: 91,
+      motivacion: 93,
+      cumplimiento: 95,
+      promedio: 92.75,
+      proyecction: "Exceeds expectations, suitable for advanced tasks.",
+      acciones: "Assign challenging projects.",
+      clientComment: "Delivered high-quality work ahead of schedule.",
+      benefit: "Eligible for project bonuses.",
+    },
+    {
+      id: 17,
+      date: "2024-09-01",
+      stack: 60,
+      comunicacion: 58,
+      motivacion: 65,
+      cumplimiento: 62,
+      promedio: 61.25,
+      proyecction: "Requires significant improvement.",
+      acciones: "Provide clear KPIs and regular feedback.",
+      clientComment: "Concerns about consistency.",
+      benefit: "Coaching program assigned.",
+    },
+    {
+      id: 18,
+      date: "2024-09-15",
+      stack: 88,
+      comunicacion: 90,
+      motivacion: 87,
+      cumplimiento: 89,
+      promedio: 88.5,
+      proyecction: "Reliable performer with potential for growth.",
+      acciones: "Support leadership development.",
+      clientComment: "Very responsive and efficient.",
+      benefit: "Nominated for employee of the month.",
+    },
+    {
+      id: 19,
+      date: "2024-10-01",
+      stack: 70,
+      comunicacion: 72,
+      motivacion: 75,
+      cumplimiento: 73,
+      promedio: 72.5,
+      proyecction: "Steady progress, but needs more consistency.",
+      acciones: "Set up bi-weekly mentoring sessions.",
+      clientComment: "Improvement visible but not consistent.",
+      benefit: "Professional development budget increased.",
+    },
+    {
+      id: 20,
+      date: "2024-10-15",
+      stack: 96,
+      comunicacion: 98,
+      motivacion: 95,
+      cumplimiento: 97,
+      promedio: 96.5,
+      proyecction: "Top performer with exceptional potential.",
+      acciones: "Promote to key leadership role.",
+      clientComment: "Flawless execution, highly recommended.",
+      benefit: "Promotion approved.",
+    },
+  ];
+
+  // Seleccionar el batch en función de la página
+  const batch = page === 1 ? dataPage1 : dataPage2;
+
+  const response = {
+    total: 60, // Simulación de un total de 60 registros en la base de datos
+    batch, // Devolvemos el batch seleccionado
+  };
+
+  return response;
+};
+
+export const fetchEval = async (id: number) => {
+  // Simula un retraso de 2 segundos
+  await new Promise((resolve) => setTimeout(resolve, 2000));
+
+  console.log(id);
+
+  const response = {
+    id: 1,
+    date: "2024-01-05",
+    stack: 5.2,
+    comunicacion: 6.8,
+    motivacion: 5.1,
+    cumplimiento: 5.3,
+    promedio: 6.8,
+    proyecction: "Excellent performance expected.",
+    acciones: "Continue with current workflow.",
+    clientComment: "Very satisfied with the progress.",
+    benefit: "Team bonus approved.",
+  };
+
+  return response;
+};
