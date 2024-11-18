@@ -52,7 +52,7 @@ export default async function Page(props: {
 
   return (
     <div className="inner-page-container">
-      <SearchBar buttonLink="/" buttonText="Nuevo Proceso" />
+      <SearchBar buttonLink="/process/new-process" buttonText="Nuevo Proceso" />
       <DataGrid data={data} baseUrl="/process" />
     </div>
   );

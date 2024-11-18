@@ -1,19 +1,22 @@
 .button {
   border-radius: 8px;
-  padding: 8px 16px;
+  padding: 8px 16px !important;
   color: var(--primary);
   text-transform: capitalize;
   font-weight: 600;
+  font-size: 16px;
   transition: all 0.2s ease-out;
   display: inline-block;
   text-decoration: none;
   color: var(--primary);
   transition: all 0.2s ease-out;
+  cursor: pointer;
 
   &.primary {
     background-color: var(--primary);
     font-weight: 500;
     color: var(--light-tertiary);
+    border: none !important;
   }
 
   &.secondary {

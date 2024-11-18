@@ -1,5 +1,6 @@
 
 
+
 "use client";
 import Modal from "@/components/molecules/Modal";
 import { FormInputsRow } from "@/app/lib/types";
@@ -19,15 +20,17 @@ function Page() {
       placeholder: "Nombre de la empresa",
       type: "text",
       name: "name",
+      defaultValue: previousValues.name,
     },
     {
       label: "Descripción",
       name: "description",
       placeholder: "Alguna nota relacionada al cliente",
       type: "textarea",
+      defaultValue: previousValues.description,
     },
     [
-      { type: "cancel", value: "Cancelar", href: "/company" },
+      { type: "cancel", value: "Cancelar", href: routeToRedirect },
       { type: "submit", value: "Guardar" },
     ],
   ];
