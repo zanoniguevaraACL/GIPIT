@@ -37,21 +37,41 @@ export default async function Page(props: {
   const searchParams = await props.searchParams;
   //const query = searchParams?.query || "";
   const page = searchParams?.page ? parseInt(searchParams?.page) : 1;
-  const prosList = await fetchProfessionals(page);
 
-  const data: ResponseData<Professional> = {
-    columns: [
-      { name: "Nombre", key: "name", width: 1.1 },
-      { name: "Rol", key: "role", width: 1.1 },
-      { name: "Cliente", key: "company", width: 1 },
-      { name: "Inicio", key: "startDate", width: 0.7 },
-      { name: "Término", key: "endDate", width: 0.7 },
-      { name: "Valor HH", key: "hourValue", width: 0.5 },
-      { name: "Estado", key: "status", width: 0.7 },
-    ],
-    total: prosList.total,
-    batch: prosList.batch,
-  };
+  const isInternal: boolean = true;
+
+  const prosList = await fetchProfessionals(page);
+  let data: ResponseData<Professional>;
+
+  if (isInternal) {
+    data = {
+      columns: [
+        { name: "Nombre", key: "name", width: 1.1 },
+        { name: "Rol", key: "role", width: 1.1 },
+        { name: "Cliente", key: "company", width: 1 },
+        { name: "Inicio", key: "startDate", width: 0.7 },
+        { name: "Término", key: "endDate", width: 0.7 },
+        { name: "Valor HH", key: "hourValue", width: 0.5 },
+        { name: "Estado", key: "status", width: 0.7 },
+      ],
+      total: prosList.total,
+      batch: prosList.batch,
+    };
+  } else {
+    data = {
+      columns: [
+        { name: "Nombre", key: "name", width: 1.1 },
+        { name: "Rol", key: "role", width: 1.1 },
+        //{ name: "Cliente", key: "company", width: 1 },
+        { name: "Inicio", key: "startDate", width: 0.7 },
+        { name: "Término", key: "endDate", width: 0.7 },
+        { name: "Valor HH", key: "hourValue", width: 0.5 },
+        { name: "Estado", key: "status", width: 0.7 },
+      ],
+      total: prosList.total,
+      batch: prosList.batch,
+    };
+  }
 
   return (
     <div className="inner-page-container">
