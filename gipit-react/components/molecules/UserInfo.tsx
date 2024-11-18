@@ -7,6 +7,7 @@ import { useSession } from "next-auth/react";
 
 function UserInfo({ newNotifications = false }: { newNotifications: boolean }) {
   const { data: session } = useSession();
+  
 
   return (
     <div className="userinfo-container">

@@ -1,13 +1,17 @@
+
+
+
+"use client";
 import Modal from "@/components/molecules/Modal";
 import { FormInputsRow } from "@/app/lib/types";
-import { handleCreateCompany } from "@/app/actions/handleCreateCompany";
-import { fetchCDetails } from "@/app/actions/fakeApi";
+import { useParams } from "next/navigation"; // Importa useParams para obtener el companyId
+import { updateCompany } from "@/app/actions/updateCompany";
 
-async function Page({ params }: { params: { companyId: string } }) {
-  const { companyId } = params;
-  const routeToRedirect = `/company/${companyId}`;
+function Page() {
+  const { companyId } = useParams(); // Obtiene companyId desde la URL
 
-  const previousValues = await fetchCDetails(parseInt(companyId));
+  // Asegúrate de que companyId sea un string
+  const id = Array.isArray(companyId) ? companyId[0] : companyId;
 
   const fields: FormInputsRow = [
     { label: "Logo", type: "file", name: "logo" },
@@ -31,7 +35,8 @@ async function Page({ params }: { params: { companyId: string } }) {
     ],
   ];
 
-  return <Modal rows={fields} onSubmit={handleCreateCompany} />;
+  // Llama a updateCompany pasando formData y companyId
+  return <Modal rows={fields} onSubmit={(formData) => updateCompany(formData, id!)} />;
 }
 
 export default Page;
