@@ -28,6 +28,39 @@ export const fetchFirstCompany = async () => {
   }
 };
 
+interface Company {
+  id: number;
+  name: string;
+
+}
+
+export const fetchListCompanies = async (): Promise<{ id: number; name: string }[]> => {
+  try {
+    const response = await fetch("http://localhost:3001/api/company", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      cache: "no-store",
+    });
+
+    if (!response.ok) {
+      throw new Error("Error fetching companies");
+    }
+
+    const companiesList: Company[] = await response.json();
+
+    const formattedCompanies = companiesList.map((company: Company) => ({
+      id: company.id,
+      name: company.name,
+    }));
+
+    return formattedCompanies;
+  } catch (error) {
+    console.error("Error:", error);
+    return [];
+  }
+};
 
 
 export const fetchCompanyDetails = async (id: number) => {
