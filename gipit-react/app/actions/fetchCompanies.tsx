@@ -8,7 +8,7 @@ export const fetchFirstCompany = async () => {
 
  export const fetchAllCompanies = async () => {
   try {
-    const response = await fetch("http://localhost:3001/api/company", {
+    const response = await fetch(`${process.env.NEXTAUTH_URL}/api/company`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -33,7 +33,7 @@ export const fetchFirstCompany = async () => {
 export const fetchCompanyDetails = async (id: number) => {
   try {
     
-    const companyResponse = await fetch(`http://localhost:3001/api/company/${id}`, {
+    const companyResponse = await fetch(`${process.env.NEXTAUTH_URL}/api/company/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -48,7 +48,7 @@ export const fetchCompanyDetails = async (id: number) => {
     const companyData = await companyResponse.json();
 
     
-    const managementResponse = await fetch(`http://localhost:3001/api/management?company_id=${id}`, {
+    const managementResponse = await fetch(`${process.env.NEXTAUTH_URL}/api/management?company_id=${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
