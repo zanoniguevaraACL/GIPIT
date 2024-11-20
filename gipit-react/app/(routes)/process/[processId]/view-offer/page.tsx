@@ -1,7 +1,7 @@
 import Modal from "@/components/molecules/Modal";
 import { FormInputsRow } from "@/app/lib/types";
 import { handleDisqualify } from "@/app/actions/handleDisqualify";
-import { fetchProcessDetails } from "@/app/actions/fakeApi";
+import { fetchProcessDetails } from "@/app/actions/fetchProcess";
 
 async function Page({ params }: { params: { processId: string } }) {
   const { processId } = params;

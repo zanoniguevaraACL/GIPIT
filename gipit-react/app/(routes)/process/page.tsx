@@ -1,4 +1,4 @@
-import { fetchProcess } from "@/app/actions/fakeApi";
+import { fetchProcess } from "@/app/actions/fetchProcess";
 import DataGrid from "@/components/molecules/DataGrid";
 import SearchBar from "@/components/molecules/SearchBar";
 

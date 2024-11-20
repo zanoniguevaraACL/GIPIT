@@ -1,10 +1,10 @@
 import Modal from "@/components/molecules/Modal";
 import { FormInputsRow } from "@/app/lib/types";
-import { handleCreateCompany } from "@/app/actions/handleCreateCompany";
-import { fetchAllC } from "@/app/actions/fakeApi";
+import { handleCreateProcess } from "@/app/actions/handleCreateProcess";
+import { fetchListCompanies } from "@/app/actions/fetchCompanies";
 
 async function Page() {
-  const clientsList = await fetchAllC();
+  const clientsList = await fetchListCompanies();
   console.log(clientsList);
   const selectFieldOptions = clientsList.map((client) => ({
     name: client.name,
@@ -39,7 +39,7 @@ async function Page() {
   ];
 
   return (
-    <Modal rows={fields} onSubmit={handleCreateCompany} title="Nuevo Proceso" />
+    <Modal rows={fields} onSubmit={handleCreateProcess} title="Nuevo Proceso" />
   );
 }
 
