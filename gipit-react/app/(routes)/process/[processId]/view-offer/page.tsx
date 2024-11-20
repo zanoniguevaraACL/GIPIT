@@ -9,13 +9,16 @@ async function Page({ params }: { params: { processId: string } }) {
 
   const previousValues = await fetchProcessDetails(parseInt(processId));
 
+  // transforma a string vacio si es nulo
+  const jobOffer = previousValues?.jobOffer ?? "";
+
   const fields: FormInputsRow = [
     {
       label: "Vacante",
       placeholder: "Descripa el puesto de trabajo",
       type: "textarea",
       name: "jobOffer",
-      defaultValue: previousValues.jobOffer,
+      defaultValue: jobOffer,
       height: "40svh",
     },
     [
