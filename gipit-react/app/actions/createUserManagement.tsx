@@ -10,7 +10,7 @@ export const createUserManagement = async (formData: FormData, managementId: str
     }
 
     // Extrae los datos del formulario
-    const name = formData.get("name") as string;
+    //const name = formData.get("name") as string;
     const role = formData.get("role") as string;
     const email = formData.get("email") as string;
 
