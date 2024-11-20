@@ -1,17 +1,6 @@
 "use server";
 
-
-interface Process {
-  id: number;
-  job_offer: string;
-  status: string;
-  opened_at: string | null;
-  closed_at: string | null;
-  pre_filtered: boolean;
-  candidate_process: { candidates: { id: number } }[];
-  job_offer_description: string | null;
-}
-
+// Fetch list of processes with pagination
 export const fetchProcess = async (page: number) => {
   try {
     if (page < 1) {
@@ -33,7 +22,7 @@ export const fetchProcess = async (page: number) => {
 
     return {
       total: data.total,
-      batch: data.batch.map((process: Process) => ({
+      batch: data.batch.map((process) => ({
         id: process.id,
         name: process.job_offer, 
         stage: process.status,
@@ -53,6 +42,7 @@ export const fetchProcess = async (page: number) => {
   }
 };
 
+// Fetch details for a single process
 export const fetchProcessDetails = async (id: number): Promise<{
   id: number;
   name: string;
@@ -92,6 +82,7 @@ export const fetchProcessDetails = async (id: number): Promise<{
   }
 };
 
+// Fetch candidates associated with a process
 export const fetchProcessCandidates = async (processId: number): Promise<{
   id: number;
   name: string;

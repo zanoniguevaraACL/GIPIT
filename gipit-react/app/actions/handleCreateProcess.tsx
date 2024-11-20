@@ -20,9 +20,8 @@ export const handleCreateProcess = async (formData: FormData) => {
       job_offer: data.jobOffer, 
       job_offer_description: data.jobOfferDescription,
       company_id: companyId,  
-      // Ensure the openedAt and closedAt values are strings before creating the Date objects
-      opened_at: data.openedAt && typeof data.openedAt === 'string' ? new Date(data.openedAt) : null,
-      closed_at: data.closedAt && typeof data.closedAt === 'string' ? new Date(data.closedAt) : null,
+      opened_at: data.openedAt ? new Date(data.openedAt) : null,
+      closed_at: data.closedAt ? new Date(data.closedAt) : null,
       pre_filtered: data.preFiltered === 'true',
       status: data.status || 'pending',
     };
@@ -53,9 +52,6 @@ export const handleCreateProcess = async (formData: FormData) => {
 
   } catch (error) {
     console.error("Error creating process:", error);
-    return {
-      message: "An unknown error occurred",
-      route: "/company",
-    };
+    throw new Error(`Error creating process: ${error.message || "Unknown error"}`);
   }
 };
