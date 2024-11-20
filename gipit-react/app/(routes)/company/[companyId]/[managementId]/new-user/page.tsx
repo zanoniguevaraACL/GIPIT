@@ -1,30 +1,45 @@
 "use client";
 import Modal from "@/components/molecules/Modal";
 import { FormInputsRow } from "@/app/lib/types";
-import { handleCreateCompany } from "@/app/actions/handleCreateCompany";
+import { useParams } from "next/navigation";
+import { createUserManagement } from "@/app/actions/createUserManagement";
 
 function Page() {
+  const params = useParams();
+  const managementId = params.managementId as string; // Extrae el managementId de los parámetros de la URL
+
   const fields: FormInputsRow = [
-    { label: "Logo", type: "file", name: "logo" },
     {
       label: "Nombre",
-      placeholder: "Nombre de la empresa",
+      placeholder: "Nombre del usuario",
       type: "text",
       name: "name",
     },
     {
-      label: "Descripción",
-      name: "description",
-      placeholder: "Alguna nota relacionada al cliente",
-      type: "textarea",
+      label: "Email",
+      placeholder: "Correo electrónico del usuario",
+      type: "email",
+      name: "email",
+    },
+    {
+      label: "Rol",
+      placeholder: "Rol del usuario",
+      type: "text",
+      name: "role",
     },
     [
-      { type: "cancel", value: "Cancelar", href: "/company" },
+      { type: "cancel", value: "Cancelar", href: `/management/${managementId}` },
       { type: "submit", value: "Guardar" },
     ],
   ];
 
-  return <Modal rows={fields} onSubmit={handleCreateCompany} />;
+  // Llama a createUserManagement pasando formData y managementId
+  return (
+    <Modal
+      rows={fields}
+      onSubmit={(formData) => createUserManagement(formData, managementId)}
+    />
+  );
 }
 
 export default Page;
