@@ -3,55 +3,64 @@
 export const handleCreateProcess = async (formData: FormData) => {
   try {
     const formEntries = Array.from(formData.entries());
-    console.log("Form Data Entries:", formEntries);
+    console.log("Entradas del formulario:", formEntries);
 
     const data = Object.fromEntries(formData.entries());
-    console.log("Form Data submitted:", data);
+    console.log("Datos del formulario enviados:", data);
 
-    const companyId = parseInt(data.client as string, 10); 
+    const companyId = parseInt(data.client as string, 10);
 
-    console.log("Selected company ID:", companyId);
+    console.log("ID de empresa seleccionado:", companyId);
 
     if (isNaN(companyId)) {
-      throw new Error("Invalid company ID.");
+      throw new Error("ID de empresa inválido.");
     }
 
+    const isValidDateString = (value: FormDataEntryValue): value is string => {
+      return typeof value === "string" && !isNaN(Date.parse(value));
+    };
+
     const mappedData = {
-      job_offer: data.jobOffer, 
+      job_offer: data.jobOffer,
       job_offer_description: data.jobOfferDescription,
-      company_id: companyId,  
-      opened_at: data.openedAt ? new Date(data.openedAt) : null,
-      closed_at: data.closedAt ? new Date(data.closedAt) : null,
+      company_id: companyId,
+      opened_at: isValidDateString(data.openedAt) ? new Date(data.openedAt) : null,
+      closed_at: isValidDateString(data.closedAt) ? new Date(data.closedAt) : null,
       pre_filtered: data.preFiltered === 'true',
       status: data.status || 'pending',
     };
 
-    console.log("Transformed Form Data submitted:", mappedData);
+    console.log("Datos transformados del formulario:", mappedData);
 
     const response = await fetch("http://localhost:3001/api/process", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(mappedData),  
+      body: JSON.stringify(mappedData),
     });
 
     if (!response.ok) {
       const errorData = await response.json();
-      console.error("Error creating process:", errorData);
-      throw new Error(errorData.error || "Unknown error creating process");
+      console.error("Error al crear el proceso:", errorData);
+      throw new Error(errorData.error || "Error desconocido al crear el proceso");
     }
 
     const result = await response.json();
-    console.log("Process created successfully:", result);
+    console.log("Proceso creado exitosamente:", result);
 
     return {
-      message: "Proceso cargado exitosamente", 
-      route: "/process", 
+      message: "Proceso cargado exitosamente",
+      route: "/process",
     };
 
   } catch (error) {
-    console.error("Error creating process:", error);
-    throw new Error(`Error creating process: ${error.message || "Unknown error"}`);
+    if (error instanceof Error) {
+      console.error("Error al crear el proceso:", error);
+      throw new Error(`Error al crear el proceso: ${error.message || "Error desconocido"}`);
+    } else {
+      console.error("Error desconocido al crear el proceso:", error);
+      throw new Error("Error desconocido al crear el proceso");
+    }
   }
 };
