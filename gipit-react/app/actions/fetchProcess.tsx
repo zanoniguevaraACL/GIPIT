@@ -6,7 +6,7 @@ export const fetchProcess = async (page: number) => {
       throw new Error("Page number must be greater than 0.");
     }
 
-    const response = await fetch(`${process.env.NEXTAUTH_URL}/api/process?page=${page}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/process?page=${page}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -53,25 +53,18 @@ export const fetchProcessDetails = async (id: number): Promise<{
   jobOffer: string | null;
 } | null> => {
   try {
-    const response = await fetch(`${process.env.NEXTAUTH_URL}/api/process/${id}`);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/process/${id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      cache: 'no-store', 
+    });
 
     if (!response.ok) {
-      throw new Error('Error fetching process details');
+      throw new Error("Error process companies");
     }
 
-    const process = await response.json();
-    
-    if (!process) {
-      console.error('API response is empty or invalid');
-      return null;
-    }
-
-    console.log('Fetched process data:', process);
-
-    if (!process.jobOffer || !process.jobOfferDescription || !process.status || !process.candidate_process) {
-      console.error('Missing required fields in the process data:', process);
-      return null;
-    }
 
     const candidateProcess = Array.isArray(process.candidate_process) ? process.candidate_process : [];
     if (candidateProcess.length === 0) {
@@ -81,9 +74,8 @@ export const fetchProcessDetails = async (id: number): Promise<{
     const candidatesIds = candidateProcess.map((candidate: { id: number }) => candidate.id);
 
     return {
-      id: process.processId,
+      id: process.processId, 
       name: process.jobOffer, 
-
       startAt: process.openedAt ? new Date(process.openedAt).toLocaleDateString() : '',
       endAt: process.closedAt ? new Date(process.closedAt).toLocaleDateString() : null, 
       preFiltered: process.preFiltered ? 1 : 0,
@@ -99,12 +91,6 @@ export const fetchProcessDetails = async (id: number): Promise<{
 };
 
 
-
-
-
-
-
-
 export const fetchProcessCandidates = async (processId: number): Promise<{
   id: number;
   name: string;
@@ -114,7 +100,7 @@ export const fetchProcessCandidates = async (processId: number): Promise<{
   jsongptText: string;
 }[] | null> => {
   try {
-    const response = await fetch(`${process.env.NEXTAUTH_URL}/api/process/${processId}`);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/process/${processId}`);
 
     if (!response.ok) {
       throw new Error(`Error fetching process details: ${response.statusText}`);
