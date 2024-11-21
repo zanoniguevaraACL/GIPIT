@@ -19,7 +19,7 @@ export const updateCompany = async (formData: FormData, companyId: string) => {
     if (logo) payload.logo = logo;
 
     // Realiza la solicitud PUT a tu backend con JSON
-    const response = await fetch(`${process.env.NEXTAUTH_URL}/api/company/${companyId}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/company/${companyId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
