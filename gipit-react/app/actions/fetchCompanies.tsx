@@ -75,7 +75,7 @@ export const fetchCompanyDetails = async (id: number) => {
     });
 
     if (!companyResponse.ok) {
-      throw new Error("Error fetching company name");
+      throw new Error("Error obteniendo nombre de compañia");
     }
 
     const companyData = await companyResponse.json();
@@ -90,7 +90,7 @@ export const fetchCompanyDetails = async (id: number) => {
     });
 
     if (!managementResponse.ok) {
-      throw new Error("Error fetching managements");
+      throw new Error("Error obteniendo jefaturas");
     }
 
     const jefaturas = await managementResponse.json();

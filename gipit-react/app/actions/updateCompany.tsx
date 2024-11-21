@@ -1,5 +1,4 @@
 
-
 "use server";
 
 export const updateCompany = async (formData: FormData, companyId: string) => {
@@ -34,20 +33,20 @@ export const updateCompany = async (formData: FormData, companyId: string) => {
     }
 
     return {
-      message: "Company updated successfully",
+      message: "Compañia actualizada correctamente",
       route: "/company",
     };
   } catch (error) {
     if (error instanceof Error) {
       console.error("Error:", error.message);
       return {
-        message: `Error updating company: ${error.message}`,
+        message: `Error actualizando compañia: ${error.message}`,
         route: "/company",
       };
     } else {
       console.error("Unknown error:", error);
       return {
-        message: "An unknown error occurred",
+        message: "Ocurrio un error ",
         route: "/company",
       };
     }

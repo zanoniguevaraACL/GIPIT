@@ -8,7 +8,7 @@ export const createUserManagement = async (
     // Convierte managementId a un número entero
     const managementIdInt = parseInt(managementId, 10);
     if (isNaN(managementIdInt)) {
-      throw new Error("Invalid managementId. It must be a number.");
+      throw new Error("ManagementId inválido. Debe ser un número.");
     }
 
     // Extrae los datos del formulario
@@ -19,7 +19,7 @@ export const createUserManagement = async (
       throw new Error("Email is required.");
     }
 
-    // Verifica si el usuario existe en la base de datos
+    
     const userResponse = await fetch(
       `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/users/byEmail/${email}`,
       {
@@ -31,19 +31,19 @@ export const createUserManagement = async (
     );
 
     if (!userResponse.ok) {
-      throw new Error("User not found. Make sure the email is correct.");
+      throw new Error("Usuario no encontrado. Asegúrese que el correo es correcto.");
     }
 
     const user = await userResponse.json();
     const userId = user.id;
 
-    // Crea el objeto JSON con los datos del user-management
+    
     const payload = {
-      user_id: userId, // Relaciona con el user
-      management_id: managementIdInt, // Relaciona con el management
+      user_id: userId, 
+      management_id: managementIdInt, 
     };
 
-    // Realiza la solicitud POST a tu backend con JSON
+    
     const response = await fetch(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/user-management`, {
       method: "POST",
       headers: {
@@ -54,18 +54,18 @@ export const createUserManagement = async (
 
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(`Error creating user-management: ${errorText}`);
+      throw new Error(`Error creando user-management: ${errorText}`);
     }
 
     return {
-      message: "User-management created successfully",
+      message: "User-management creado exitosamente",
       route: `/management/${managementId}`,
     };
   } catch (error) {
     if (error instanceof Error) {
       console.error("Error:", error.message);
       return {
-        message: `Error creating user-management: ${error.message}`,
+        message: `Error creando user-management: ${error.message}`,
         route: `/management/${managementId}`,
       };
     } else {
