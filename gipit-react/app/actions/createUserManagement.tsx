@@ -1,7 +1,9 @@
-
 "use server";
 
-export const createUserManagement = async (formData: FormData, managementId: string) => {
+export const createUserManagement = async (
+  formData: FormData,
+  managementId: string
+) => {
   try {
     // Convierte managementId a un número entero
     const managementIdInt = parseInt(managementId, 10);
@@ -10,8 +12,6 @@ export const createUserManagement = async (formData: FormData, managementId: str
     }
 
     // Extrae los datos del formulario
-    //const name = formData.get("name") as string;
-    const role = formData.get("role") as string;
     const email = formData.get("email") as string;
 
     // Valida que el correo electrónico esté presente
@@ -20,12 +20,15 @@ export const createUserManagement = async (formData: FormData, managementId: str
     }
 
     // Verifica si el usuario existe en la base de datos
-    const userResponse = await fetch(`${process.env.NEXTAUTH_URL}/api/users/byEmail/${email}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const userResponse = await fetch(
+      `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/users/byEmail/${email}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     if (!userResponse.ok) {
       throw new Error("User not found. Make sure the email is correct.");
@@ -38,11 +41,10 @@ export const createUserManagement = async (formData: FormData, managementId: str
     const payload = {
       user_id: userId, // Relaciona con el user
       management_id: managementIdInt, // Relaciona con el management
-      role,
     };
 
     // Realiza la solicitud POST a tu backend con JSON
-    const response = await fetch(`${process.env.NEXTAUTH_URL}/api/user-management`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/user-management`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
