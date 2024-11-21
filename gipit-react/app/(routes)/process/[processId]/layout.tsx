@@ -52,15 +52,15 @@ export default function Layout({
         try {
           setLoading(true);
   
-          const procesoData = await fetchProcessDetails(Number(processId));  // Use dynamic processId
+          const procesoData = await fetchProcessDetails(Number(processId));  
           if (procesoData) {
             setProceso(procesoData);
   
-            if (procesoData.candidatesIds) {
-              const candidatesTabsData = await fetchProcessCandidates(procesoData.candidatesIds);
+            if (procesoData.id) {
+              const candidatesTabsData = await fetchProcessCandidates(procesoData.id); 
               setCandidatesTabs(candidatesTabsData ?? []); 
             } else {
-              setCandidatesTabs([]); // No candidates found
+              setCandidatesTabs([]); 
             }
           } else {
             setError("Proceso no encontrado");
@@ -75,6 +75,7 @@ export default function Layout({
       fetchData();
     }
   }, [processId]);
+  
   
 
   if (loading) {
