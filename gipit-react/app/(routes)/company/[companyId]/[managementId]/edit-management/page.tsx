@@ -3,32 +3,47 @@
 import Modal from "@/components/molecules/Modal";
 import { FormInputsRow } from "@/app/lib/types";
 import { updateManagement } from "@/app/actions/updateManagement";
-import { fetchCDetails } from "@/app/actions/fakeApi";
+import { useState, useEffect } from "react";
 
-async function Page({
+function Page({
   params,
 }: {
   params: { companyId: string; managementId: string };
 }) {
-  // Extrae y convierte los IDs a números enteros
-  const companyId = parseInt(params.companyId, 10);
-  const managementId = parseInt(params.managementId, 10);
+  const { companyId, managementId } = params;
 
-  // Verifica si los IDs son números válidos
-  if (isNaN(companyId) || isNaN(managementId)) {
-    throw new Error("Invalid managementId or companyId. They must be numbers.");
-  }
+  const [isLoading, setIsLoading] = useState(true);
+  const [managementData, setManagementData] = useState({
+    name: "",
+    description: "",
+  });
 
   const routeToRedirect = `/company/${companyId}`;
 
-  const previousValues = await fetchCDetails(companyId);
+  // Fetch data for the management being edited
+  useEffect(() => {
+    const fetchManagementData = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/management/${managementId}`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch management data");
+        }
+        const data = await response.json();
+        setManagementData({
+          name: data.name || "",
+          description: data.description || "",
+        });
+      } catch (error) {
+        console.error("Error fetching management data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  let managementIndex = 0;
-  previousValues.jefaturas.forEach((jef, index) => {
-    if (jef.id === managementId) {
-      managementIndex = index;
-    }
-  });
+    fetchManagementData();
+  }, [managementId]);
 
   const fields: FormInputsRow = [
     {
@@ -36,14 +51,14 @@ async function Page({
       placeholder: "Nombre de la jefatura",
       type: "text",
       name: "name",
-      defaultValue: previousValues.jefaturas[managementIndex].name,
+      defaultValue: managementData.name,
     },
     {
       label: "Descripción",
       name: "description",
       placeholder: "Alguna nota relacionada a la jefatura",
       type: "textarea",
-      defaultValue: previousValues.jefaturas[managementIndex].description,
+      defaultValue: managementData.description,
     },
     [
       { type: "cancel", value: "Cancelar", href: routeToRedirect },
@@ -51,11 +66,20 @@ async function Page({
     ],
   ];
 
-  // Ajusta la llamada a onSubmit para pasar todos los argumentos necesarios
+  if (isLoading) {
+    return <p>Cargando la información de la jefatura...</p>;
+  }
+
   return (
     <Modal
       rows={fields}
-      onSubmit={(formData) => updateManagement(formData, managementId.toString(), companyId.toString())}
+      onSubmit={(formData) =>
+        updateManagement(
+          formData,
+          managementId.toString(),
+          companyId.toString()
+        )
+      }
     />
   );
 }

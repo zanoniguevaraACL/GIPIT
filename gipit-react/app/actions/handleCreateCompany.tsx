@@ -27,20 +27,20 @@ export const handleCreateCompany = async (formData: FormData) => {
     if (!response.ok) {
       // Muestra el texto de la respuesta si hay un error
       const errorText = await response.text();
-      throw new Error(`Error creating company: ${errorText}`);
+      throw new Error(`Error creando compañia: ${errorText}`);
     }
     
 
     return {
       
-      message: "Company created successfully",
+      message: "Compañia creada exitosamente",
       route: "/company",
     };
   } catch (error) {
     if (error instanceof Error) {
       console.error("Error:", error.message);
       return {
-        message: `Error creating company: ${error.message}`,
+        message: `Error creando compañia: ${error.message}`,
         route: "/company",
       };
     } else {
