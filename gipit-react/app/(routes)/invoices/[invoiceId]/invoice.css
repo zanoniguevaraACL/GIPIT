@@ -1,0 +1,17 @@
+.total-container {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  margin-top: 32px;
+}
+
+.button-note-container {
+  display: flex;
+  justify-content: end;
+  margin-top: 12px;
+}
+
+.client-note-container {
+  max-width: 600px;
+  margin: 0 0 0 auto;
+}

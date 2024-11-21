@@ -11,17 +11,19 @@ interface DataGridRowProps<T extends { id: string | number }> {
   data: T;
   columns: Column<T>[];
   baseUrl: string;
+  hasNoClick?: boolean;
 }
 
 const DataGridRow = <T extends { id: string | number }>({
   data,
   columns,
   baseUrl,
+  hasNoClick,
 }: DataGridRowProps<T>) => {
   const spacing = columns.map((c) => `${c.width}fr`).join(" ");
   return (
     <Link
-      href={`${baseUrl}/${data.id}`}
+      href={hasNoClick ? "" : `${baseUrl}/${data.id}`}
       className="data-grid-row"
       style={{ gridTemplateColumns: spacing }}
     >

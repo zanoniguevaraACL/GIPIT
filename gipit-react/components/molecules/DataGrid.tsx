@@ -18,11 +18,15 @@ interface ResponseData<T> {
 interface Props<T> {
   data: ResponseData<T>;
   baseUrl: string;
+  hasNoClick?: boolean;
+  hasNoPagination?: boolean;
 }
 
 const DataGrid = <T extends { id: string | number }>({
   data,
   baseUrl,
+  hasNoClick = false,
+  hasNoPagination = false,
 }: Props<T>) => {
   // Calcula el ancho de las columnas basado en `width`
   const spacing = data.columns.map((c) => `${c.width}fr`).join(" ");
@@ -45,11 +49,12 @@ const DataGrid = <T extends { id: string | number }>({
             data={register}
             columns={data.columns}
             baseUrl={baseUrl}
+            hasNoClick={hasNoClick}
           />
         ))}
       </div>
       {/* Componente de Paginación */}
-      <Pagination totalRecords={data.total} />
+      {!hasNoPagination && <Pagination totalRecords={data.total} />}
     </div>
   );
 };

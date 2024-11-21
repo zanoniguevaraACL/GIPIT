@@ -899,3 +899,109 @@ export const fetchEval = async (id: number) => {
 
   return response;
 };
+
+export const fetchAllInvoices = async (id: number) => {
+  // Simula un retraso de 2 segundos
+  await new Promise((resolve) => setTimeout(resolve, 2000));
+
+  console.log(id);
+
+  const response = [
+    {
+      id: 1,
+      cantidad: 5,
+      total: 5600.0,
+      date: "2024-12-16",
+      expiration: "2025-01-05",
+      status: "pendiente",
+    },
+    {
+      id: 2,
+      cantidad: 5,
+      total: 5600.0,
+      date: "2024-12-16",
+      expiration: "2025-01-05",
+      status: "pendiente",
+    },
+    {
+      id: 3,
+      cantidad: 5,
+      total: 5600.0,
+      date: "2024-12-16",
+      expiration: "2025-01-05",
+      status: "pagado",
+    },
+    {
+      id: 4,
+      cantidad: 5,
+      total: 5600.0,
+      date: "2024-12-16",
+      expiration: "2025-01-05",
+      status: "pendiente",
+    },
+  ];
+
+  return response;
+};
+
+export const fetchInvoiceDetails = async (id: number) => {
+  // Simula un retraso de 2 segundos
+  await new Promise((resolve) => setTimeout(resolve, 2000));
+
+  console.log(id);
+
+  const response = {
+    total: 9360.0,
+    date: "2024-12-16",
+    expiration: "2025-02-05",
+    status: "pending",
+    details: [
+      {
+        id: 1,
+        name: "Luis Martínez",
+        service: "Desarrollador Backend",
+        rate: 35,
+        hours: 100,
+        subtotal: 3500,
+        vat: 700,
+        total: 4200,
+        description: "Servicio de desarrollo backend para proyecto web",
+      },
+      {
+        id: 2,
+        name: "Ana González",
+        service: "Diseñadora UX/UI",
+        rate: 45,
+        hours: 80,
+        subtotal: 3600,
+        vat: 720,
+        total: 4320,
+        description: "Diseño y prototipado de interfaz para app móvil",
+      },
+      {
+        id: 3,
+        name: "Carlos Rojas",
+        service: "Consultor SEO",
+        rate: 50,
+        hours: 60,
+        subtotal: 3000,
+        vat: 600,
+        total: 3600,
+        description: "Optimización SEO y análisis de palabras clave",
+      },
+      {
+        id: 4,
+        name: "Sofía Ramírez",
+        service: "Analista de Datos",
+        rate: 40,
+        hours: 120,
+        subtotal: 4800,
+        vat: 960,
+        total: 5760,
+        description: "Análisis de datos para mejorar estrategias de negocio",
+      },
+    ],
+  };
+
+  return response;
+};
