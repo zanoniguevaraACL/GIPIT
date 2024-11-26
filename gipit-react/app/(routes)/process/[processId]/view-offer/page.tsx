@@ -1,53 +1,53 @@
 "use client";
 import Modal from "@/components/molecules/Modal";
 import { FormInputsRow } from "@/app/lib/types";
-import { useParams } from "next/navigation"; // Import useParams to get processId from URL
-import { updateProcess } from "@/app/actions/updateProcess"; // Import the updateProcess function
-import { fetchProcessDetails } from "@/app/actions/fetchProcess"; // Fetch process details
+import { useParams } from "next/navigation"; // Importar useParams para obtener el processId de la URL
+import { updateProcess } from "@/app/actions/updateProcess"; // Importar la función updateProcess
+import { fetchProcessDetails } from "@/app/actions/fetchProcess"; // Obtener los detalles del proceso
 
 async function Page() {
-  const { processId } = useParams(); // Get processId from URL
+  const { processId } = useParams(); // Obtener processId de la URL
 
   if (!processId) {
-    return <div>Error: No process ID provided in URL</div>;
+    return <div>Error: No se proporcionó el ID del proceso en la URL</div>; // Mensaje de error si no se pasa el processId
   }
 
   const routeToRedirect = `/process/${processId}`;
 
-  // Fetch process details
+  // Obtener detalles del proceso
   const previousValues = await fetchProcessDetails(parseInt(processId));
 
-  // Handle errors in fetching process details
+  // Manejar errores al obtener los detalles del proceso
   if (!previousValues || !previousValues.jobOffer) {
-    console.error("Error: No job offer found for process ID:", processId);
+    console.error("Error: No se encontró la oferta de trabajo para el ID del proceso:", processId);
     return (
       <div>
-        <h2>Error: Could not fetch job offer details</h2>
-        <a href={routeToRedirect}>Go back</a>
+        <h2>Error: No se pudieron obtener los detalles de la oferta de trabajo</h2>
+        <a href={routeToRedirect}>Volver</a> {/* Enlace para regresar al proceso */}
       </div>
     );
   }
 
   const fields: FormInputsRow = [
     {
-      label: "Vacante", // Job offer field
+      label: "Vacante", // Campo de la oferta de trabajo
       placeholder: "Describa el puesto de trabajo",
       type: "textarea",
-      name: "jobOffer",
-      defaultValue: previousValues.jobOffer, // Pre-fill with the fetched job offer
+      name: "jobOffer", // Nombre del campo para la oferta de trabajo
+      defaultValue: previousValues.jobOffer, // Prellenar con la oferta de trabajo obtenida
       height: "40svh",
     },
     [
-      { type: "cancel", value: "Cerrar", href: routeToRedirect }, // Cancel redirects to the process page
-      { type: "submit", value: "Guardar" }, // Save button to submit the form
+      { type: "cancel", value: "Cerrar", href: routeToRedirect }, // El botón de cancelar redirige al proceso
+      { type: "submit", value: "Guardar" }, // Botón para guardar el formulario
     ],
   ];
 
-  // Call updateProcess to update the job offer
+  // Llamar a updateProcess para actualizar la oferta de trabajo
   return (
     <Modal
       rows={fields}
-      onSubmit={(formData) => updateProcess(formData, processId)} // Submit the updated job offer
+      onSubmit={(formData) => updateProcess(formData, processId)} // Enviar la oferta de trabajo actualizada
       title="Detalles de la Vacante"
     />
   );
