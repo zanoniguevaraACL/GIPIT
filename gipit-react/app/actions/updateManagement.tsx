@@ -31,18 +31,18 @@ export const updateManagement = async (formData: FormData, managementId: string,
     if (!response.ok) {
       // Muestra el texto de la respuesta si hay un error
       const errorText = await response.text();
-      throw new Error(`Error updating management: ${errorText}`);
+      throw new Error(`Error actualizando jefatura: ${errorText}`);
     }
 
     return {
-      message: "Management updated successfully",
+      message: "Jefatura actualizada exitosamente",
       route: `/company/${companyId}`,
     };
   } catch (error) {
     if (error instanceof Error) {
       console.error("Error:", error.message);
       return {
-        message: `Error updating management: ${error.message}`,
+        message: `Error actualizando jefatura: ${error.message}`,
         route: `/company/${companyId}`,
       };
     } else {

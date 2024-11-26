@@ -32,24 +32,24 @@ export const handleCreateManagement = async (formData: FormData, companyId: stri
     if (!response.ok) {
       // Muestra el texto de la respuesta si hay un error
       const errorText = await response.text();
-      throw new Error(`Error creating management: ${errorText}`);
+      throw new Error(`Error creando jefatura: ${errorText}`);
     }
 
     return {
-      message: "Management created successfully",
+      message: "Jefatura creada exitosamente",
       route: `/company/${companyId}`,
     };
   } catch (error) {
     if (error instanceof Error) {
       console.error("Error:", error.message);
       return {
-        message: `Error creating management: ${error.message}`,
+        message: `Error creando jefatura: ${error.message}`,
         route: `/company/${companyId}`,
       };
     } else {
       console.error("Unknown error:", error);
       return {
-        message: "An unknown error occurred",
+        message: "Un error ha ocurrido",
         route: `/company/${companyId}`,
       };
     }
