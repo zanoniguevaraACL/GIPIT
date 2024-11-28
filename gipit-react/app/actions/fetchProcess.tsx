@@ -65,7 +65,6 @@ export const fetchProcess = async (page: number) => {
       })),
     };
   } catch (error) {
-    console.error('Error fetching process data:', error);
     return {
       total: 0,
       batch: [],
@@ -95,7 +94,6 @@ export const fetchProcessDetails = async (id: number): Promise<Proceso | null> =
     const candidateProcess = Array.isArray(proceso.candidate_process) ? proceso.candidate_process : [];
 
     if (candidateProcess.length === 0) {
-      console.warn('No se encontraron candidatos en los datos del proceso');
     }
 
     const candidatesIds = candidateProcess.map((candidate: { id: number }) => candidate.id);
@@ -114,7 +112,6 @@ export const fetchProcessDetails = async (id: number): Promise<Proceso | null> =
       isInternal: proceso.isInternal ?? false,
     };
   } catch (error) {
-    console.error('Error al obtener los detalles del proceso:', error);
     return null;
   }
 };
@@ -137,7 +134,6 @@ export const fetchProcessCandidates = async (processId: number): Promise<{
     const proceso = await response.json();  // Now using 'proceso' for the process object
 
     if (!proceso.candidate_process || proceso.candidate_process.length === 0) {
-      console.warn('No se encontraron candidatos para este proceso');
       return [];
     }
 
@@ -150,7 +146,6 @@ export const fetchProcessCandidates = async (processId: number): Promise<{
       jsongptText: cp.candidates.jsongpt_text || 'No hay comentarios adicionales',
     }));
   } catch (error) {
-    console.error('Error al obtener los detalles del proceso:', error);
     return null;
   }
 };

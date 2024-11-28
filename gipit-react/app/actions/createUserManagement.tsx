@@ -63,13 +63,11 @@ export const createUserManagement = async (
     };
   } catch (error) {
     if (error instanceof Error) {
-      console.error("Error:", error.message);
       return {
         message: `Error creando user-management: ${error.message}`,
         route: `/management/${managementId}`,
       };
     } else {
-      console.error("Unknown error:", error);
       return {
         message: "An unknown error occurred",
         route: `/management/${managementId}`,

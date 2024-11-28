@@ -23,7 +23,6 @@ export const fetchFirstCompany = async () => {
     const companiesList = await response.json();
     return companiesList;
   } catch (error) {
-    console.error("Error:", error);
     return [];
   }
 };
@@ -36,7 +35,7 @@ interface Company {
 
 export const fetchListCompanies = async (): Promise<{ id: number; name: string }[]> => {
   try {
-    const response = await fetch("http://localhost:3001/api/company", {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/company`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -57,7 +56,6 @@ export const fetchListCompanies = async (): Promise<{ id: number; name: string }
 
     return formattedCompanies;
   } catch (error) {
-    console.error("Error:", error);
     return [];
   }
 };
@@ -105,7 +103,6 @@ export const fetchCompanyDetails = async (id: number) => {
 
     return companyDetails;
   } catch (error) {
-    console.error("Error:", error);
     return {
       id: id,
       name: "Nombre no disponible",

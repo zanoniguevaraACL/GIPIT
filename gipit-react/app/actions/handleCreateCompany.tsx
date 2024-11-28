@@ -38,13 +38,11 @@ export const handleCreateCompany = async (formData: FormData) => {
     };
   } catch (error) {
     if (error instanceof Error) {
-      console.error("Error:", error.message);
       return {
         message: `Error creando compañia: ${error.message}`,
         route: "/company",
       };
     } else {
-      console.error("Unknown error:", error);
       return {
         message: "An unknown error occurred",
         route: "/company",
