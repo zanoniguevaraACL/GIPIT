@@ -32,7 +32,7 @@ export const handleCreateProcess = async (formData: FormData) => {
 
     console.log("Datos transformados del formulario:", mappedData);
 
-    const response = await fetch("http://localhost:3001/api/process", {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/process`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
