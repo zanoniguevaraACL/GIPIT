@@ -36,7 +36,7 @@ interface Company {
 
 export const fetchListCompanies = async (): Promise<{ id: number; name: string }[]> => {
   try {
-    const response = await fetch("http://localhost:3001/api/company", {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/company`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
