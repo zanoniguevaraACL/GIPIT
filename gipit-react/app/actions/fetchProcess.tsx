@@ -15,7 +15,7 @@ type ProcessData = {
   opened_at: string;
   closed_at: string | null;
   pre_filtered: boolean;
-  candidate_process: Candidate[];  // Use Candidate[] instead of any[]
+  candidate_process: Candidate[]; 
   status: string;
 };
 
@@ -36,7 +36,7 @@ type Proceso = {
 export const fetchProcess = async (page: number) => {
   try {
     if (page < 1) {
-      throw new Error("Page number must be greater than 0.");
+      throw new Error("El número de página debe ser mayor que 0.");
     }
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/process?page=${page}`, {
@@ -47,7 +47,7 @@ export const fetchProcess = async (page: number) => {
     });
 
     if (!response.ok) {
-      throw new Error('Error fetching processes');
+      throw new Error('Error al obtener los procesos');
     }
 
     const data = await response.json();
@@ -65,15 +65,13 @@ export const fetchProcess = async (page: number) => {
       })),
     };
   } catch (error) {
-    return {
-      total: 0,
-      batch: [],
-    };
+    if (error instanceof Error) {
+      throw new Error(`Error al obtener los procesos: ${error.message || "Error desconocido"}`);
+    } else {
+      throw new Error("Error desconocido al obtener los procesos");
+    }
   }
 };
-
-
-
 
 export const fetchProcessDetails = async (id: number): Promise<Proceso | null> => {
   try {
@@ -93,9 +91,6 @@ export const fetchProcessDetails = async (id: number): Promise<Proceso | null> =
 
     const candidateProcess = Array.isArray(proceso.candidate_process) ? proceso.candidate_process : [];
 
-    if (candidateProcess.length === 0) {
-    }
-
     const candidatesIds = candidateProcess.map((candidate: { id: number }) => candidate.id);
 
     return {
@@ -112,7 +107,11 @@ export const fetchProcessDetails = async (id: number): Promise<Proceso | null> =
       isInternal: proceso.isInternal ?? false,
     };
   } catch (error) {
-    return null;
+    if (error instanceof Error) {
+      throw new Error(`Error al obtener los detalles del proceso: ${error.message || "Error desconocido"}`);
+    } else {
+      throw new Error("Error desconocido al obtener los detalles del proceso");
+    }
   }
 };
 
@@ -131,7 +130,7 @@ export const fetchProcessCandidates = async (processId: number): Promise<{
       throw new Error(`Error al obtener los detalles del proceso: ${response.statusText}`);
     }
 
-    const proceso = await response.json();  // Now using 'proceso' for the process object
+    const proceso = await response.json();
 
     if (!proceso.candidate_process || proceso.candidate_process.length === 0) {
       return [];
@@ -146,7 +145,10 @@ export const fetchProcessCandidates = async (processId: number): Promise<{
       jsongptText: cp.candidates.jsongpt_text || 'No hay comentarios adicionales',
     }));
   } catch (error) {
-    return null;
+    if (error instanceof Error) {
+      throw new Error(`Error al obtener los candidatos del proceso: ${error.message || "Error desconocido"}`);
+    } else {
+      throw new Error("Error desconocido al obtener los candidatos del proceso");
+    }
   }
 };
-

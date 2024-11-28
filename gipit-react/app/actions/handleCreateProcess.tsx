@@ -2,12 +2,9 @@
 
 export const handleCreateProcess = async (formData: FormData) => {
   try {
-    const formEntries = Array.from(formData.entries());
-
     const data = Object.fromEntries(formData.entries());
 
     const companyId = parseInt(data.client as string, 10);
-
 
     if (isNaN(companyId)) {
       throw new Error("ID de empresa inválido.");
@@ -27,7 +24,6 @@ export const handleCreateProcess = async (formData: FormData) => {
       status: data.status || 'pending',
     };
 
-
     const response = await fetch(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/process`, {
       method: "POST",
       headers: {
@@ -41,7 +37,7 @@ export const handleCreateProcess = async (formData: FormData) => {
       throw new Error(errorData.error || "Error desconocido al crear el proceso");
     }
 
-    const result = await response.json();
+    await response.json();
 
     return {
       message: "Proceso cargado exitosamente",
