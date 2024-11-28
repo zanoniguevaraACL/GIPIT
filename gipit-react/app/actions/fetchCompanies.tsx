@@ -23,7 +23,6 @@ export const fetchFirstCompany = async () => {
     const companiesList = await response.json();
     return companiesList;
   } catch (error) {
-    console.error("Error:", error);
     return [];
   }
 };
@@ -57,7 +56,6 @@ export const fetchListCompanies = async (): Promise<{ id: number; name: string }
 
     return formattedCompanies;
   } catch (error) {
-    console.error("Error:", error);
     return [];
   }
 };
@@ -105,7 +103,6 @@ export const fetchCompanyDetails = async (id: number) => {
 
     return companyDetails;
   } catch (error) {
-    console.error("Error:", error);
     return {
       id: id,
       name: "Nombre no disponible",

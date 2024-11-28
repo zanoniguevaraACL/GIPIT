@@ -38,13 +38,11 @@ export const updateCompany = async (formData: FormData, companyId: string) => {
     };
   } catch (error) {
     if (error instanceof Error) {
-      console.error("Error:", error.message);
       return {
         message: `Error actualizando compañia: ${error.message}`,
         route: "/company",
       };
     } else {
-      console.error("Unknown error:", error);
       return {
         message: "Ocurrio un error ",
         route: "/company",

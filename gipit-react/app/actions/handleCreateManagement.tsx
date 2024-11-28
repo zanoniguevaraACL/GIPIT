@@ -2,25 +2,21 @@
 
 export const handleCreateManagement = async (formData: FormData, companyId: string) => {
   try {
-    // Extrae los datos del formulario
     const name = formData.get("name") as string;
     const description = formData.get("description") as string;
 
-    // Convierte companyId a un número entero
     const companyIdInt = parseInt(companyId, 10);
 
     if (isNaN(companyIdInt)) {
       throw new Error("Invalid companyId. It must be a number.");
     }
 
-    // Crea el objeto JSON con los datos de la jefatura
     const payload = {
       name,
       description,
-      company_id: companyIdInt, // Ahora es un número, no una cadena
+      company_id: companyIdInt,
     };
 
-    // Realiza la solicitud POST a tu backend con JSON
     const response = await fetch(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/management`, {
       method: "POST",
       headers: {
@@ -41,13 +37,11 @@ export const handleCreateManagement = async (formData: FormData, companyId: stri
     };
   } catch (error) {
     if (error instanceof Error) {
-      console.error("Error:", error.message);
       return {
         message: `Error creando jefatura: ${error.message}`,
         route: `/company/${companyId}`,
       };
     } else {
-      console.error("Unknown error:", error);
       return {
         message: "Un error ha ocurrido",
         route: `/company/${companyId}`,

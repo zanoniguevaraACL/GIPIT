@@ -3,14 +3,11 @@
 export const handleCreateProcess = async (formData: FormData) => {
   try {
     const formEntries = Array.from(formData.entries());
-    console.log("Entradas del formulario:", formEntries);
 
     const data = Object.fromEntries(formData.entries());
-    console.log("Datos del formulario enviados:", data);
 
     const companyId = parseInt(data.client as string, 10);
 
-    console.log("ID de empresa seleccionado:", companyId);
 
     if (isNaN(companyId)) {
       throw new Error("ID de empresa inválido.");
@@ -30,7 +27,6 @@ export const handleCreateProcess = async (formData: FormData) => {
       status: data.status || 'pending',
     };
 
-    console.log("Datos transformados del formulario:", mappedData);
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/process`, {
       method: "POST",
@@ -42,12 +38,10 @@ export const handleCreateProcess = async (formData: FormData) => {
 
     if (!response.ok) {
       const errorData = await response.json();
-      console.error("Error al crear el proceso:", errorData);
       throw new Error(errorData.error || "Error desconocido al crear el proceso");
     }
 
     const result = await response.json();
-    console.log("Proceso creado exitosamente:", result);
 
     return {
       message: "Proceso cargado exitosamente",
@@ -56,10 +50,8 @@ export const handleCreateProcess = async (formData: FormData) => {
 
   } catch (error) {
     if (error instanceof Error) {
-      console.error("Error al crear el proceso:", error);
       throw new Error(`Error al crear el proceso: ${error.message || "Error desconocido"}`);
     } else {
-      console.error("Error desconocido al crear el proceso:", error);
       throw new Error("Error desconocido al crear el proceso");
     }
   }
