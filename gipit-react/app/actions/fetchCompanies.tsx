@@ -1,12 +1,12 @@
 "use server";
-import { fetchFirstC} from "./fakeApi";
+import { fetchFirstC } from "./fakeApi";
 
 export const fetchFirstCompany = async () => {
   const res = await fetchFirstC();
   return res;
 };
 
- export const fetchAllCompanies = async () => {
+export const fetchAllCompanies = async () => {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/company`, {
       method: "GET",
@@ -17,20 +17,23 @@ export const fetchFirstCompany = async () => {
     });
 
     if (!response.ok) {
-      throw new Error("Error fetching companies");
+      throw new Error("Error al obtener las compañías");
     }
 
     const companiesList = await response.json();
     return companiesList;
   } catch (error) {
-    return [];
+    if (error instanceof Error) {
+      throw new Error(`Error al obtener las compañías: ${error.message || "Error desconocido"}`);
+    } else {
+      throw new Error("Error desconocido al obtener las compañías");
+    }
   }
 };
 
 interface Company {
   id: number;
   name: string;
-
 }
 
 export const fetchListCompanies = async (): Promise<{ id: number; name: string }[]> => {
@@ -44,7 +47,7 @@ export const fetchListCompanies = async (): Promise<{ id: number; name: string }
     });
 
     if (!response.ok) {
-      throw new Error("Error fetching companies");
+      throw new Error("Error al obtener las compañías");
     }
 
     const companiesList: Company[] = await response.json();
@@ -56,14 +59,16 @@ export const fetchListCompanies = async (): Promise<{ id: number; name: string }
 
     return formattedCompanies;
   } catch (error) {
-    return [];
+    if (error instanceof Error) {
+      throw new Error(`Error al obtener la lista de compañías: ${error.message || "Error desconocido"}`);
+    } else {
+      throw new Error("Error desconocido al obtener la lista de compañías");
+    }
   }
 };
 
-
 export const fetchCompanyDetails = async (id: number) => {
   try {
-    
     const companyResponse = await fetch(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/company/${id}`, {
       method: "GET",
       headers: {
@@ -73,12 +78,11 @@ export const fetchCompanyDetails = async (id: number) => {
     });
 
     if (!companyResponse.ok) {
-      throw new Error("Error obteniendo nombre de compañia");
+      throw new Error("Error al obtener los detalles de la compañía");
     }
 
     const companyData = await companyResponse.json();
 
-    
     const managementResponse = await fetch(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/management?company_id=${id}`, {
       method: "GET",
       headers: {
@@ -88,12 +92,11 @@ export const fetchCompanyDetails = async (id: number) => {
     });
 
     if (!managementResponse.ok) {
-      throw new Error("Error obteniendo jefaturas");
+      throw new Error("Error al obtener las jefaturas");
     }
 
     const jefaturas = await managementResponse.json();
 
-   
     const companyDetails = {
       id: id,
       name: companyData.name, 
@@ -102,12 +105,16 @@ export const fetchCompanyDetails = async (id: number) => {
     };
 
     return companyDetails;
-  } catch (error) {
-    return {
-      id: id,
-      name: "Nombre no disponible",
-      jefaturas: [],
-      logo:'/logopordefault.png'
-    };
+  }  catch (error) {
+    if (error instanceof Error) {
+      throw new Error(`Error al obtener los detalles de la compañía: ${error.message || "Error desconocido"}`);
+    } else {
+      return {
+        id: id,
+        name: "Nombre no disponible",
+        jefaturas: [],
+        logo: '/logopordefault.png'
+      };
+    }
   }
 };
