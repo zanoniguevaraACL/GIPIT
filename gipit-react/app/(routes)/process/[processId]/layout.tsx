@@ -12,7 +12,6 @@ import ProcessInternalHeading from "@/components/molecules/ProcessInternalHeadin
 import { fetchAllCandidateProcesses } from "@/app/actions/fetchProcessDataDB";
 // import { fetchProcessDetails } from "@/app/actions/fetchProcessDetails";
 import { NextRequest } from "next/server";
-import { fetchProcessDetails } from "@/app/actions/fakeApi";
 
 // Define the types for Proceso and Candidate
 type Proceso = {
