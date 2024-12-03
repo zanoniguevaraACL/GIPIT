@@ -10,9 +10,9 @@ export default function Page() {
 
   const actualRoute = usePathname();
 
-  console.log('SHOW CANDIDATES en page.tsx', showCandidates);
+  // console.log('SHOW CANDIDATES en page.tsx', showCandidates);
 
-  console.log("Lista de candidatos que llega a la process/page.TSX ---->>", candidatesTabs);
+  // console.log("Lista de candidatos que llega a la process/page.TSX ---->>", candidatesTabs);
 
   if (candidatesTabs.length > 0) {
     redirect(`${actualRoute}/${candidatesTabs[0].id}`); // Redirige al primer candidato disponible

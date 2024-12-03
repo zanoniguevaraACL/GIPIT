@@ -42,9 +42,6 @@ export default function Layout({
   params,
 }: Readonly<{ children: React.ReactNode; params: { processId: string } }>) {
   const { processId } = params;
-
-  console.log("ID del proceso -->", processId);
-  // Use proper types for state
   const [proceso, setProceso] = useState<Proceso | null>(null); 
   const [candidatesTabs, setCandidatesTabs] = useState<Candidate[]>([]); 
   const [loading, setLoading] = useState(true); 
@@ -56,9 +53,6 @@ export default function Layout({
         try {
           setLoading(true);
           const procesoData = await fetchProcessDetails(Number(processId));
-          console.log('Proceso seleccionado : -->', procesoData);
-          console.log('Proceso seleccionado candidatos!! : -->', procesoData.candidates);
-          
 
           if (procesoData) {
             setProceso(procesoData);

@@ -32,10 +32,9 @@ export default async function Page(props: {
   }>;
 }) {
   const searchParams = await props.searchParams;
-  //const query = searchParams?.query || "";
   const page = searchParams?.page ? parseInt(searchParams?.page) : 1;
   const process = await fetchProcess(page);
-  console.log('Proceso ACTUAL seleccionado ->', process)
+  // console.log('Proceso ACTUAL seleccionado ->', process)
 
   const data: ResponseData<Process> = {
     columns: [

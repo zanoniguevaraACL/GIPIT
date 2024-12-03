@@ -6,7 +6,8 @@ function CandidatesList() {
   // Accede al valor de las variables almacenadas en contexto
   const { showCandidates, candidatesTabs } = useAppContext();
 
-  console.log('Candidatos a listar ->',candidatesTabs);
+  //CANDIDATOS A LISTAR
+  // console.log('Candidatos a listar ->',candidatesTabs);
   if (candidatesTabs && showCandidates) {//
     return (
       <div className="title-n-list-container">
