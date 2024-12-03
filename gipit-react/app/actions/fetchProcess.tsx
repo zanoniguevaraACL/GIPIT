@@ -39,7 +39,7 @@ export const fetchProcess = async (page: number) => {
       throw new Error("El número de página debe ser mayor que 0.");
     }
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/process?page=${page}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/process?page=${page}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -75,7 +75,7 @@ export const fetchProcess = async (page: number) => {
 
 export const fetchProcessDetails = async (id: number): Promise<Proceso | null> => {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/process/${id}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/process/${id}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -124,7 +124,7 @@ export const fetchProcessCandidates = async (processId: number): Promise<{
   jsongptText: string;
 }[] | null> => {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/process/${processId}`);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/process/${processId}`);
 
     if (!response.ok) {
       throw new Error(`Error al obtener los detalles del proceso: ${response.statusText}`);

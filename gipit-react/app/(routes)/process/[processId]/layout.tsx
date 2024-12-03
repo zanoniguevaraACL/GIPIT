@@ -1,7 +1,7 @@
 "use client";
 
 import ProcessHeading from "@/components/molecules/ProcessHeading";
-import { fetchProcessCandidates, fetchProcessDetails } from "@/app/actions/fetchProcess";
+// import { fetchProcessCandidates, fetchProcessDetails } from "@/app/actions/fetchProcess";
 import stage1 from "@/src/stage1.webp";
 import stage2 from "@/src/stage2.webp";
 import stage3 from "@/src/stage3.webp";
@@ -10,7 +10,7 @@ import React, { useEffect, useState } from "react";
 import ClientProvider from "@/contexts/ClientProvider";
 import ProcessInternalHeading from "@/components/molecules/ProcessInternalHeading";
 import { fetchAllCandidateProcesses } from "@/app/actions/fetchProcessDataDB";
-// import { fetchProcessDetails } from "@/app/actions/fetchProcessDetails";
+import { fetchProcessDetails } from "@/app/actions/fetchProcessDetails";
 import { NextRequest } from "next/server";
 
 // Define the types for Proceso and Candidate
@@ -20,9 +20,8 @@ type Proceso = {
   startAt: string;
   endAt: string | null;
   preFiltered: number;
-  candidates: number;
+  candidates: any[];
   status: string;
-  candidatesIds: number[];
   jobOffer: string | null;
   stage: string;
   isInternal: boolean;
@@ -35,6 +34,7 @@ type Candidate = {
   phone: string;
   address: string;
   jsongptText: string;
+  match?: number; 
 };
 
 export default function Layout({
@@ -43,6 +43,7 @@ export default function Layout({
 }: Readonly<{ children: React.ReactNode; params: { processId: string } }>) {
   const { processId } = params;
 
+  console.log("ID del proceso -->", processId);
   // Use proper types for state
   const [proceso, setProceso] = useState<Proceso | null>(null); 
   const [candidatesTabs, setCandidatesTabs] = useState<Candidate[]>([]); 
@@ -54,17 +55,14 @@ export default function Layout({
       const fetchData = async () => {
         try {
           setLoading(true);
-  
-          const procesoData = await fetchProcessDetails(Number(processId));  
+          const procesoData = await fetchProcessDetails(Number(processId));
+          console.log('Proceso seleccionado : -->', procesoData);
+          console.log('Proceso seleccionado candidatos!! : -->', procesoData.candidates);
+          
+
           if (procesoData) {
             setProceso(procesoData);
-  
-            if (procesoData.id) {
-              const candidatesTabsData = await fetchProcessCandidates(procesoData.id); 
-              setCandidatesTabs(candidatesTabsData ?? []); 
-            } else {
-              setCandidatesTabs([]); 
-            }
+            setCandidatesTabs(procesoData.candidates ?? []); // Asigna directamente los candidatos del proceso
           } else {
             setError("Proceso no encontrado");
           }
@@ -140,8 +138,7 @@ export default function Layout({
         }
       });
       description = { title: et.name, image: et.image, text: et.text };
-      showCandidates = et.showCandidates ? proceso.candidatesIds[0] : -1;
-    }
+      showCandidates = et.showCandidates && proceso.candidates.length > 0 ? proceso.candidates[0] : -1;    }
   });
 
   return (

@@ -12,9 +12,15 @@ export default function Page({ params }: { params: { processId: string; candidat
   const routeToRedirect = `/process/${processId}/${candidateId}`;
 
 
+  console.log("ID del proceso -->",processId);
+  console.log("ID del candidato -->",candidateId);
+  console.log("PARAMS -->",params);
+
+
   useEffect(() => {
     const fetchDetails = async () => {
       try {
+        console.log('Candidato ID:', candidateId); 
         const details = await fetchCandidateDetails(parseInt(candidateId));
         setCandidateDetails(details);
         

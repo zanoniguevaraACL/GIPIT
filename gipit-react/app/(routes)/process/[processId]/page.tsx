@@ -6,11 +6,16 @@ import { redirect, usePathname } from "next/navigation";
 
 export default function Page() {
   // Accede al valor de `showCandidates` y la función `setShowCandidates`
-  const { showCandidates } = useAppContext();
+  const { showCandidates, candidatesTabs = [] } = useAppContext(); // Valor predeterminado []
+
   const actualRoute = usePathname();
 
-  if (showCandidates && showCandidates > 0) {
-    redirect(`${actualRoute}/${showCandidates}`);
+  console.log('SHOW CANDIDATES en page.tsx', showCandidates);
+
+  console.log("Lista de candidatos que llega a la process/page.TSX ---->>", candidatesTabs);
+
+  if (candidatesTabs.length > 0) {
+    redirect(`${actualRoute}/${candidatesTabs[0].id}`); // Redirige al primer candidato disponible
   }
 
   return (

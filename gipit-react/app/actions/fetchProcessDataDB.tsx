@@ -17,7 +17,6 @@ export async function fetchAllCandidateProcesses(processId: number) {
     }
 
     const candidateProcesses = await response.json();
-    console.log(`Lista de candidatos para el proceso ${processId}`, candidateProcesses);
     return candidateProcesses;
   } catch (error) {
     console.error('Error fetching candidate processes:', error);
