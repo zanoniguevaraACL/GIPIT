@@ -63,20 +63,20 @@ function Page() {
     const fetchCompanyData = async () => {
       try {
         if (!companyId) {
-          throw new Error("Invalid companyId");
+          throw new Error("ID de compañia invalido");
         }
         const response = await fetch(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/company/${companyId}`);
         if (!response.ok) {
-          throw new Error("Error fetching company data");
+          throw new Error("error recuperando información de la compañia");
         }
         const data = await response.json();
         setCompanyData({
           name: data.name || "",
           description: data.description || "",
-          logo: null, // El logo será subido como archivo
+          logo: null, 
         });
       } catch (error) {
-        console.error("Error fetching company data:", error);
+        console.error("error recuperando información de la compañia:", error);
       } finally {
         setLoading(false);
       }
@@ -100,14 +100,14 @@ function Page() {
       placeholder: "Nombre de la empresa",
       type: "text",
       name: "name",
-      defaultValue: companyData.name, // Valor predeterminado
+      defaultValue: companyData.name, 
     },
     {
       label: "Descripción",
       name: "description",
       placeholder: "Alguna nota relacionada al cliente",
       type: "textarea",
-      defaultValue: companyData.description, // Valor predeterminado
+      defaultValue: companyData.description, 
     },
     [
       { type: "cancel", value: "Cancelar", href: "/company" },
