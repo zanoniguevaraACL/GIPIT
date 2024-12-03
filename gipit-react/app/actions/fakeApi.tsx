@@ -244,7 +244,7 @@ export const fetchProcess = async (page: number) => {
 
   const dataPage2 = [
     {
-      id: 15,
+      id: 18,
       name: "Consultor en Ciberseguridad",
       stage: "Entrevistas",
       startAt: "05/12/2024",
@@ -283,8 +283,8 @@ export const fetchProcessDetails = async (id: number) => {
   console.log(id);
 
   const response = {
-    id: 1,
-    name: "Consultor en Ciberseguridad",
+    id: id,
+    name: "Desarrollador FullStack",
     stage: "Entrevistas",
     startAt: "05/12/2024",
     endAt: null,
@@ -293,7 +293,7 @@ export const fetchProcessDetails = async (id: number) => {
     status: "activo",
     candidatesIds: [4, 2, 3],
     jobOffer:
-      "Este trabajo es un lorem ipsum dolor sit amet the quick brown fox jumps over the lazy dog. Este trabajo es un lorem ipsum dolor sit amet the quick brown fox jumps over the lazy dog. Este trabajo es un lorem ipsum dolor sit amet the quick brown fox jumps over the lazy dog. Este trabajo es un lorem ipsum dolor sit amet the quick brown fox jumps over the lazy dog. Este trabajo es un lorem ipsum dolor sit amet the quick brown fox jumps over the lazy dog. Este trabajo es un lorem ipsum dolor sit amet the quick brown fox jumps over the lazy dog. Este trabajo es un lorem ipsum dolor sit amet the quick brown fox jumps over the lazy dog. Este trabajo es un lorem ipsum dolor sit amet the quick brown fox jumps over the lazy dog",
+      "Desarrollador Fullstack",
   };
 
   return response;
@@ -336,14 +336,112 @@ export const fetchCandidateDetails = async (id: number) => {
   // este endpoint busca el candidato por el ID y además el comentario asociado y trae el % de compatibilidad.
   // IMPORTANTE: El % de compatibilidad solo se genera una vez, porque en distintos llamados GPT puede dar % diferentes.
   const response = {
-    name: "Alfredo Espinosa Rodríguez",
+    name: "Alan Donovan Olivares Villarreal",
     match: 98,
     totalExperience: 6,
-    email: "pedro@gmail.com",
+    email: "alandon201288@gmail.com\n",
     phone: "+560000000",
-    address: "#301 Martí RM Santiago",
-    sumary:
-      "Figma ipsum component variant main layer. Pixel team rotate draft slice scale asset stroke. Text pen rectangle bold opacity object slice ipsum asset figma. Underline team arrow hand line layout inspect team component auto. Scale draft edit main main create. Subtract slice effect list variant. Bullet group bullet ellipse style bullet. Edit rotate team main scrolling scale thumbnail. Main stroke rectangle overflow layer mask slice rotate duplicate. Component layout plugin hand union editor layer ellipse bullet mask. Layer layer create frame ellipse group. Flatten edit reesizing duplicate vertical export boolean boolean. Stroke pixel content asset blur opacity ellipse union.",
+    address: "Calle Fernando de Alva 11 Interior B-101",
+    sumary: `<h2>Resumen General</h2>
+<p>
+Líder técnico con más de 8 años de experiencia en desarrollos Java,
+principalmente en backend, utilizando tecnologías como Spring, SpringBoot,
+JPA y bases de datos relacionales. Experiencia usando un marco ágil de
+desarrollo con SCRUM. Actualmente enfocado en la coordinación de equipos en
+proyectos bancarios, tales como proyectos web, servicios web (REST y SOAP)
+y procesos programados.
+</p>
+
+<h2>Datos Personales</h2>
+<p>
+Teléfono: 5545728354<br>
+Dirección: Calle Fernando de Alva 11 Interior B-101, Colonia Obrera, Delegación Cuauhtémoc, C.P 06800, Ciudad de México<br>
+Correo electrónico: <a href="mailto:alandon201288@gmail.com">alandon201288@gmail.com</a>
+</p>
+
+<h2>Formación Profesional</h2>
+<ul>
+  <li>
+      <strong>2007 - 2011:</strong> Universidad Autónoma del Estado de Hidalgo<br>
+      Lic. en Sistemas Computacionales<br>
+      Titulación: Examen EGEL en Ingeniería de Software (EGEL-ISOFT)
+  </li>
+</ul>
+
+<h2>Experiencia Laboral</h2>
+<ul>
+  <li>
+    <strong>2020 Agosto - 2021 Octubre: Accendo Banco – Líder Técnico</strong><br>
+    Banco enfocado en satisfacer las necesidades a nivel financiero de personas morales.
+    <ul>
+      <li>Banca Electrónica de Personas Morales: Incorporación de módulos y mejora de experiencia de usuario, facilitando al área de negocio la incorporación de nuevos clientes y aumentando los ingresos en un 20%.</li>
+      <li>Sistema de Conciliación de Transacciones de Facilitadores de Pago: Desarrollo desde el análisis hasta el soporte a producción, involucrándose con empresas fintech y aumentando la transaccionalidad del banco.</li>
+      <li>Interconexión entre sistemas Bloomberg y TAS: Homologación de inversiones desde el análisis hasta el soporte a producción, logrando renombre para la institución al interactuar con la plataforma Bloomberg.</li>
+    </ul>
+  </li>
+  <li>
+    <strong>2017 Septiembre - 2020 Julio: AppWhere – Líder Técnico</strong><br>
+    Empresa enfocada en servicios de tecnología a la medida para empresas del sector público y privado.
+    <ul>
+      <li>Carga Masiva de Inversiones: Proyecto desde la definición hasta el soporte a producción, permitiendo a la institución manejar volumen en inversiones tipo CEDES para personas físicas.</li>
+      <li>Proceso de Prevención de Fraudes: Implementación desde cero, revisión de clientes, prospectos y beneficiarios en listas restringidas en procesos en línea y batch.</li>
+    </ul>
+  </li>
+  <li>
+    <strong>2016 Abril - 2017 Septiembre: AppWhere – Desarrollador Java Sr.</strong><br>
+    Desempeñándose como desarrollador Java, realizando actividades como:
+    <ul>
+      <li>Soporte a producción y creación de nuevos proyectos en Banca Electrónica, favoreciendo la retención y adquisición de nuevos clientes mediante un módulo de referencias virtuales.</li>
+      <li>Desarrollo de servicios web para consulta de información del CRM institucional, mejorando la interconexión entre aplicativos transaccionales.</li>
+    </ul>
+  </li>
+  <li>
+    <strong>2014 Enero - 2016 Marzo: INFOTEC – Desarrollador Java Sr.</strong><br>
+    Institución gubernamental enfocada en investigación y desarrollo de software a la medida:
+    <ul>
+      <li>Incorporación de nuevos módulos al proyecto CONALITEG para la selección de libros de texto gratuito a nivel nacional.</li>
+      <li>Desarrollo de nuevos módulos en el sistema SIISNE para el registro de personas interesadas en empleos agropecuarios en EU y Canadá.</li>
+    </ul>
+  </li>
+  <li>
+    <strong>2014 Abril - 2014 Diciembre: ONU PNUD – Desarrollador Java Jr.</strong><br>
+    Programa de las Naciones Unidas para el Desarrollo, asignado a la Secretaría de Relaciones Exteriores:
+    <ul>
+      <li>Uso de Grails para migración de proyectos de PHP a Java, como el sistema de eventos SAE, mejorando la administración de visitas gubernamentales.</li>
+    </ul>
+  </li>
+  <li>
+    <strong>2012 Diciembre - 2014 Marzo: EGLOBAL – Desarrollador Java Jr.</strong><br>
+    Empresa enfocada en transaccionalidad a través de TVP y PinPad para bancos:
+    <ul>
+      <li>Migración del aplicativo de procesamiento de cargos recurrentes BBVA, optimizando los tiempos en un 50%.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2>Habilidades</h2>
+<ul>
+  <li>Lenguajes y tecnologías: Java, Spring, SpringBoot, EJB, WS SOAP, WS REST, Thymeleaf, Primefaces, Hibernate, MyBatis, Grails</li>
+  <li>Bases de datos: Oracle, SQL Server, MySQL</li>
+  <li>Servidores de aplicaciones: JBoss, Apache Tomcat, WebLogic, GlassFish</li>
+</ul>
+
+<h2>Idiomas</h2>
+<ul>
+  <li>Inglés</li>
+  <li>Español</li>
+</ul>
+
+<h2>Cursos</h2>
+<ul>
+  <li>MySQL en 3CT Centro de Capacitación Tecnológica</li>
+  <li>Java básico en 3CT Centro de Capacitación Tecnológica</li>
+  <li>Java Swing en 3CT Centro de Capacitación Tecnológica</li>
+  <li>Java Servlets en 3CT Centro de Capacitación Tecnológica</li>
+  <li>Java JSP en 3CT Centro de Capacitación Tecnológica</li>
+  <li>Arquitecto DEVOPS – MITOCODE</li>
+  <li>FullStack - MITOCODE</li>
+</ul>`,
     techSkills:
       "Figma ipsum component variant main layer. Pixel team rotate draft slice scale asset stroke. Text pen rectangle bold opacity object slice ipsum asset figma. Underline team arrow hand line layout inspect team component auto. Scale draft edit main main create. Subtract slice effect list variant. Bullet group bullet ellipse style bullet. Edit rotate team main scrolling scale thumbnail. Main stroke rectangle overflow layer mask slice rotate duplicate. Component layout plugin hand union editor layer ellipse bullet mask. Layer layer create frame ellipse group. Flatten edit reesizing duplicate vertical export boolean boolean. Stroke pixel content asset blur opacity ellipse union.",
     softSkills:

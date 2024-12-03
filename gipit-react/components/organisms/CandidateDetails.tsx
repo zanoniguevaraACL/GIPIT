@@ -1,7 +1,8 @@
-import { fetchCandidateDetails } from "@/app/actions/fakeApi";
+// import { fetchCandidateDetails } from "@/app/actions/fakeApi";
 import "./candidateDetails.css";
 import CandidateClientNote from "../molecules/CandidateClientNote";
 import Button from "../atoms/Button";
+import { fetchCandidateDetails } from "@/app/actions/fetchCandidateDetails";
 
 async function CandidateDetails({
   id,
@@ -24,8 +25,8 @@ async function CandidateDetails({
         </p>
       </div>
       <div className="details-block">
-        <h4>Resumen</h4>
-        <p className="text-14">{data.sumary}</p>
+        <div dangerouslySetInnerHTML={{ __html: data.sumary }} className="text-content-display"></div>
+        {/* <p className="text-14">{data.sumary}</p> */}
       </div>
       <div className="details-block">
         <h4>Habilidades Técnicas</h4>

@@ -9,6 +9,10 @@ import stage4 from "@/src/stage4.webp";
 import React, { useEffect, useState } from "react";
 import ClientProvider from "@/contexts/ClientProvider";
 import ProcessInternalHeading from "@/components/molecules/ProcessInternalHeading";
+import { fetchAllCandidateProcesses } from "@/app/actions/fetchProcessDataDB";
+// import { fetchProcessDetails } from "@/app/actions/fetchProcessDetails";
+import { NextRequest } from "next/server";
+import { fetchProcessDetails } from "@/app/actions/fakeApi";
 
 // Define the types for Proceso and Candidate
 type Proceso = {
