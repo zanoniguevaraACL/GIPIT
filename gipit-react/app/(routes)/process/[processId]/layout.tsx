@@ -2,7 +2,7 @@ import ProcessHeading from "@/components/molecules/ProcessHeading";
 import {
   fetchProcessCandidates,
   fetchProcessDetails,
-} from "@/app/actions/fakeApi";
+} from "@/app/actions/fetchProcess";
 import stage1 from "@/src/stage1.webp";
 import stage2 from "@/src/stage2.webp";
 import stage3 from "@/src/stage3.webp";
