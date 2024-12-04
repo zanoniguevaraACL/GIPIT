@@ -44,6 +44,7 @@ export const fetchProcess = async (page: number) => {
       headers: {
         'Content-Type': 'application/json',
       },
+      cache: 'no-store',
     });
 
     if (!response.ok) {
@@ -80,7 +81,7 @@ export const fetchProcessDetails = async (id: number): Promise<Proceso | null> =
       headers: {
         'Content-Type': 'application/json',
       },
-      cache: 'no-store',
+      cache: 'no-store', 
     });
 
     if (!response.ok) {
@@ -124,7 +125,13 @@ export const fetchProcessCandidates = async (processId: number): Promise<{
   jsongptText: string;
 }[] | null> => {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/process/${processId}`);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/process/${processId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      cache: 'no-store',
+    });
 
     if (!response.ok) {
       throw new Error(`Error al obtener los detalles del proceso: ${response.statusText}`);

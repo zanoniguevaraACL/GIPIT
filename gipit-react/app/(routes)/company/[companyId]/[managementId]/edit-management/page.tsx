@@ -20,7 +20,6 @@ function Page({
 
   const routeToRedirect = `/company/${companyId}`;
 
-  // Fetch data for the management being edited
   useEffect(() => {
     const fetchManagementData = async () => {
       try {
@@ -28,7 +27,7 @@ function Page({
           `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/management/${managementId}`
         );
         if (!response.ok) {
-          throw new Error("Failed to fetch management data");
+          throw new Error("error al recuperar información de las jefaturas");
         }
         const data = await response.json();
         setManagementData({
@@ -36,7 +35,7 @@ function Page({
           description: data.description || "",
         });
       } catch (error) {
-        console.error("Error fetching management data:", error);
+        console.error("error al recuperar información de las jefaturas:", error);
       } finally {
         setIsLoading(false);
       }
