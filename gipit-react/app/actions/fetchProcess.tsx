@@ -11,12 +11,12 @@ type Candidate = {
 
 type ProcessData = {
   id: number;
-  job_offer: string;
-  opened_at: string;
-  closed_at: string | null;
-  pre_filtered: boolean;
-  candidate_process: Candidate[]; 
-  status: string;
+  name: string;
+  startAt: Date;
+  endAt: Date | null;
+  pre_filtered: number;
+  candidates: Candidate[]; 
+  state: string;
 };
 
 type Proceso = {
@@ -39,7 +39,7 @@ export const fetchProcess = async (page: number) => {
       throw new Error("El número de página debe ser mayor que 0.");
     }
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/process?page=${page}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/process?page=${page}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -52,17 +52,18 @@ export const fetchProcess = async (page: number) => {
     }
 
     const data = await response.json();
+    // console.log("DATA FETCHPROCESS--> :", data.batch)
 
     return {
       total: data.total,
       batch: data.batch.map((process: ProcessData) => ({
         id: process.id,
-        name: process.job_offer,
-        startAt: process.opened_at ? new Date(process.opened_at).toLocaleDateString() : '',
-        endAt: process.closed_at ? new Date(process.closed_at).toLocaleDateString() : null,
+        name: process.name,
+        startAt: process.startAt ? process.startAt: '',
+        endAt: process.endAt ? process.endAt: null,
         preFiltered: process.pre_filtered ? 1 : 0,
-        candidates: process.candidate_process ? process.candidate_process.length : 0,
-        state: process.status,
+        candidates: process.candidates ? process.candidates.length : 0,
+        state: process.state,
       })),
     };
   } catch (error) {
@@ -76,7 +77,7 @@ export const fetchProcess = async (page: number) => {
 
 export const fetchProcessDetails = async (id: number): Promise<Proceso | null> => {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/process/${id}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/process/${id}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -125,13 +126,7 @@ export const fetchProcessCandidates = async (processId: number): Promise<{
   jsongptText: string;
 }[] | null> => {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/process/${processId}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      cache: 'no-store',
-    });
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/process/${processId}`);
 
     if (!response.ok) {
       throw new Error(`Error al obtener los detalles del proceso: ${response.statusText}`);

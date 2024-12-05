@@ -2,16 +2,19 @@ import { fetchProcess } from "@/app/actions/fetchProcess";
 import DataGrid from "@/components/molecules/DataGrid";
 import SearchBar from "@/components/molecules/SearchBar";
 
-interface Process {
+type Proceso = {
   id: number;
   name: string;
-  stage: string;
   startAt: string;
   endAt: string | null;
   preFiltered: number;
   candidates: number;
-  state: string;
-}
+  status: string;
+  candidatesIds: number[];
+  jobOffer: string | null;
+  stage: string;
+  isInternal: boolean;
+};
 
 interface Column<T> {
   name: string;
@@ -32,11 +35,10 @@ export default async function Page(props: {
   }>;
 }) {
   const searchParams = await props.searchParams;
-  //const query = searchParams?.query || "";
   const page = searchParams?.page ? parseInt(searchParams?.page) : 1;
   const process = await fetchProcess(page);
 
-  const data: ResponseData<Process> = {
+  const data: ResponseData<Proceso> = {
     columns: [
       { name: "Nombre", key: "name", width: 2 },
       { name: "Etapa", key: "stage", width: 1.2 },
@@ -44,11 +46,12 @@ export default async function Page(props: {
       { name: "Cierre", key: "endAt", width: 1 },
       { name: "Pre Filtrados", key: "preFiltered", width: 0.6 },
       { name: "Candidatos", key: "candidates", width: 0.6 },
-      { name: "Estado", key: "state", width: 0.6 },
+      { name: "Estado", key: "status", width: 0.6 },
     ],
     total: process.total,
     batch: process.batch,
   };
+  // console.log("Data de los procesos----->", data)
 
   return (
     <div className="inner-page-container">

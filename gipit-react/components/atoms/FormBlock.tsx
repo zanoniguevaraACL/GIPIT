@@ -113,6 +113,13 @@ function FormBlock({ rows, onSubmit }: FormBlockProps) {
       onSubmit={async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
+
+        // Aquí puedes ver los datos antes de enviarlos
+        for (const pair of formData.entries()) {
+          console.log(`DATOS FORMULARIO EDICION===: ${pair[0]}, ${pair[1]}`);
+        }
+        
+
         const response = await onSubmit(formData, actualRoute);
         alert(response.message);
         router.push(response.route);

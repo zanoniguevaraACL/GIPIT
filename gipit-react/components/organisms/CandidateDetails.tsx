@@ -1,7 +1,8 @@
-import { fetchCandidateDetails } from "@/app/actions/fakeApi";
+// import { fetchCandidateDetails } from "@/app/actions/fakeApi";
 import "./candidateDetails.css";
 import CandidateClientNote from "../molecules/CandidateClientNote";
 import Button from "../atoms/Button";
+import { fetchCandidateDetails } from "@/app/actions/fetchCandidateDetails";
 
 async function CandidateDetails({
   id,
@@ -10,22 +11,25 @@ async function CandidateDetails({
   id: number;
   processId: number;
 }) {
+  
   const data = await fetchCandidateDetails(id);
+
+  console.log("En CanidateDetails.tsx Candidato encontrado:--->",data);
   const isInternal = true; // lo identificamos en la sesion, si el user es ACL mostramos el boton de editar candidato
 
   return (
     <div className="candidate-details-container">
       <h3>{data.name}</h3>
       <div className="experience-n-match-container">
-        <p className="text-14">{data.totalExperience} años de experiencia</p>
+        <p className="text-14">{data.totalExperience ? data.totalExperience : 'No se especifican'} años de experiencia</p>
         <div className="vertical-separator"></div>
         <p className="text-14">
           {data.match}% de compatibilidad <i>(calculado con IA)</i>
         </p>
       </div>
       <div className="details-block">
-        <h4>Resumen</h4>
-        <p className="text-14">{data.sumary}</p>
+        <div dangerouslySetInnerHTML={{ __html: data.sumary }} className="text-content-display"></div>
+        {/* <p className="text-14">{data.sumary}</p> */}
       </div>
       <div className="details-block">
         <h4>Habilidades Técnicas</h4>

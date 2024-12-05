@@ -1,17 +1,53 @@
-import Modal from "@/components/molecules/Modal";
+'use client';
+import ModalWithTextEditor from "@/components/molecules/ModalWithTextEditor";
 import { FormInputsRow } from "@/app/lib/types";
-import { handleDisqualify } from "@/app/actions/handleDisqualify";
-import { fetchCandidateDetails } from "@/app/actions/fakeApi";
+import { handleEditCandidate } from "@/app/actions/handleEditCandidate";
+import { useState, useEffect } from "react";
+import '@/components/molecules/textEditor.css';
+import { fetchCandidateDetails } from "@/app/actions/fetchCandidateDetails";
 
-async function Page({
-  params,
-}: {
-  params: { processId: string; candidateId: string };
-}) {
+type CandidateDetails = {
+  name: string;
+  match: number;
+  email: string;
+  phone: string;
+  address: string;
+  sumary: string;
+  techSkills: string;
+  softSkills: string;
+  clientNote: {
+    comment: string;
+  };
+};
+
+
+export default function Page({ params }: { params: { processId: string; candidateId: string } }) {
+  const [candidateDetails, setCandidateDetails] = useState<CandidateDetails | null>(null);
   const { processId, candidateId } = params;
   const routeToRedirect = `/process/${processId}/${candidateId}`;
 
-  const candidateDetails = await fetchCandidateDetails(parseInt(candidateId));
+  // console.log("ID del proceso -->",processId);
+  // console.log("ID del candidato -->",candidateId);
+  // console.log("PARAMS -->",params);
+
+  useEffect(() => {
+    const fetchDetails = async () => {
+      try {
+        console.log('Candidato ID:', candidateId); 
+        const details = await fetchCandidateDetails(parseInt(candidateId));
+        setCandidateDetails(details);
+        
+      } catch (error) {
+        console.error("Error fetching candidate details:", error);
+      }
+    };
+
+    fetchDetails();
+  }, [candidateId]);
+
+  if (!candidateDetails) {
+    return <div>Loading...</div>;
+  }
 
   const fields: FormInputsRow = [
     {
@@ -42,13 +78,6 @@ async function Page({
       name: "address",
       defaultValue: candidateDetails.address,
     },
-    {
-      label: "CV",
-      placeholder: "Detalles del cv",
-      type: "textarea",
-      name: "cv",
-      defaultValue: candidateDetails.sumary,
-    },
     [
       { type: "cancel", value: "Cancelar", href: routeToRedirect },
       { type: "submit", value: "Guardar Nota" },
@@ -56,8 +85,13 @@ async function Page({
   ];
 
   return (
-    <Modal rows={fields} onSubmit={handleDisqualify} title="Nuevo Candidato" />
+    <div className="main-container">
+      <ModalWithTextEditor
+        rows={fields}
+        onSubmit={handleEditCandidate}
+        title="Editar Candidato"
+        cvCandidato={candidateDetails.sumary || 'Escribe tu contenido aqui...'} // enviar contenido al modal
+      />
+    </div>
   );
 }
-
-export default Page;
