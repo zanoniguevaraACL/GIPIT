@@ -1,8 +1,14 @@
 "use server";
 import fetch from 'node-fetch';
 
+export type DocumentResponse = {
+  id: string;
+  status: 'PENDING' | 'SUCCESS' | 'ERROR';
+  error_message?: string;
+};
 
-export const processDocumentAction = async (file)=> {
+
+export const processDocumentAction = async (file: File): Promise<DocumentResponse | null> => {
   const url = 'https://api.cloud.llamaindex.ai/api/parsing/upload';
   const formData = new FormData();
 
@@ -19,7 +25,6 @@ export const processDocumentAction = async (file)=> {
   formData.append('take_screenshot', 'false');
   formData.append('is_formatting_instruction', 'false');
   formData.append('file', file);
-
 
   const headers = {
     'accept': 'application/json',
@@ -40,7 +45,7 @@ export const processDocumentAction = async (file)=> {
       throw new Error(`Error en la solicitud: ${response.statusText}`);
     }
 
-    const data = await response.json();
+    const data = await response.json() as DocumentResponse;
 
     console.log("Respuesta de la API al cargar archivo:", data);
 
@@ -58,8 +63,7 @@ export const processDocumentAction = async (file)=> {
 };
 
 
-
-export async function getText(jobId) {
+export async function getText(jobId: string): Promise<{ text: string } | null> {
   const url = `https://api.cloud.llamaindex.ai/api/v1/parsing/job/${jobId}/result/text`;
 
   try {
@@ -70,26 +74,32 @@ export async function getText(jobId) {
         'Authorization': `Bearer ${process.env.API_KEY_LLAMA}`,
         'redirect': "follow"
       }
-    })
+    });
 
     if (!response.ok) {
       console.error(`Error al verificar el estado: ${response.statusText}`);
       return null;
     }
-    const data = await response.json();
+
+    // Solución: usa "type assertion" para definir el tipo del valor devuelto.
+    const data = (await response.json()) as { text: string };
     console.log("Respuesta de la API en la tercera consulta del texto:", data);
 
-    return data; // Retorna el objeto de datos directamente
-  }
-  catch (error) {
+    return data;
+  } catch (error) {
     console.error(`Error al intentar recuperar la transcripción ${error}`);
     return null;
   }
-
 }
 
 
-export const checkJob = async (jobId) => {
+export interface DocumentStatusResponse {
+  id: string;
+  status: 'PENDING' | 'SUCCESS' | 'ERROR';
+  error_message?: string;
+}
+
+export const checkJob = async (jobId: string): Promise<DocumentStatusResponse | null> => {
   const url = `https://api.cloud.llamaindex.ai/api/v1/parsing/job/${jobId}`;
 
   try {
@@ -107,10 +117,11 @@ export const checkJob = async (jobId) => {
       return null;
     }
 
-    const data = await response.json();
+    // Solución: usa "type assertion" para definir el tipo del valor devuelto.
+    const data = (await response.json()) as DocumentStatusResponse;
     console.log("Respuesta de la API al verificar estado:", data);
 
-    return data; // Retorna el objeto de datos directamente
+    return data;
   } catch (error) {
     console.error(`Error al verificar el estado del trabajo: ${error}`);
     return null;

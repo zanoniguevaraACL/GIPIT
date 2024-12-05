@@ -5,28 +5,21 @@ import { chatGPTCandidateResponse, compatibilityResponse }  from "./chatGPTCandi
 import { checkJob } from "./processDocumentAction";
 import { getText } from './processDocumentAction';
 import { fetchProcessDetails } from "./fetchProcessDetails";
+import { DocumentResponse } from "./processDocumentAction";
 
-type DocumentResponse = {
-  id: string;
-  status: 'PENDING' | 'SUCCESS' | 'ERROR';
-  error_message?: string;
-};
+interface CompatibilityResponse {
+  evaluacion?: {
+    coincidencias?: {
+      habilidades?: string;
+      soft_skills?: string;
+    };
+    faltas?: string[];
+    puntuacion_general?: number;
+  };
+  preguntas_rrhh?: string[];
+}
 
-// type ChatGPTResponse = {
-//   text: string;
-// };
 
-// type CompatibilityResponse = {
-//   evaluacion?: {
-//     coincidencias?: {
-//       habilidades?: string;
-//       soft_skills?: string;
-//     };
-//     faltas?: string[];
-//     puntuacion_general?: number;
-//   };
-//   preguntas_rrhh?: string[];
-// };
 
 export const handleCreateCandidate = async (
   formData: FormData,
@@ -64,7 +57,7 @@ export const handleCreateCandidate = async (
 	console.log("Archivo recibido:", file);
 
 	// Llama al procesamiento del archivo
-	const documentResponse = await processDocumentAction(file);
+	const documentResponse: DocumentResponse | null = await processDocumentAction(file);
 
 	console.log("Respuesta de processDocumentAction:", documentResponse);
 	console.log(documentResponse?.id);
@@ -78,17 +71,21 @@ export const handleCreateCandidate = async (
     };
   }
 
-	function cleanGeneratedHtml(generatedText: any) {
+	function cleanGeneratedHtml(generatedText: string) {
 		return generatedText
 			.replace(/^```html\n/, '')  // Elimina la etiqueta de apertura
 			.replace(/\n```$/, '');     // Elimina la etiqueta de cierre
 	}
 
 	  // Esperar hasta que el estado no sea 'PENDING'
-		let respuestaJob: DocumentResponse = documentResponse;
+		let respuestaJob: DocumentResponse | null = documentResponse;
 		while (respuestaJob?.status === 'PENDING') {
 			await new Promise(resolve => setTimeout(resolve, 5000)); // Espera 5 segundos antes de verificar de nuevo
 			respuestaJob = await checkJob(documentResponse?.id);
+			if (!respuestaJob) {
+				console.error("No se pudo obtener una respuesta válida del trabajo.");
+				return { message: "Error al verificar el estado del documento.", route: actualRoute };
+			}
 			console.log("Verificando estado del documento:", respuestaJob);
 		}
 
@@ -100,45 +97,76 @@ export const handleCreateCandidate = async (
 		}
 
 		
-	let resultadoTextoHTML: any;
-	let resultadoEstandarizado: any;
-	let resultadoCompatibilidad: any;
-	let cleanedHtml: any;
-	let compatibilidadTexto: any;
+	let resultadoTextoHTML: {text: string} | null = null;
+	let resultadoEstandarizado: string | null = null;
+	let resultadoCompatibilidad: CompatibilityResponse | null = null;
+	let cleanedHtml: string | null = null;
+	let compatibilidadTexto: string | null = null;
 	if (respuestaJob?.status === 'SUCCESS') {
 		// Comunicación para obtener la transcripción en texto
-		resultadoTextoHTML = await getText(respuestaJob?.id);
+		const textoHTMLResult = await getText(respuestaJob?.id);
+		if (typeof textoHTMLResult === 'object' && textoHTMLResult !== null && 'text' in textoHTMLResult) {
+			resultadoTextoHTML = textoHTMLResult as { text: string };
+		}
 
 		//Comunicación con chatGPT para obtener respuesta de valor para RH
-		resultadoEstandarizado = await chatGPTCandidateResponse(resultadoTextoHTML?.text);
+		if (resultadoTextoHTML?.text) {
+			const estandarizadoResult = await chatGPTCandidateResponse(resultadoTextoHTML.text);
+			if (typeof estandarizadoResult === 'string') {
+				resultadoEstandarizado = estandarizadoResult;
+			}
+		} else {
+			console.error("resultadoTextoHTML.text es undefined, no se puede continuar.");
+			return { message: "No se pudo obtener el texto del CV.", route: actualRoute };
+		}
 
     // Compatibilidad del candidato con la vacante
-		compatibilidadTexto = await compatibilityResponse(resultadoTextoHTML?.text, vacante.jobOfferDescription);
+		const compatibilidadResult = await compatibilityResponse(resultadoTextoHTML?.text, vacante.jobOfferDescription);
+		if (typeof compatibilidadResult === 'string') {
+			compatibilidadTexto = compatibilidadResult.replace(/^```json\n/, "").replace(/\n```$/, "");
+		} else if (compatibilidadResult && typeof compatibilidadResult === 'object' && 'error' in compatibilidadResult) {
+			console.error("Error en la respuesta de compatibilidad:", compatibilidadResult.error);
+			return { message: "Error en la compatibilidad con la vacante.", route: actualRoute };
+		} else {
+			console.error("No se pudo obtener una respuesta de compatibilidad válida.");
+			return { message: "No se pudo obtener la compatibilidad del candidato.", route: actualRoute };
+		}
 
-    // Limpiar y analizar el JSON generado
-    compatibilidadTexto = compatibilidadTexto.replace(/^```json\n/, "").replace(/\n```$/, "");
-
-    try {
-      resultadoCompatibilidad = JSON.parse(compatibilidadTexto);
-    } catch (error) {
-      console.error("Error al analizar JSON de compatibilidad:", error);
-      return { message: "Error al analizar la respuesta de compatibilidad.", route: actualRoute };
-    }
+		if (compatibilidadTexto) {
+			try {
+				resultadoCompatibilidad = JSON.parse(compatibilidadTexto);
+			} catch (error) {
+				console.error("Error al analizar JSON de compatibilidad:", error);
+				return { message: "Error al analizar la respuesta de compatibilidad.", route: actualRoute };
+			}
+		}
 		console.log("Comparación del CV con la vacante ===>", resultadoCompatibilidad);
 
-		cleanedHtml = cleanGeneratedHtml(resultadoEstandarizado);
+		if (resultadoEstandarizado) {
+			cleanedHtml = cleanGeneratedHtml(resultadoEstandarizado);
+		} else {
+			console.error("Resultado estandarizado es nulo.");
+			return { message: "Error al limpiar el HTML generado.", route: actualRoute };
+		}
+
 	}
 
   // **Se recupera respuestas del json devuelto por chatGPT**
 	const interviewQuestions = JSON.stringify(resultadoCompatibilidad?.preguntas_rrhh || 0).toString();
 
   // Preparar los datos para la creación del candidato y la asociación con el proceso
-	formData.append("jsongpt_text", cleanedHtml);
+	if (cleanedHtml) {
+		formData.append("jsongpt_text", cleanedHtml);
+	} else {
+		console.error("cleanedHtml es nulo.");
+		return { message: "No se pudo agregar el texto procesado.", route: actualRoute };
+	}
 	formData.append("process_id", processId.toString());
 	formData.append("technical_skills", resultadoCompatibilidad?.evaluacion?.coincidencias?.habilidades || '');
 	formData.append("client_comments", Array.isArray(resultadoCompatibilidad?.evaluacion?.faltas) ? resultadoCompatibilidad.evaluacion.faltas.join(', ') : '');	formData.append("match_percent", (resultadoCompatibilidad?.evaluacion?.puntuacion_general || 0).toString());
 	formData.append("interview_questions", interviewQuestions);
-	formData.append("soft_skills", resultadoCompatibilidad?.evaluacion?.coincidencias?.soft_skills);
+	const softSkills = resultadoCompatibilidad?.evaluacion?.coincidencias?.soft_skills ?? "";
+	formData.append("soft_skills", softSkills);
 
 	// Agrega candidatos a la base de datos
   const createResponse = await createCandidateAction(formData, processId);
