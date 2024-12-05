@@ -17,7 +17,7 @@ export default async function Layout({
   const isInternal: boolean = false;
 
   if (!process) {
-    return <div>Error:proceso no encontrado.</div>;
+    return <div>Error, proceso no encontrado.</div>;
   }
 
   const etapas = [
