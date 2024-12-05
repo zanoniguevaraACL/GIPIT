@@ -1,5 +1,5 @@
 import ProcessHeading from "@/components/molecules/ProcessHeading";
-import {fetchProcessCandidates,fetchProcessDetails} from "@/app/actions/fetchProcess";
+import {fetchProcessCandidates, fetchProcessDetails } from "@/app/actions/fetchProcess"; 
 import stage1 from "@/src/stage1.webp";
 import stage2 from "@/src/stage2.webp";
 import stage3 from "@/src/stage3.webp";
@@ -14,7 +14,11 @@ export default async function Layout({
   children: React.ReactNode;
 }>) {
   const process = await fetchProcessDetails(1);
-  const isInternal: boolean = false; // logica por el rol de la sesion
+  const isInternal: boolean = false;
+
+  if (!process) {
+    return <div>Error:}proceso no encontrado.</div>;
+  }
 
   const etapas = [
     {
@@ -47,7 +51,6 @@ export default async function Layout({
     },
   ];
 
-  // variables del proceso para renderizar datos
   const etapasToUse: {
     name: string;
     showCandidates: boolean;
@@ -59,31 +62,35 @@ export default async function Layout({
     text: string;
   } = { title: "", image: "", text: "" };
   let showCandidates: number = -1;
-  const candidatesTabs = await fetchProcessCandidates(process.candidatesIds);
+
+  const candidatesTabs = process.candidatesIds.length > 0
+    ? await Promise.all(process.candidatesIds.map(async (candidateId) => {
+        const candidates = await fetchProcessCandidates(candidateId);
+        return candidates ? candidates.map(candidate => ({
+          name: candidate.name,
+          id: candidate.id, 
+        })) : [];
+      })).then(results => results.flat())
+    : [];
+
+  const candidatesTabsFinal = candidatesTabs ?? [];
 
   etapas.forEach((et) => {
-    // recorremos las etapas de base de arriba
     if (et.name.toLowerCase() === process.stage.toLowerCase()) {
-      /* cuando encontremos la etapa activa iniciamos otro loop para 
-      asignar "toDo" | "active" | "done" giandonos por si es mayor o 
-      menor el order asignado.*/
       etapas.forEach((e) => {
         if (et.order === e.order) {
-          // esta es la activa
           etapasToUse[e.order] = {
             name: e.name,
             showCandidates: e.showCandidates,
             status: "active",
           };
         } else if (et.order > e.order) {
-          // estas son las pasadas
           etapasToUse[e.order] = {
             name: e.name,
             showCandidates: e.showCandidates,
             status: "done",
           };
         } else {
-          // estas son las futuras
           etapasToUse[e.order] = {
             name: e.name,
             showCandidates: e.showCandidates,
@@ -114,7 +121,7 @@ export default async function Layout({
 
       <ClientProvider
         showCandidates={showCandidates}
-        candidatesTabs={candidatesTabs}
+        candidatesTabs={candidatesTabsFinal} 
       >
         {children}
       </ClientProvider>
