@@ -1,3 +1,4 @@
+'use client'
 import ProcessHeading from "@/components/molecules/ProcessHeading";
 import stage1 from "@/src/stage1.webp";
 import stage2 from "@/src/stage2.webp";
@@ -7,6 +8,7 @@ import React from "react";
 import ClientProvider from "@/contexts/ClientProvider";
 import ProcessInternalHeading from "@/components/molecules/ProcessInternalHeading";
 import { fetchProcessDetails } from "@/app/actions/fetchProcessDetails";
+import { useState, useEffect } from "react";
 
 // Define the types for Proceso and Candidate
 type Proceso = {
@@ -48,6 +50,7 @@ export default function Layout({
         try {
           setLoading(true);
           const procesoData = await fetchProcessDetails(Number(processId));
+          console.log("proceso desde LAYOUT -->",procesoData);
 
           if (procesoData) {
             setProceso(procesoData);
@@ -121,22 +124,21 @@ export default function Layout({
     image: string;
     text: string;
   } = { title: "", image: "", text: "" };
-  let showCandidates: number = -1;
-
-  const candidatesTabs = process.candidatesIds.length > 0
-    ? await Promise.all(process.candidatesIds.map(async (candidateId) => {
-        const candidates = await fetchProcessCandidates(candidateId);
-        return candidates ? candidates.map(candidate => ({
-          name: candidate.name,
-          id: candidate.id, 
-        })) : [];
-      })).then(results => results.flat())
-    : [];
+  let showCandidates: Candidate | number = -1;
+  // const candidatesTabs = process.candidatesIds.length > 0
+  //   ? await Promise.all(process.candidatesIds.map(async (candidateId) => {
+  //       const candidates = await fetchProcessCandidates(candidateId);
+  //       return candidates ? candidates.map(candidate => ({
+  //         name: candidate.name,
+  //         id: candidate.id, 
+  //       })) : [];
+  //     })).then(results => results.flat())
+  //   : [];
 
   const candidatesTabsFinal = candidatesTabs ?? [];
 
   etapas.forEach((et) => {
-    if (et.name.toLowerCase() === process.stage.toLowerCase()) {
+    if (et.name.toLowerCase() === proceso.stage.toLowerCase()) {
       etapas.forEach((e) => {
         if (et.order === e.order) {
           etapasToUse[e.order] = {
@@ -164,11 +166,11 @@ export default function Layout({
 
   return (
     <div className="inner-page-container">
-      {isInternal ? (
-        <ProcessInternalHeading process={process} etapasToUse={etapasToUse} />
+      {proceso.isInternal ? (
+        <ProcessInternalHeading process={proceso} etapasToUse={etapasToUse} />
       ) : (
         <ProcessHeading
-          process={process}
+          process={proceso}
           etapasToUse={etapasToUse}
           description={description}
         />
