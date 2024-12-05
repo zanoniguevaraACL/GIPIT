@@ -1,6 +1,7 @@
 "use server";
 import fetch from 'node-fetch';
 
+
 export const processDocumentAction = async (file)=> {
   const url = 'https://api.cloud.llamaindex.ai/api/parsing/upload';
   const formData = new FormData();
@@ -51,7 +52,7 @@ export const processDocumentAction = async (file)=> {
       return null;
     }
   } catch (error) {
-    console.error("Error al procesar el documento:", error);
+    console.error(`Error al procesar el documento: ${error}`);
     return null;
   }
 };
@@ -81,7 +82,7 @@ export async function getText(jobId) {
     return data; // Retorna el objeto de datos directamente
   }
   catch (error) {
-    console.error("Error al intentar recuperar la transcripción");
+    console.error(`Error al intentar recuperar la transcripción ${error}`);
     return null;
   }
 
@@ -111,7 +112,7 @@ export const checkJob = async (jobId) => {
 
     return data; // Retorna el objeto de datos directamente
   } catch (error) {
-    console.error("Error al verificar el estado del trabajo:", error);
+    console.error(`Error al verificar el estado del trabajo: ${error}`);
     return null;
   }
 };

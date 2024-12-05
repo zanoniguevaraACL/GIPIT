@@ -4,11 +4,10 @@ import "./modalWithTextEditor.css";
 import { useRef, useEffect, useState } from "react";
 import { EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
-import { Schema, DOMParser } from 'prosemirror-model';
 import { schema } from 'prosemirror-schema-basic';
 import { addListNodes } from 'prosemirror-schema-list';
 import { exampleSetup } from 'prosemirror-example-setup';
-import { DOMSerializer } from 'prosemirror-model';
+import {Schema, DOMParser, DOMSerializer, Node } from 'prosemirror-model';
 import '@/components/molecules/textEditor.css';
 
 type ModalWithTextEditorProps = FormBlockProps & {
@@ -35,7 +34,7 @@ function ModalWithTextEditor({ rows, onSubmit, title, message, cvCandidato }: Mo
       });
 
 			// string pero estructurado como html
-			function serializeToHTML(doc: any) {
+			function serializeToHTML(doc: Node) {
 				const fragment = DOMSerializer.fromSchema(mySchema).serializeFragment(doc.content);
 				const div = document.createElement('div');
 				div.appendChild(fragment);

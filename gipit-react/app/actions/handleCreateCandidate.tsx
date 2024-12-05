@@ -5,7 +5,28 @@ import { chatGPTCandidateResponse, compatibilityResponse }  from "./chatGPTCandi
 import { checkJob } from "./processDocumentAction";
 import { getText } from './processDocumentAction';
 import { fetchProcessDetails } from "./fetchProcessDetails";
-import DevServer from "next/dist/server/dev/next-dev-server";
+
+type DocumentResponse = {
+  id: string;
+  status: 'PENDING' | 'SUCCESS' | 'ERROR';
+  error_message?: string;
+};
+
+// type ChatGPTResponse = {
+//   text: string;
+// };
+
+// type CompatibilityResponse = {
+//   evaluacion?: {
+//     coincidencias?: {
+//       habilidades?: string;
+//       soft_skills?: string;
+//     };
+//     faltas?: string[];
+//     puntuacion_general?: number;
+//   };
+//   preguntas_rrhh?: string[];
+// };
 
 export const handleCreateCandidate = async (
   formData: FormData,
@@ -64,7 +85,7 @@ export const handleCreateCandidate = async (
 	}
 
 	  // Esperar hasta que el estado no sea 'PENDING'
-		let respuestaJob: any = documentResponse;
+		let respuestaJob: DocumentResponse = documentResponse;
 		while (respuestaJob?.status === 'PENDING') {
 			await new Promise(resolve => setTimeout(resolve, 5000)); // Espera 5 segundos antes de verificar de nuevo
 			respuestaJob = await checkJob(documentResponse?.id);
@@ -78,6 +99,7 @@ export const handleCreateCandidate = async (
 			};
 		}
 
+		
 	let resultadoTextoHTML: any;
 	let resultadoEstandarizado: any;
 	let resultadoCompatibilidad: any;

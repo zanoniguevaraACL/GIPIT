@@ -6,7 +6,9 @@ import { redirect, usePathname } from "next/navigation";
 
 export default function Page() {
   // Accede al valor de `showCandidates` y la función `setShowCandidates`
-  const { showCandidates, candidatesTabs = [] } = useAppContext(); // Valor predeterminado []
+  // const { showCandidates, candidatesTabs = [] } = useAppContext(); // Valor predeterminado [] showCandidates en desuso
+
+  const { candidatesTabs = [] } = useAppContext(); // Valor predeterminado []
 
   const actualRoute = usePathname();
 

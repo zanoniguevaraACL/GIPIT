@@ -1,7 +1,6 @@
 "use client";
 
 import ProcessHeading from "@/components/molecules/ProcessHeading";
-// import { fetchProcessCandidates, fetchProcessDetails } from "@/app/actions/fetchProcess";
 import stage1 from "@/src/stage1.webp";
 import stage2 from "@/src/stage2.webp";
 import stage3 from "@/src/stage3.webp";
@@ -9,9 +8,7 @@ import stage4 from "@/src/stage4.webp";
 import React, { useEffect, useState } from "react";
 import ClientProvider from "@/contexts/ClientProvider";
 import ProcessInternalHeading from "@/components/molecules/ProcessInternalHeading";
-import { fetchAllCandidateProcesses } from "@/app/actions/fetchProcessDataDB";
 import { fetchProcessDetails } from "@/app/actions/fetchProcessDetails";
-import { NextRequest } from "next/server";
 
 // Define the types for Proceso and Candidate
 type Proceso = {
@@ -20,7 +17,7 @@ type Proceso = {
   startAt: string;
   endAt: string | null;
   preFiltered: number;
-  candidates: any[];
+  candidates: Candidate[];
   status: string;
   jobOffer: string | null;
   stage: string;

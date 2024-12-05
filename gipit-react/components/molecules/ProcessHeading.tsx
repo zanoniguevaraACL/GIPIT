@@ -35,7 +35,6 @@ function ProcessHeading({
     startAt: string;
     endAt: string | null;
     preFiltered: number;
-    candidates: any[];
     status: string;
   };
 }) {

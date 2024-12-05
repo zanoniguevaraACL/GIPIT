@@ -19,7 +19,7 @@ function ProcessInternalHeading({
     startAt: string;
     endAt: string | null;
     preFiltered: number;
-    candidates: any[];
+    candidates: unknown[];
     status: string;
   };
 }) {
