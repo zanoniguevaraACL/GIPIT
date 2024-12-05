@@ -1,13 +1,13 @@
-import { fetchAllInvoices } from "@/app/actions/fakeApi";
+import { fetchAllPreInvoices } from "@/app/actions/fetchInvoices";
 import DataGrid from "@/components/molecules/DataGrid";
 import SearchBar from "@/components/molecules/SearchBar";
 
 interface InvoiceDetails {
   id: number;
   cantidad: number;
-  total: number;
-  date: string;
-  expiration: string;
+  total_value: number;
+  estimated_date: string;
+  expiration_date: string;
   status: string;
 }
 
@@ -30,23 +30,23 @@ export default async function Page(props: {
   }>;
 }) {
   const searchParams = await props.searchParams;
-  //const query = searchParams?.query || "";
   const page = searchParams?.page ? parseInt(searchParams?.page) : 1;
 
-  //const isInternal: boolean = true;
+  const invoicesList = await fetchAllPreInvoices(page);
+  
 
-  const invoicesList = await fetchAllInvoices(page);
-
+  const total = 24; 
+  
   const data: ResponseData<InvoiceDetails> = {
     columns: [
-      { name: "Fecha", key: "date", width: 1.1 },
-      { name: "Exipra", key: "expiration", width: 1.1 },
+      { name: "Fecha", key: "estimated_date", width: 1.1 },
+      { name: "Exipra", key: "expiration_date", width: 1.1 },
       { name: "Profesionales", key: "cantidad", width: 1 },
-      { name: "Monto", key: "total", width: 1 },
+      { name: "Monto", key: "total_value", width: 1 },
       { name: "Estado", key: "status", width: 1 },
     ],
-    total: 24,
-    batch: invoicesList,
+    total, 
+    batch: invoicesList, 
   };
 
   return (

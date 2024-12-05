@@ -1,12 +1,12 @@
 "use client";
 import Modal from "@/components/molecules/Modal";
 import { FormInputsRow } from "@/app/lib/types";
-import { useParams } from "next/navigation"; // Importa useParams para obtener el companyId
+import { useParams } from "next/navigation";
 import { handleCreateManagement } from "@/app/actions/handleCreateManagement";
 
 function ManagementPage() {
-  const params = useParams(); // Asegúrate de usar correctamente useParams
-  const companyId = params.companyId as string; // Extrae companyId como string
+  const params = useParams(); 
+  const companyId = params.companyId as string; 
 
   const fields: FormInputsRow = [
     {
@@ -27,7 +27,6 @@ function ManagementPage() {
     ],
   ];
 
-  // Llama a handleCreateManagement pasando formData y companyId
   return <Modal rows={fields} onSubmit={(formData) => handleCreateManagement(formData, companyId)} />;
 }
 

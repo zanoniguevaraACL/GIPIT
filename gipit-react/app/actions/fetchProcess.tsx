@@ -44,6 +44,7 @@ export const fetchProcess = async (page: number) => {
       headers: {
         'Content-Type': 'application/json',
       },
+      cache: 'no-store',
     });
 
     if (!response.ok) {
@@ -80,7 +81,7 @@ export const fetchProcessDetails = async (id: number): Promise<Proceso | null> =
       headers: {
         'Content-Type': 'application/json',
       },
-      cache: 'no-store',
+      cache: 'no-store', 
     });
 
     if (!response.ok) {

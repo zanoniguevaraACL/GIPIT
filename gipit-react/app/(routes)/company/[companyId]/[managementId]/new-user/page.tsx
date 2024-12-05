@@ -6,7 +6,7 @@ import { createUserManagement } from "@/app/actions/createUserManagement";
 
 function Page() {
   const params = useParams();
-  const managementId = params.managementId as string; // Extrae el managementId de los parámetros de la URL
+  const managementId = params.managementId as string; 
 
   const fields: FormInputsRow = [
     {
@@ -33,7 +33,6 @@ function Page() {
     ],
   ];
 
-  // Llama a createUserManagement pasando formData y managementId
   return (
     <Modal
       rows={fields}

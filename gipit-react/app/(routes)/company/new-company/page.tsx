@@ -12,12 +12,10 @@ function Page() {
   const handleSubmit = async (formData: FormData): Promise<{ message: string; route: string }> => {
     const result = await handleCreateCompany(formData);
 
-    if (result.message.startsWith("Company created successfully")) {
-      // Redirige a la página de compañías
+    if (result.message.startsWith("compañia creada exitosamente")) {
       router.push("/company");
     }
 
-    // Devuelve el resultado en el formato esperado
     return {
       message: result.message,
       route: "/company",
