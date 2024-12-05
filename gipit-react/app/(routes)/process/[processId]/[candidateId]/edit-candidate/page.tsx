@@ -6,8 +6,23 @@ import { useState, useEffect } from "react";
 import '@/components/molecules/textEditor.css';
 import { fetchCandidateDetails } from "@/app/actions/fetchCandidateDetails";
 
+type CandidateDetails = {
+  name: string;
+  match: number;
+  email: string;
+  phone: string;
+  address: string;
+  sumary: string;
+  techSkills: string;
+  softSkills: string;
+  clientNote: {
+    comment: string;
+  };
+};
+
+
 export default function Page({ params }: { params: { processId: string; candidateId: string } }) {
-  const [candidateDetails, setCandidateDetails] = useState<any>(null);
+  const [candidateDetails, setCandidateDetails] = useState<CandidateDetails | null>(null);
   const { processId, candidateId } = params;
   const routeToRedirect = `/process/${processId}/${candidateId}`;
 

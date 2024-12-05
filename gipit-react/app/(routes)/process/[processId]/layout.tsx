@@ -19,7 +19,7 @@ type Proceso = {
   preFiltered: number;
   candidates: Candidate[];
   status: string;
-  jobOffer: string | null;
+  jobOffer?: string; // Hacerlo opcional
   stage: string;
   isInternal: boolean;
 };
