@@ -40,7 +40,7 @@ export const fetchProcess = async (page: number) => {
     }
 
     console.log("VARIABLE DE ENTORNO QUE TIRA EL FETCH", process.env.NEXT_PUBLIC_API_URL);
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/process?page=${page}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/process`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
