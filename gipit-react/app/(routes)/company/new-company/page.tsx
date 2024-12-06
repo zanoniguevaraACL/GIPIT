@@ -24,14 +24,15 @@ function Page() {
   
       if (!parsedData.success) {
         parsedData.error.errors.forEach(error => {
-          toast.error(error.message); 
+          toast.error(error.message);
         });
         return { message: "validación fallida", route: "/company/new-company" };
       }
   
       setLoading(true);
-  
-      formData.set("logo", null);
+      
+      //modificar despues cuando se agregue la capacidad de subir archivos
+      formData.delete("logo"); 
   
       const result = await handleCreateCompany(formData);
   
@@ -45,11 +46,12 @@ function Page() {
       setLoading(false);
       return result;
     } catch (error) {
-      toast.error("Error al procesar la solicitud"); 
+      toast.error("Error al procesar la solicitud");
       setLoading(false);
       return { message: "Error al procesar la solicitud", route: "/company" };
     }
   };
+  
   
 
   const fields: FormInputsRow = [
