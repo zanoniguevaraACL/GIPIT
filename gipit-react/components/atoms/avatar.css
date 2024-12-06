@@ -16,3 +16,24 @@
     }
   }
 }
+
+
+.avatar-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px; /* Ajusta según sea necesario */
+  height: 40px; /* Ajusta según sea necesario */
+  border-radius: 50%;
+  background-color: #484848; /* Fondo para las iniciales */
+}
+
+.avatar-initials {
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff; /* Color de texto para las iniciales */
+}
+
+.avatar-container img {
+  border-radius: 50%;
+}

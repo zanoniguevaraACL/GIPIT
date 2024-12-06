@@ -1,13 +1,13 @@
 .total-container {
   display: flex;
   flex-direction: column;
-  align-items: end;
+  align-items: flex-end;
   margin-top: 32px;
 }
 
 .button-note-container {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   margin-top: 12px;
 }
 

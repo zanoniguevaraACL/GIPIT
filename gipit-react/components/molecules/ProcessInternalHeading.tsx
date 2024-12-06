@@ -19,9 +19,8 @@ function ProcessInternalHeading({
     startAt: string;
     endAt: string | null;
     preFiltered: number;
-    candidates: number;
+    candidates: unknown[];
     status: string;
-    candidatesIds: number[];
   };
 }) {
   const [confirm, setConfirm] = useState({

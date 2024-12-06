@@ -1,5 +1,5 @@
+'use client'
 import ProcessHeading from "@/components/molecules/ProcessHeading";
-import {fetchProcessCandidates, fetchProcessDetails } from "@/app/actions/fetchProcess"; 
 import stage1 from "@/src/stage1.webp";
 import stage2 from "@/src/stage2.webp";
 import stage3 from "@/src/stage3.webp";
@@ -7,17 +7,80 @@ import stage4 from "@/src/stage4.webp";
 import React from "react";
 import ClientProvider from "@/contexts/ClientProvider";
 import ProcessInternalHeading from "@/components/molecules/ProcessInternalHeading";
+import { fetchProcessDetails } from "@/app/actions/fetchProcessDetails";
+import { useState, useEffect } from "react";
 
-export default async function Layout({
+// Define the types for Proceso and Candidate
+type Proceso = {
+  id: number;
+  name: string;
+  startAt: string;
+  endAt: string | null;
+  preFiltered: number;
+  candidates: Candidate[];
+  status: string;
+  jobOffer?: string; // Hacerlo opcional
+  stage: string;
+  isInternal: boolean;
+};
+
+type Candidate = {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  jsongptText: string;
+  match?: number; 
+};
+
+export default function Layout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  const process = await fetchProcessDetails(1);
-  const isInternal: boolean = false;
+  params,
+}: Readonly<{ children: React.ReactNode; params: { processId: string } }>) {
+  const { processId } = params;
+  const [proceso, setProceso] = useState<Proceso | null>(null); 
+  const [candidatesTabs, setCandidatesTabs] = useState<Candidate[]>([]); 
+  const [loading, setLoading] = useState(true); 
+  const [error, setError] = useState<string | null>(null); 
 
-  if (!process) {
-    return <div>Error, proceso no encontrado.</div>;
+  useEffect(() => {
+    if (processId) {
+      const fetchData = async () => {
+        try {
+          setLoading(true);
+          const procesoData = await fetchProcessDetails(Number(processId));
+          console.log("proceso desde LAYOUT -->",procesoData);
+
+          if (procesoData) {
+            setProceso(procesoData);
+            setCandidatesTabs(procesoData.candidates ?? []); // Asigna directamente los candidatos del proceso
+          } else {
+            setError("Proceso no encontrado");
+          }
+        } catch {
+          setError("Error llamando información del proceso");
+        } finally {
+          setLoading(false);
+        }
+      };
+  
+      fetchData();
+    }
+  }, [processId]);
+  
+  
+
+  if (loading) {
+    return <div>Cargando...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
+
+  if (!proceso) {
+    return <div>No se encontró información</div>;
   }
 
   const etapas = [
@@ -61,22 +124,21 @@ export default async function Layout({
     image: string;
     text: string;
   } = { title: "", image: "", text: "" };
-  let showCandidates: number = -1;
-
-  const candidatesTabs = process.candidatesIds.length > 0
-    ? await Promise.all(process.candidatesIds.map(async (candidateId) => {
-        const candidates = await fetchProcessCandidates(candidateId);
-        return candidates ? candidates.map(candidate => ({
-          name: candidate.name,
-          id: candidate.id, 
-        })) : [];
-      })).then(results => results.flat())
-    : [];
+  let showCandidates: Candidate | number = -1;
+  // const candidatesTabs = process.candidatesIds.length > 0
+  //   ? await Promise.all(process.candidatesIds.map(async (candidateId) => {
+  //       const candidates = await fetchProcessCandidates(candidateId);
+  //       return candidates ? candidates.map(candidate => ({
+  //         name: candidate.name,
+  //         id: candidate.id, 
+  //       })) : [];
+  //     })).then(results => results.flat())
+  //   : [];
 
   const candidatesTabsFinal = candidatesTabs ?? [];
 
   etapas.forEach((et) => {
-    if (et.name.toLowerCase() === process.stage.toLowerCase()) {
+    if (et.name.toLowerCase() === proceso.stage.toLowerCase()) {
       etapas.forEach((e) => {
         if (et.order === e.order) {
           etapasToUse[e.order] = {
@@ -98,22 +160,17 @@ export default async function Layout({
           };
         }
       });
-      description = {
-        title: et.name,
-        image: et.image,
-        text: et.text,
-      };
-      showCandidates = et.showCandidates ? process.candidatesIds[0] : -1;
-    }
+      description = { title: et.name, image: et.image, text: et.text };
+      showCandidates = et.showCandidates && proceso.candidates.length > 0 ? proceso.candidates[0] : -1;    }
   });
 
   return (
     <div className="inner-page-container">
-      {isInternal ? (
-        <ProcessInternalHeading process={process} etapasToUse={etapasToUse} />
+      {proceso.isInternal ? (
+        <ProcessInternalHeading process={proceso} etapasToUse={etapasToUse} />
       ) : (
         <ProcessHeading
-          process={process}
+          process={proceso}
           etapasToUse={etapasToUse}
           description={description}
         />

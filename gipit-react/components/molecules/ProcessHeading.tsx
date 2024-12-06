@@ -35,9 +35,7 @@ function ProcessHeading({
     startAt: string;
     endAt: string | null;
     preFiltered: number;
-    candidates: number;
     status: string;
-    candidatesIds: number[];
   };
 }) {
   const [contracted, setContracted] = useState(false);

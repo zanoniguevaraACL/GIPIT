@@ -1,6 +1,6 @@
 import Modal from "@/components/molecules/Modal";
 import { FormInputsRow } from "@/app/lib/types";
-import { handleDisqualify } from "@/app/actions/handleDisqualify";
+import { handleCreateCandidate } from "@/app/actions/handleCreateCandidate"; 
 
 async function Page({ params }: { params: { processId: string } }) {
   const { processId } = params;
@@ -48,7 +48,7 @@ async function Page({ params }: { params: { processId: string } }) {
   ];
 
   return (
-    <Modal rows={fields} onSubmit={handleDisqualify} title="Nuevo Candidato" />
+    <Modal rows={fields} onSubmit={handleCreateCandidate} title="Nuevo Candidato" /> 
   );
 }
 

@@ -48,6 +48,7 @@ export type FormBlockProps = {
   ) => Promise<{ message: string; route: string }>;
   title?: string;
   message?: string;
+  editor?: React.ReactNode; // Añadir esta línea
 };
 
 export interface NavBarCTAProps {
