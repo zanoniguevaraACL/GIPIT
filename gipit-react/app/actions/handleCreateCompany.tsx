@@ -16,7 +16,7 @@ export const handleCreateCompany = async (formData: FormData) => {
     };
 
     // Realiza la solicitud POST a tu backend con JSON
-    const response = await fetch(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/company`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/company`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

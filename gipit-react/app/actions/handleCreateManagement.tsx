@@ -17,7 +17,7 @@ export const handleCreateManagement = async (formData: FormData, companyId: stri
       company_id: companyIdInt,
     };
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/management`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/management`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -65,7 +65,7 @@ function Page() {
         if (!companyId) {
           throw new Error("ID de compañia invalido");
         }
-        const response = await fetch(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/company/${companyId}`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/company/${companyId}`);
         if (!response.ok) {
           throw new Error("error recuperando información de la compañia");
         }

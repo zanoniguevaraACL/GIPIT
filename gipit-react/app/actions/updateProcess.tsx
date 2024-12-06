@@ -15,7 +15,7 @@ export const updateProcess = async (formData: FormData, processId: string) => {
       job_offer_description: jobOfferDescription,
     };
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/process/${processId}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/process/${processId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

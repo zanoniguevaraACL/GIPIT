@@ -16,7 +16,7 @@ export const updateManagement = async (formData: FormData, managementId: string,
     if (name) payload.name = name;
     if (description) payload.description = description;
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/management/${managementIdInt}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/management/${managementIdInt}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
