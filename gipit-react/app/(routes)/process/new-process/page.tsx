@@ -52,7 +52,12 @@ const Page = () => {
   }
 
   if (error) {
-    return <div>{error}</div>;
+    return (
+      <div>
+        <p style={{ color: "red" }}>{error}</p> 
+        <a href="/process">Volver</a> 
+      </div>
+    );
   }
 
   const selectFieldOptions = clientsList.map((client) => ({

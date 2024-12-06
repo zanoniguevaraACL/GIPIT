@@ -24,15 +24,14 @@ function Page() {
   
       if (!parsedData.success) {
         parsedData.error.errors.forEach(error => {
-          toast.error(error.message);
+          toast.error(error.message); 
         });
         return { message: "validación fallida", route: "/company/new-company" };
       }
   
       setLoading(true);
-      
-      //modificar despues cuando se agregue la capacidad de subir archivos
-      formData.delete("logo"); 
+  
+      formData.delete("logo");
   
       const result = await handleCreateCompany(formData);
   
@@ -45,17 +44,16 @@ function Page() {
   
       setLoading(false);
       return result;
-    } catch (error) {
-      toast.error("Error al procesar la solicitud");
+    } catch {
+      toast.error("Error al procesar la solicitud"); 
       setLoading(false);
-      return { message: "Error al procesar la solicitud", route: "/company" };
+      return { message: "Error al procesar la solicitud", route: "/company/new-company" };
     }
   };
   
-  
 
   const fields: FormInputsRow = [
-    { label: "Logo", type: "file", name: "logo" }, 
+    { label: "Logo", type: "file", name: "logo" },
     {
       label: "Nombre",
       placeholder: "Nombre de la empresa",
@@ -74,7 +72,15 @@ function Page() {
     ],
   ];
 
-  return <Modal rows={fields} onSubmit={handleSubmit} loading={loading} />;
+  return (
+    <div>
+      {loading ? (
+        <div>Cargando...</div>
+      ) : (
+        <Modal rows={fields} onSubmit={handleSubmit} />
+      )}
+    </div>
+  );
 }
 
 export default Page;
