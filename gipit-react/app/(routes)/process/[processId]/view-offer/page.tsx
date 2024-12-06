@@ -6,10 +6,15 @@ import { useParams } from "next/navigation";
 import { updateProcess } from "@/app/actions/updateProcess"; 
 import { fetchProcessDetails } from "@/app/actions/fetchProcess"; 
 import { toast } from "react-toastify"; 
-import { z } from "zod"; 
+import { z } from "zod";
 
 const processSchema = z.object({
-  jobOffer: z.string().min(1, "La vacante es obligatoria"), 
+  jobOffer: z
+    .string()
+    .min(1, "La vacante es obligatoria")
+    .regex(/^[A-Za-zÀ-ÿ0-9 .-]+$/, {
+      message: "La vacante solo puede contener letras, números, espacios, puntos y guiones",
+    }), 
 });
 
 function Page() {
@@ -87,7 +92,7 @@ function Page() {
       }
 
       return { message: result.message, route: "/process" };
-    } catch (error) {
+    } catch {
       toast.error("Error al procesar la solicitud"); 
       return { message: "Error al procesar la solicitud", route: `/process/${processId}` };
     }

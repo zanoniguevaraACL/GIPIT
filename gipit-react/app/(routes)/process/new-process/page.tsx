@@ -14,8 +14,18 @@ const processSchema = z.object({
     .refine((val) => !isNaN(val), {
       message: "Selecciona un cliente válido", 
     }),
-  jobOffer: z.string().min(1, "El perfil buscado es obligatorio"),
-  jobOfferDescription: z.string().min(1, "La descripción de la vacante es obligatoria"),
+  jobOffer: z
+    .string()
+    .min(1, "El perfil buscado es obligatorio")
+    .regex(/^[A-Za-zÀ-ÿ0-9 .-]+$/, {
+      message: "El perfil solo puede contener letras, números, espacios, puntos y guiones",
+    }),
+  jobOfferDescription: z
+    .string()
+    .min(1, "La descripción de la vacante es obligatoria")
+    .regex(/^[A-Za-zÀ-ÿ0-9 .-]+$/, {
+      message: "La descripción solo puede contener letras, números, espacios, puntos y guiones",
+    }),
 });
 
 type Client = {
@@ -87,7 +97,7 @@ const Page = () => {
       }
 
       return { message: result.message, route: "/process" };
-    } catch (error) {
+    } catch {
       toast.error("Error al procesar la solicitud"); 
       return { message: "Error al procesar la solicitud", route: "/process" };
     }
