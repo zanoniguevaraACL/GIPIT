@@ -1,5 +1,5 @@
 const Home = () => {
-  return <h1>Welcome to My Company App</h1>;
+  return <h1>Bienvenido al Dashboard de ACL</h1>;
 };
 
 export default Home;
