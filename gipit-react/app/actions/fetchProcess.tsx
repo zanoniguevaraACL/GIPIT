@@ -48,7 +48,7 @@ export const fetchProcess = async (page: number) => {
     });
 
     if (!response.ok) {
-      throw new Error('Error al obtener los procesos');
+      throw new Error(`Error al obtener los procesos: ${response.status} ${response.statusText}`);
     }
 
     const data = await response.json();
@@ -67,11 +67,8 @@ export const fetchProcess = async (page: number) => {
       })),
     };
   } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(`Error al obtener los procesos: ${error.message || "Error desconocido"}`);
-    } else {
-      throw new Error("Error desconocido al obtener los procesos");
-    }
+    console.error("Error detallado:", error);
+    throw new Error(`Error al obtener los procesos: ${error instanceof Error ? error.message : "Error desconocido"}`);
   }
 };
 
