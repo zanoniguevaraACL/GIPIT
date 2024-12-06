@@ -1,6 +1,6 @@
 export const fetchAllPreInvoices = async (page: number) => {
     try {
-      const apiUrl = `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/preinvoices?page=${page}`;
+      const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/preinvoices?page=${page}`;
     
       const response = await fetch(apiUrl, {
         method: 'GET',

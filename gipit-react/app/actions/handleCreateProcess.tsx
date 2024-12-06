@@ -24,7 +24,7 @@ export const handleCreateProcess = async (formData: FormData) => {
       status: data.status || 'pending',
     };
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/process`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/process`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

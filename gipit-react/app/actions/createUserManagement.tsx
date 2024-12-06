@@ -21,7 +21,7 @@ export const createUserManagement = async (
 
     
     const userResponse = await fetch(
-      `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/users/byEmail/${email}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/users/byEmail/${email}`,
       {
         method: "GET",
         headers: {
@@ -44,7 +44,7 @@ export const createUserManagement = async (
     };
 
     
-    const response = await fetch(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/user-management`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user-management`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

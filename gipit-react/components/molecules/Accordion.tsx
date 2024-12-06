@@ -31,7 +31,7 @@ function Accordion({ details }: { details: CompanyDetails }) {
   // Función para cargar los integrantes de una jefatura
   const fetchIntegrantes = async (managementId: number) => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/user-management/${managementId}`);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user-management/${managementId}`);
       if (!response.ok) {
         throw new Error("Error fetching integrantes");
       }

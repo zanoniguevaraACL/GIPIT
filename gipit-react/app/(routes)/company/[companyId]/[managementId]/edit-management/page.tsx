@@ -24,7 +24,7 @@ function Page({
     const fetchManagementData = async () => {
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/management/${managementId}`
+          `${process.env.NEXT_PUBLIC_API_URL}/api/management/${managementId}`
         );
         if (!response.ok) {
           throw new Error("error al recuperar información de las jefaturas");
