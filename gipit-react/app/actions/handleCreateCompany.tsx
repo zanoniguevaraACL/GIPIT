@@ -4,7 +4,8 @@ export const handleCreateCompany = async (formData: FormData) => {
   try {
     const name = formData.get("name") as string;
     const description = formData.get("description") as string;
-    const logo = formData.get("logo") as File | null;
+
+    const logo = null;  
 
     const payload = { name, description, logo };
 
@@ -33,7 +34,7 @@ export const handleCreateCompany = async (formData: FormData) => {
       };
     } else {
       return {
-        message: "ocurrió un error desconocido",
+        message: "Ocurrió un error desconocido",
         route: "/company",
       };
     }
