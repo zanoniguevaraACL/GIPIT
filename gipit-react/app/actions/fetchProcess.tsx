@@ -40,12 +40,12 @@ export const fetchProcess = async (page: number) => {
     }
 
     console.log("VARIABLE DE ENTORNO QUE TIRA EL FETCH", process.env.NEXT_PUBLIC_API_URL);
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/process`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/process?page=${page}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
-      cache: 'no-store',
+      // cache: 'no-store',
     });
 
     if (!response.ok) {
@@ -56,6 +56,7 @@ export const fetchProcess = async (page: number) => {
     // console.log("DATA FETCHPROCESS--> :", data.batch)
     console.log("Datos recibidos desde la API:", data);
 
+    console.log("URL utilizada para la API:", `${process.env.NEXT_PUBLIC_API_URL}/api/process?page=${page}`);
     return {
       total: data.total,
       batch: data.batch.map((process: ProcessData) => ({
