@@ -2,14 +2,14 @@
 import { useEffect, useState } from "react";
 import Modal from "@/components/molecules/Modal";
 import { FormInputsRow } from "@/app/lib/types";
-import { useParams } from "next/navigation";
+import { useParams } from "next/navigation"; 
 import { updateProcess } from "@/app/actions/updateProcess"; 
 import { fetchProcessDetails } from "@/app/actions/fetchProcess"; 
 import { toast } from "react-toastify"; 
 import { z } from "zod"; 
 
 const processSchema = z.object({
-  jobOffer: z.string().min(1, "La vacante es obligatoria"),
+  jobOffer: z.string().min(1, "La vacante es obligatoria"), 
 });
 
 function Page() {
@@ -55,7 +55,7 @@ function Page() {
   if (error) {
     return (
       <div>
-        <h2>{error}</h2>
+        <p style={{ color: "red" }}>{error}</p> 
         <a href={`/process/${processId}`}>Volver</a>
       </div>
     );
@@ -67,7 +67,7 @@ function Page() {
 
   const handleSubmit = async (formData: FormData) => {
     try {
-      const formObj = Object.fromEntries(formData.entries());
+      const formObj = Object.fromEntries(formData.entries()); 
 
       const parsedData = processSchema.safeParse(formObj);
 
@@ -81,18 +81,17 @@ function Page() {
       const result = await updateProcess(formData, processId as string); 
 
       if (result.message.startsWith("Proceso actualizado exitosamente")) {
-        toast.success(result.message); 
+        toast.success(result.message);
       } else {
-        toast.error(result.message); 
+        toast.success(result.message); 
       }
 
       return { message: result.message, route: "/process" };
     } catch (error) {
-      toast.error("Error al procesar la solicitud");
+      toast.error("Error al procesar la solicitud"); 
       return { message: "Error al procesar la solicitud", route: `/process/${processId}` };
     }
   };
-
 
   return (
     <Modal
