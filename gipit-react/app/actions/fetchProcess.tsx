@@ -39,6 +39,7 @@ export const fetchProcess = async (page: number) => {
       throw new Error("El número de página debe ser mayor que 0.");
     }
 
+    console.log("VARIABLE DE ENTORNO QUE TIRA EL FETCH", process.env.NEXT_PUBLIC_API_URL);
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/process?page=${page}`, {
       method: 'GET',
       headers: {
@@ -53,6 +54,7 @@ export const fetchProcess = async (page: number) => {
 
     const data = await response.json();
     // console.log("DATA FETCHPROCESS--> :", data.batch)
+    console.log("Datos recibidos desde la API:", data);
 
     return {
       total: data.total,
