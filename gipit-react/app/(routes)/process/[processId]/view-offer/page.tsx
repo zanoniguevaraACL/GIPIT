@@ -2,39 +2,49 @@
 import { useEffect, useState } from "react";
 import Modal from "@/components/molecules/Modal";
 import { FormInputsRow } from "@/app/lib/types";
-import { useParams } from "next/navigation"; // Import useParams to get the processId from the URL
-import { updateProcess } from "@/app/actions/updateProcess"; // Import the updateProcess function
-import { fetchProcessDetails } from "@/app/actions/fetchProcess"; // Fetch process details
+import { useParams } from "next/navigation"; 
+import { updateProcess } from "@/app/actions/updateProcess"; 
+import { fetchProcessDetails } from "@/app/actions/fetchProcess"; 
+import { toast } from "react-toastify"; 
+import { z } from "zod";
+
+const processSchema = z.object({
+  jobOffer: z
+    .string()
+    .min(1, "La vacante es obligatoria")
+    .regex(/^[A-Za-zÀ-ÿ0-9 .-]+$/, {
+      message: "La vacante solo puede contener letras, números, espacios, puntos y guiones",
+    }), 
+});
 
 function Page() {
-  const { processId } = useParams(); // Get processId from the URL
-  const [previousValues, setPreviousValues] = useState<FormInputsRow | null>(null); // State to store process details
-  const [error, setError] = useState<string | null>(null); // State to handle errors
+  const { processId } = useParams(); 
+  const [previousValues, setPreviousValues] = useState<FormInputsRow | null>(null);
+  const [error, setError] = useState<string | null>(null); 
 
   useEffect(() => {
     if (processId) {
-      // Ensure processId is a string, not an array
       const processIdStr = Array.isArray(processId) ? processId[0] : processId;
 
       const fetchDetails = async () => {
         try {
-          const details = await fetchProcessDetails(parseInt(processIdStr)); // parseInt with the string version of processId
+          const details = await fetchProcessDetails(parseInt(processIdStr));
           if (!details || !details.jobOffer) {
             setError("No se encontró la oferta de trabajo para el ID del proceso.");
             return;
           }
           setPreviousValues([
             {
-              label: "Vacante", // Job offer field
+              label: "Vacante",
               placeholder: "Describa el puesto de trabajo",
               type: "textarea",
-              name: "jobOffer", // Field name for the job offer
-              defaultValue: details.jobOffer, // Pre-fill with the fetched job offer
+              name: "jobOffer", 
+              defaultValue: details.jobOffer, 
               height: "40svh",
             },
             [
-              { type: "cancel", value: "Cerrar", href: `/process/${processIdStr}` }, // Cancel button redirects to the process
-              { type: "submit", value: "Guardar" }, // Submit button to save the form
+              { type: "cancel", value: "Cerrar", href: `/process/${processIdStr}` }, 
+              { type: "submit", value: "Guardar" },
             ],
           ]);
         } catch (error) {
@@ -50,23 +60,48 @@ function Page() {
   if (error) {
     return (
       <div>
-        <h2>{error}</h2>
-        <a href={`/process/${processId}`}>Volver</a> {/* Link to go back to the process */}
+        <p style={{ color: "red" }}>{error}</p> 
+        <a href={`/process/${processId}`}>Volver</a>
       </div>
     );
   }
 
   if (!previousValues) {
-    return <div>Cargando...</div>; // Loading state while data is being fetched
+    return <div>Cargando...</div>; 
   }
 
-  // Ensure processId is passed as a string to updateProcess
-  const processIdStr = Array.isArray(processId) ? processId[0] : processId;
+  const handleSubmit = async (formData: FormData) => {
+    try {
+      const formObj = Object.fromEntries(formData.entries()); 
+
+      const parsedData = processSchema.safeParse(formObj);
+
+      if (!parsedData.success) {
+        parsedData.error.errors.forEach((error) => {
+          toast.error(error.message);
+        });
+        return { message: "validación fallida", route: `/process/${processId}` };
+      }
+
+      const result = await updateProcess(formData, processId as string); 
+
+      if (result.message.startsWith("Proceso actualizado exitosamente")) {
+        toast.success(result.message);
+      } else {
+        toast.success(result.message); 
+      }
+
+      return { message: result.message, route: "/process" };
+    } catch {
+      toast.error("Error al procesar la solicitud"); 
+      return { message: "Error al procesar la solicitud", route: `/process/${processId}` };
+    }
+  };
 
   return (
     <Modal
       rows={previousValues}
-      onSubmit={(formData) => updateProcess(formData, processIdStr)} // Pass the correctly typed processId
+      onSubmit={handleSubmit} 
       title="Detalles de la Vacante"
     />
   );
