@@ -1,19 +1,21 @@
-'use server'
+"use server";
 import OpenAI from "openai";
 
 // Configuración del cliente de OpenAI
 const openai = new OpenAI({
-  apiKey: process.env.API_KEY_OPENAI
+  apiKey: process.env.API_KEY_OPENAI,
 });
 
 // Comunicación con chatGPT para obtener una respuesta de valor para RH
 export async function chatGPTCandidateResponse(textoCV: string) {
   try {
     if (!textoCV) {
-      return { error: "Es obligatorio contar con la transcripción del curriculum" }
+      return {
+        error: "Es obligatorio contar con la transcripción del curriculum",
+      };
     }
 
-  const prompt = `
+    const prompt = `
 Convierte el contenido de un CV proporcionado en un formato HTML limpio y bien estructurado, siguiendo las directrices especificadas a continuación.
 
 - Utiliza etiquetas HTML adecuadas para mejorar la presentación:
@@ -63,41 +65,36 @@ Con el CV proporcionado, intenta llevarlo a la siguiente estructura:
 
 - Mantén el HTML fácil de leer y semántico, lo que mejorará la comprensión tanto humana como por parte de motores de búsqueda.
 - No uses caracteres especiales que no pertenezcan al contenido, como símbolos de escape o etiquetas extrínsecas.
-  `
-
-
-  
+  `;
 
     //solicitud a la API de OpenAI
     const completion = await openai.chat.completions.create({
       model: "chatgpt-4o-latest",
-      messages: [
-        { role: "user", content: prompt },
-      ],
-      max_tokens: 16000,//16000, // Cantidad de palabras en la respuesta
+      messages: [{ role: "user", content: prompt }],
+      max_tokens: 16000, //16000, // Cantidad de palabras en la respuesta
     });
-
 
     // Respuesta al prompt
     const content = completion.choices[0].message.content;
-    console.log(content);
 
     return content;
   } catch (error) {
     console.error("Error obteniendo respuesta de cv estandar:", error);
-    return { error: "Failed to generate content." }
+    return { error: "Failed to generate content." };
   }
 }
 
-
 // Comunicación con chatGPT para obtener una respuesta de valor para RH
-export async function compatibilityResponse(textoCV: string, textoVacante: string) {
+export async function compatibilityResponse(
+  textoCV: string,
+  textoVacante: string
+) {
   try {
     if (!textoCV) {
-      return { error: "Los parametros son requeridos" }
+      return { error: "Los parametros son requeridos" };
     }
 
-  const promptComp = `
+    const promptComp = `
 Analiza detalladamente la compatibilidad entre un currículum vitae (CV) y una oferta laboral. Además, proporciona 20 preguntas que un entrevistador de Recursos Humanos (RRHH) pueda hacerle al candidato para explorar su ajuste a la oferta laboral. Para ello, ten en cuenta los principales apartados esenciales del CV y la oferta laboral, comparándolos punto por punto para establecer el grado de correspondencia.  
 
 Este es el Curriculum:
@@ -174,26 +171,16 @@ Adicionalmente, proporciona las 20 preguntas generadas.
     //solicitud a la API de OpenAI
     const completion = await openai.chat.completions.create({
       model: "chatgpt-4o-latest",
-      messages: [
-        { role: "user", content: promptComp },
-      ],
-      max_tokens: 16000,//16000, // Cantidad de palabras en la respuesta
+      messages: [{ role: "user", content: promptComp }],
+      max_tokens: 16000, //16000, // Cantidad de palabras en la respuesta
     });
-
 
     // Respuesta al prompt
     const content = completion.choices[0].message.content;
-    // console.log("----> Compatibility server action response --->", content);
 
     return content;
   } catch (error) {
     console.error("Error en la compatibilidad con el candidato:", error);
-    return { error: "Failed to generate content." }
+    return { error: "Failed to generate content." };
   }
 }
-
-
-
-
-
-

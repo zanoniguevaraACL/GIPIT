@@ -44,16 +44,11 @@
     gap: 24px;
 
     .management-user-row {
-      display: flex;
+      display: grid;
       align-items: center;
-      justify-content: space-between;
       gap: 24px;
-      grid-template-columns: 24px 1.5fr 1.5fr 2fr 1fr;
+      grid-template-columns: 24px 1.5fr 1.5fr 1fr;
       padding: 0 12px;
-
-      * {
-        place-content: center;
-      }
     }
 
     .buttons-row {

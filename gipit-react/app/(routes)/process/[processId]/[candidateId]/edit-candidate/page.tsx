@@ -1,9 +1,9 @@
-'use client';
+"use client";
 import ModalWithTextEditor from "@/components/molecules/ModalWithTextEditor";
 import { FormInputsRow } from "@/app/lib/types";
 import { handleEditCandidate } from "@/app/actions/handleEditCandidate";
 import { useState, useEffect } from "react";
-import '@/components/molecules/textEditor.css';
+import "@/components/molecules/textEditor.css";
 import { fetchCandidateDetails } from "@/app/actions/fetchCandidateDetails";
 
 type CandidateDetails = {
@@ -20,23 +20,21 @@ type CandidateDetails = {
   };
 };
 
-
-export default function Page({ params }: { params: { processId: string; candidateId: string } }) {
-  const [candidateDetails, setCandidateDetails] = useState<CandidateDetails | null>(null);
+export default function Page({
+  params,
+}: {
+  params: { processId: string; candidateId: string };
+}) {
+  const [candidateDetails, setCandidateDetails] =
+    useState<CandidateDetails | null>(null);
   const { processId, candidateId } = params;
   const routeToRedirect = `/process/${processId}/${candidateId}`;
-
-  // console.log("ID del proceso -->",processId);
-  // console.log("ID del candidato -->",candidateId);
-  // console.log("PARAMS -->",params);
 
   useEffect(() => {
     const fetchDetails = async () => {
       try {
-        console.log('Candidato ID:', candidateId); 
         const details = await fetchCandidateDetails(parseInt(candidateId));
         setCandidateDetails(details);
-        
       } catch (error) {
         console.error("Error fetching candidate details:", error);
       }
@@ -90,7 +88,7 @@ export default function Page({ params }: { params: { processId: string; candidat
         rows={fields}
         onSubmit={handleEditCandidate}
         title="Editar Candidato"
-        cvCandidato={candidateDetails.sumary || 'Escribe tu contenido aqui...'} // enviar contenido al modal
+        cvCandidato={candidateDetails.sumary || "Escribe tu contenido aqui..."} // enviar contenido al modal
       />
     </div>
   );

@@ -8,10 +8,14 @@ function UserNameAndRole({
   name: string | null | undefined;
   role: string | null | undefined;
 }) {
+  let nameToUse: string = "User";
+  if (name) {
+    nameToUse = name.split(" ")[0] + " " + name.split(" ")[1];
+  }
   return (
     <div className="user-name-and-role-container">
       <div className="flex-row center-aligned gap-8">
-        <h4> {name}</h4>
+        <h4> {nameToUse}</h4>
         <IconChevronDown />
       </div>
       <p className="text-12">{role}</p>

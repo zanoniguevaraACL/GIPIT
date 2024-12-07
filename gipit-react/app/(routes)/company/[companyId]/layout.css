@@ -14,10 +14,20 @@
   flex-grow: 1;
   border-radius: 12px;
   height: 100%;
+  overflow: auto;
 }
 
 .company-details-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.company-logo {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  padding: 8px;
+  border-radius: 8px;
+  background-color: var(--light-tertiary);
 }

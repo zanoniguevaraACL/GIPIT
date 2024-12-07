@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import ProcessHeading from "@/components/molecules/ProcessHeading";
 import stage1 from "@/src/stage1.webp";
 import stage2 from "@/src/stage2.webp";
@@ -31,7 +31,7 @@ type Candidate = {
   phone: string;
   address: string;
   jsongptText: string;
-  match?: number; 
+  match?: number;
 };
 
 export default function Layout({
@@ -39,10 +39,10 @@ export default function Layout({
   params,
 }: Readonly<{ children: React.ReactNode; params: { processId: string } }>) {
   const { processId } = params;
-  const [proceso, setProceso] = useState<Proceso | null>(null); 
-  const [candidatesTabs, setCandidatesTabs] = useState<Candidate[]>([]); 
-  const [loading, setLoading] = useState(true); 
-  const [error, setError] = useState<string | null>(null); 
+  const [proceso, setProceso] = useState<Proceso | null>(null);
+  const [candidatesTabs, setCandidatesTabs] = useState<Candidate[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (processId) {
@@ -50,7 +50,6 @@ export default function Layout({
         try {
           setLoading(true);
           const procesoData = await fetchProcessDetails(Number(processId));
-          console.log("proceso desde LAYOUT -->",procesoData);
 
           if (procesoData) {
             setProceso(procesoData);
@@ -64,12 +63,10 @@ export default function Layout({
           setLoading(false);
         }
       };
-  
+
       fetchData();
     }
   }, [processId]);
-  
-  
 
   if (loading) {
     return <div>Cargando...</div>;
@@ -130,7 +127,7 @@ export default function Layout({
   //       const candidates = await fetchProcessCandidates(candidateId);
   //       return candidates ? candidates.map(candidate => ({
   //         name: candidate.name,
-  //         id: candidate.id, 
+  //         id: candidate.id,
   //       })) : [];
   //     })).then(results => results.flat())
   //   : [];
@@ -161,12 +158,18 @@ export default function Layout({
         }
       });
       description = { title: et.name, image: et.image, text: et.text };
-      showCandidates = et.showCandidates && proceso.candidates.length > 0 ? proceso.candidates[0] : -1;    }
+      showCandidates =
+        et.showCandidates && proceso.candidates.length > 0
+          ? proceso.candidates[0]
+          : -1;
+    }
   });
+
+  const isInternal = true;
 
   return (
     <div className="inner-page-container">
-      {proceso.isInternal ? (
+      {isInternal ? (
         <ProcessInternalHeading process={proceso} etapasToUse={etapasToUse} />
       ) : (
         <ProcessHeading
@@ -178,7 +181,7 @@ export default function Layout({
 
       <ClientProvider
         showCandidates={showCandidates}
-        candidatesTabs={candidatesTabsFinal} 
+        candidatesTabs={candidatesTabsFinal}
       >
         {children}
       </ClientProvider>
