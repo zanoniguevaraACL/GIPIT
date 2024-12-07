@@ -51,7 +51,6 @@ export default async function Page(props: {
     total: process.total,
     batch: process.batch,
   };
-  // console.log("Data de los procesos----->", data)
 
   return (
     <div className="inner-page-container">

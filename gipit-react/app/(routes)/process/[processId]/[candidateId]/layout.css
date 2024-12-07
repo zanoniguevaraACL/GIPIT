@@ -4,7 +4,8 @@
 }
 
 .process-candidates-container {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
   gap: 24px;
   margin-top: 32px;
 

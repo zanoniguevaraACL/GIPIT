@@ -1,7 +1,9 @@
-'use server'
-export const createCandidateAction = async (formData: FormData, processId: number) => {
+"use server";
+export const createCandidateAction = async (
+  formData: FormData,
+  processId: number
+) => {
   // Convertir FormData a un objeto JSON
-console.log("Proceso en el que se crea el candidato actual ======>", processId);
 
   const data = {
     name: formData.get("name") as string,
@@ -19,22 +21,35 @@ console.log("Proceso en el que se crea el candidato actual ======>", processId);
 
   try {
     // Llamada al endpoint de tu backend para crear un candidato
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/candidates`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/candidates`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
+    );
 
     if (!response.ok) {
       throw new Error(`Error: ${response.statusText}`);
     }
 
     const result = await response.json();
-    return { success: true, message: "Candidato y relación con el proceso creados exitosamente", result: result };;
+    return {
+      success: true,
+      message: "Candidato y relación con el proceso creados exitosamente",
+      result: result,
+    };
   } catch (error) {
-    console.error("Error al llamar al endpoint de creación de candidato:", error);
-    return { success: false, message: "Error al crear el candidato o asociarlo con el proceso." };
+    console.error(
+      "Error al llamar al endpoint de creación de candidato:",
+      error
+    );
+    return {
+      success: false,
+      message: "Error al crear el candidato o asociarlo con el proceso.",
+    };
   }
 };

@@ -1,4 +1,3 @@
-
 "use client";
 import { IconChevronDown, IconUserShield } from "@tabler/icons-react";
 import Button from "../atoms/Button";
@@ -26,12 +25,17 @@ interface CompanyDetails {
 
 function Accordion({ details }: { details: CompanyDetails }) {
   const [expanded, setExpanded] = useState<number | null>(null); // Jefatura expandida
-  const [jefaturas, setJefaturas] = useState<Jefatura[]>(details.jefaturas || []);
+  const [jefaturas, setJefaturas] = useState<Jefatura[]>(
+    details.jefaturas || []
+  );
 
   // Función para cargar los integrantes de una jefatura
   const fetchIntegrantes = async (managementId: number) => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user-management/${managementId}`);
+      //const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user-management/${managementId}`);
+      const response = await fetch(
+        `https://gipit-back.vercel.app/api/user-management/${managementId}`
+      );
       if (!response.ok) {
         throw new Error("Error fetching integrantes");
       }
@@ -66,7 +70,9 @@ function Accordion({ details }: { details: CompanyDetails }) {
         jefaturas.map((jef, index: number) => (
           <div
             key={index}
-            className={`management-container ${expanded === index ? "expanded" : ""}`}
+            className={`management-container ${
+              expanded === index ? "expanded" : ""
+            }`}
           >
             <div
               className="management-name-container"
@@ -82,7 +88,6 @@ function Accordion({ details }: { details: CompanyDetails }) {
                     <IconUserShield />
                     <p>{integ.name}</p>
                     <p>{integ.email}</p>
-                    <p>{integ.role}</p>
                   </div>
                 ))
               ) : (

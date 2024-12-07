@@ -1,9 +1,6 @@
 "use server";
 
 export const serverAction = async (formData: FormData) => {
-  // Simula un retraso de 2 segundos
-  await new Promise((resolve) => setTimeout(resolve, 2000));
-
   const response = formData.get("name") as string;
 
   // Retorna un resultado (en este caso solo un log)
@@ -11,17 +8,11 @@ export const serverAction = async (formData: FormData) => {
 };
 
 export const fetchFirstC = async () => {
-  // Simula un retraso de 2 segundos
-  await new Promise((resolve) => setTimeout(resolve, 2000));
-
-  const response = 2;
+  const response = 6;
   return response;
 };
 
 export const fetchAllC = async () => {
-  // Simula un retraso de 2 segundos
-  await new Promise((resolve) => setTimeout(resolve, 2000));
-
   const response = [
     { id: 5, name: "Cencosud" },
     { id: 6, name: "BCI Seguros" },
@@ -49,9 +40,6 @@ export const fetchAllC = async () => {
 };
 
 export const fetchCDetails = async (id: number) => {
-  // Simula un retraso de 2 segundos
-  await new Promise((resolve) => setTimeout(resolve, 2000));
-
   const response = {
     id: id,
     name: "Cencosud",
@@ -92,11 +80,6 @@ export const fetchCDetails = async (id: number) => {
 };
 
 export const fetchProcess = async (page: number) => {
-  // Simula un retraso de 2 segundos
-  await new Promise((resolve) => setTimeout(resolve, 2000));
-
-  console.log("actual page: ", page); // Usaremos la página para traer los 15 registros correspondientes
-
   // Datos simulados para las distintas páginas
   const dataPage1 = [
     {
@@ -278,8 +261,6 @@ export const fetchProcess = async (page: number) => {
 };
 
 export const fetchProcessDetails = async (id: number) => {
-  // Simula un retraso de 2 segundos
-  await new Promise((resolve) => setTimeout(resolve, 2000));
   console.log(id);
 
   const response = {
@@ -292,16 +273,13 @@ export const fetchProcessDetails = async (id: number) => {
     candidates: 4,
     status: "activo",
     candidatesIds: [4, 2, 3],
-    jobOffer:
-      "Desarrollador Fullstack",
+    jobOffer: "Desarrollador Fullstack",
   };
 
   return response;
 };
 
 export const fetchProcessCandidates = async (ids: number[]) => {
-  // Simula un retraso de 2 segundos
-  await new Promise((resolve) => setTimeout(resolve, 2000));
   console.log(ids);
 
   const response = [
@@ -329,9 +307,7 @@ export const fetchProcessCandidates = async (ids: number[]) => {
 };
 
 export const fetchCandidateDetails = async (id: number) => {
-  // Simula un retraso de 2 segundos
-  console.log("resolviendo id ", id);
-  await new Promise((resolve) => setTimeout(resolve, 2000));
+  console.log(id);
 
   // este endpoint busca el candidato por el ID y además el comentario asociado y trae el % de compatibilidad.
   // IMPORTANTE: El % de compatibilidad solo se genera una vez, porque en distintos llamados GPT puede dar % diferentes.
@@ -458,9 +434,6 @@ Correo electrónico: <a href="mailto:alandon201288@gmail.com">alandon201288@gmai
 };
 
 export const fetchProfessionals = async (page: number) => {
-  // Simula un retraso de 2 segundos
-  await new Promise((resolve) => setTimeout(resolve, 2000));
-
   console.log("actual page: ", page); // Usaremos la página para traer los 15 registros correspondientes
 
   // Datos simulados para las distintas páginas
@@ -742,9 +715,6 @@ export const fetchProfessionals = async (page: number) => {
 };
 
 export const fetchPro = async (id: number) => {
-  // Simula un retraso de 2 segundos
-  await new Promise((resolve) => setTimeout(resolve, 2000));
-
   console.log(id);
 
   const response = {
@@ -755,9 +725,6 @@ export const fetchPro = async (id: number) => {
 };
 
 export const fetchEvaluations = async (page: number) => {
-  // Simula un retraso de 2 segundos
-  await new Promise((resolve) => setTimeout(resolve, 2000));
-
   // esta trae los registros de 10 en 10 !!!
 
   console.log("actual page: ", page); // Usaremos la página para traer los 10 registros correspondientes
@@ -976,9 +943,6 @@ export const fetchEvaluations = async (page: number) => {
 };
 
 export const fetchEval = async (id: number) => {
-  // Simula un retraso de 2 segundos
-  await new Promise((resolve) => setTimeout(resolve, 2000));
-
   console.log(id);
 
   const response = {
@@ -999,9 +963,6 @@ export const fetchEval = async (id: number) => {
 };
 
 export const fetchAllInvoices = async (id: number) => {
-  // Simula un retraso de 2 segundos
-  await new Promise((resolve) => setTimeout(resolve, 2000));
-
   console.log(id);
 
   const response = [
@@ -1043,9 +1004,6 @@ export const fetchAllInvoices = async (id: number) => {
 };
 
 export const fetchInvoiceDetails = async (id: number) => {
-  // Simula un retraso de 2 segundos
-  await new Promise((resolve) => setTimeout(resolve, 2000));
-
   console.log(id);
 
   const response = {
