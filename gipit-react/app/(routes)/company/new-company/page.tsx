@@ -2,69 +2,26 @@
 import Modal from "@/components/molecules/Modal";
 import { FormInputsRow } from "@/app/lib/types";
 import { handleCreateCompany } from "@/app/actions/handleCreateCompany";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { toast } from "react-toastify";
 import { z } from "zod";
 
-const companySchema = z.object({
-  logo: z.instanceof(File).optional(),
-  name: z
-    .string()
-    .min(1, "El nombre de la empresa es obligatorio")
-    .regex(/^[A-Za-zÀ-ÿ0-9 .-]+$/, {
-      message:
-        "El nombre solo puede contener letras, números, espacios, puntos y guiones",
-    }),
-  description: z
-    .string()
-    .min(1, "La descripción es obligatoria")
-    .regex(/^[A-Za-zÀ-ÿ0-9 .-]+$/, {
-      message:
-        "La descripción solo puede contener letras, números, espacios, puntos y guiones",
-    }),
-});
-
 function Page() {
-  const router = useRouter();
-  const [loading, setLoading] = useState(false);
-
-  const handleSubmit = async (
-    formData: FormData
-  ): Promise<{ message: string; route: string }> => {
-    try {
-      const formObj = Object.fromEntries(formData.entries());
-      const parsedData = companySchema.safeParse(formObj);
-
-      if (!parsedData.success) {
-        parsedData.error.errors.forEach((error) => {
-          toast.error(error.message);
-        });
-        return { message: "validación fallida", route: "/company/new-company" };
-      }
-
-      setLoading(true);
-
-      const result = await handleCreateCompany(formData);
-
-      if (result.message.startsWith("Compañia creada exitosamente")) {
-        toast.success(result.message);
-        router.push(result.route);
-      } else {
-        toast.error(result.message);
-      }
-
-      setLoading(false);
-      return result;
-    } catch {
-      toast.error("Error al procesar la solicitud");
-      setLoading(false);
-      return {
-        message: "Error al procesar la solicitud",
-        route: "/company/new-company",
-      };
-    }
-  };
+  const companySchema = z.object({
+    logo: z.instanceof(File).optional(),
+    name: z
+      .string()
+      .min(3, "El nombre debe tener mínimo 3 caracteres")
+      .regex(/^[A-Za-zÀ-ÿ0-9 .-]+$/, {
+        message:
+          "El nombre solo puede contener letras, números, espacios, puntos y guiones",
+      }),
+    description: z
+      .string()
+      .min(3, "La descripción debe tener mínimo 3 caracteres")
+      .regex(/^[A-Za-zÀ-ÿ0-9 .-]+$/, {
+        message:
+          "La descripción solo puede contener letras, números, espacios, puntos y guiones",
+      }),
+  });
 
   const fields: FormInputsRow = [
     {
@@ -92,13 +49,12 @@ function Page() {
   ];
 
   return (
-    <div>
-      {loading ? (
-        <div>Cargando...</div>
-      ) : (
-        <Modal rows={fields} onSubmit={handleSubmit} />
-      )}
-    </div>
+    <Modal
+      title="Nuevo Cliente"
+      rows={fields}
+      onSubmit={handleCreateCompany}
+      validationSchema={companySchema}
+    />
   );
 }
 

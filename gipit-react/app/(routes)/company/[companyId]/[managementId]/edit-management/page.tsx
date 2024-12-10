@@ -1,9 +1,9 @@
-
 "use client";
 import Modal from "@/components/molecules/Modal";
 import { FormInputsRow } from "@/app/lib/types";
 import { updateManagement } from "@/app/actions/updateManagement";
 import { useState, useEffect } from "react";
+import { z } from "zod";
 
 function Page({
   params,
@@ -35,7 +35,10 @@ function Page({
           description: data.description || "",
         });
       } catch (error) {
-        console.error("error al recuperar información de las jefaturas:", error);
+        console.error(
+          "error al recuperar información de las jefaturas:",
+          error
+        );
       } finally {
         setIsLoading(false);
       }
@@ -43,6 +46,23 @@ function Page({
 
     fetchManagementData();
   }, [managementId]);
+
+  const managementSchema = z.object({
+    name: z
+      .string()
+      .min(3, "El nombre debe tener mínimo 3 caracteres")
+      .regex(/^[A-Za-zÀ-ÿ0-9 .-]+$/, {
+        message:
+          "El nombre solo puede contener letras, números, espacios, puntos y guiones",
+      }),
+    description: z
+      .string()
+      .min(3, "La descripción debe tener mínimo 3 caracteres")
+      .regex(/^[A-Za-zÀ-ÿ0-9 .-]+$/, {
+        message:
+          "La descripción solo puede contener letras, números, espacios, puntos y guiones",
+      }),
+  });
 
   const fields: FormInputsRow = [
     {
@@ -79,6 +99,7 @@ function Page({
           companyId.toString()
         )
       }
+      validationSchema={managementSchema}
     />
   );
 }

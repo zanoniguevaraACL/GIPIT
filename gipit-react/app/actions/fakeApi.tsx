@@ -4,7 +4,7 @@ export const serverAction = async (formData: FormData) => {
   const response = formData.get("name") as string;
 
   // Retorna un resultado (en este caso solo un log)
-  return { message: response };
+  return { message: response, statusCode: 200 };
 };
 
 export const fetchFirstC = async () => {

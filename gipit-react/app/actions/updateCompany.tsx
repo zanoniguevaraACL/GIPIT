@@ -1,7 +1,10 @@
 "use server";
 import sharp from "sharp";
 
-export const updateCompany = async (formData: FormData, companyId: string) => {
+export const updateCompany = async (
+  formData: FormData,
+  companyId: string
+): Promise<{ message: string; route: string; statusCode: number }> => {
   try {
     // Extrae los datos del formulario
     const name = formData.get("name") as string | null;
@@ -11,14 +14,25 @@ export const updateCompany = async (formData: FormData, companyId: string) => {
     const logoFile = formData.get("logo") as File | null;
     let logo = null;
 
-    if (logoFile) {
+    if (logoFile && logoFile.size > 0) {
       const arrayBuffer = await logoFile.arrayBuffer();
 
       // Procesar el logo con Sharp
       logo = await sharp(Buffer.from(arrayBuffer))
-        .resize(100, 100) // Redimensionar a un máximo de 800x800
+        .resize(100, 100, {
+          fit: "inside", // Mantener la relación de aspecto y ajustar dentro de 100x100
+          withoutEnlargement: true, // Evitar agrandar imágenes más pequeñas que 100x100
+        })
         .toFormat("png") // Convertir a PNG
         .toBuffer(); // Obtener el binario optimizado
+    } else {
+      // si no viene logo del form buscamos el antiguo para mantenerlo.
+      const response = await (
+        await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/company/${companyId}`
+        )
+      ).json();
+      logo = response.logo;
     }
 
     // Construye el objeto payload dinámicamente
@@ -48,17 +62,20 @@ export const updateCompany = async (formData: FormData, companyId: string) => {
     return {
       message: "Compañia actualizada correctamente",
       route: "/company",
+      statusCode: 200,
     };
   } catch (error) {
     if (error instanceof Error) {
       return {
         message: `Error actualizando compañia: ${error.message}`,
         route: "/company",
+        statusCode: 500,
       };
     } else {
       return {
         message: "Ocurrio un error ",
         route: "/company",
+        statusCode: 500,
       };
     }
   }

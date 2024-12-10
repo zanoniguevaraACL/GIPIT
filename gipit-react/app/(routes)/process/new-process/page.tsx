@@ -4,27 +4,29 @@ import Modal from "@/components/molecules/Modal";
 import { FormInputsRow } from "@/app/lib/types";
 import { handleCreateProcess } from "@/app/actions/handleCreateProcess";
 import { fetchListCompanies } from "@/app/actions/fetchCompanies";
-import { toast } from "react-toastify";  
+import { toast } from "react-toastify";
 import { z } from "zod";
 
 const processSchema = z.object({
   client: z
     .string()
-    .transform((val) => parseInt(val, 10))  
+    .transform((val) => parseInt(val, 10))
     .refine((val) => !isNaN(val), {
-      message: "Selecciona un cliente válido", 
+      message: "Selecciona un cliente válido",
     }),
   jobOffer: z
     .string()
     .min(1, "El perfil buscado es obligatorio")
     .regex(/^[A-Za-zÀ-ÿ0-9 .-]+$/, {
-      message: "El perfil solo puede contener letras, números, espacios, puntos y guiones",
+      message:
+        "El perfil solo puede contener letras, números, espacios, puntos y guiones",
     }),
   jobOfferDescription: z
     .string()
     .min(1, "La descripción de la vacante es obligatoria")
     .regex(/^[A-Za-zÀ-ÿ0-9 .-]+$/, {
-      message: "La descripción solo puede contener letras, números, espacios, puntos y guiones",
+      message:
+        "La descripción solo puede contener letras, números, espacios, puntos y guiones",
     }),
 });
 
@@ -64,18 +66,20 @@ const Page = () => {
   if (error) {
     return (
       <div>
-        <p style={{ color: "red" }}>{error}</p> 
-        <a href="/process">Volver</a> 
+        <p style={{ color: "red" }}>{error}</p>
+        <a href="/process">Volver</a>
       </div>
     );
   }
 
   const selectFieldOptions = clientsList.map((client) => ({
     name: client.name,
-    value: client.id,  
+    value: client.id,
   }));
 
-  const handleSubmit = async (formData: FormData): Promise<{ message: string; route: string }> => {
+  const handleSubmit = async (
+    formData: FormData
+  ): Promise<{ message: string; route: string; statusCode: number }> => {
     try {
       const formObj = Object.fromEntries(formData.entries());
 
@@ -83,23 +87,31 @@ const Page = () => {
 
       if (!parsedData.success) {
         parsedData.error.errors.forEach((error) => {
-          toast.error(error.message); 
+          toast.error(error.message);
         });
-        return { message: "validación fallida", route: "/process/new" };
+        return {
+          message: "validación fallida",
+          route: "/process/new",
+          statusCode: 500,
+        };
       }
 
       const result = await handleCreateProcess(formData);
 
       if (result.message.startsWith("Proceso creado exitosamente")) {
-        toast.success(result.message); 
+        toast.success(result.message);
       } else {
         toast.success(result.message);
       }
 
-      return { message: result.message, route: "/process" };
+      return { message: result.message, route: "/process", statusCode: 200 };
     } catch {
-      toast.error("Error al procesar la solicitud"); 
-      return { message: "Error al procesar la solicitud", route: "/process" };
+      toast.error("Error al procesar la solicitud");
+      return {
+        message: "Error al procesar la solicitud",
+        route: "/process",
+        statusCode: 500,
+      };
     }
   };
 
@@ -109,7 +121,7 @@ const Page = () => {
       placeholder: "Seleccionar cliente",
       type: "select",
       name: "client",
-      options: selectFieldOptions,  
+      options: selectFieldOptions,
     },
     {
       label: "Perfil buscado",
@@ -130,13 +142,7 @@ const Page = () => {
     ],
   ];
 
-  return (
-    <Modal
-      rows={fields}
-      onSubmit={handleSubmit} 
-      title="Nuevo Proceso"
-    />
-  );
+  return <Modal rows={fields} onSubmit={handleSubmit} title="Nuevo Proceso" />;
 };
 
 export default Page;

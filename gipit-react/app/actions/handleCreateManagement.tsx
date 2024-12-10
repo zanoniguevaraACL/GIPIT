@@ -1,6 +1,9 @@
 "use server";
 
-export const handleCreateManagement = async (formData: FormData, companyId: string) => {
+export const handleCreateManagement = async (
+  formData: FormData,
+  companyId: string
+): Promise<{ message: string; route: string; statusCode: number }> => {
   try {
     const name = formData.get("name") as string;
     const description = formData.get("description") as string;
@@ -17,13 +20,16 @@ export const handleCreateManagement = async (formData: FormData, companyId: stri
       company_id: companyIdInt,
     };
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/management`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/management`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      }
+    );
 
     if (!response.ok) {
       // Muestra el texto de la respuesta si hay un error
@@ -34,17 +40,20 @@ export const handleCreateManagement = async (formData: FormData, companyId: stri
     return {
       message: "Jefatura creada exitosamente",
       route: `/company/${companyId}`,
+      statusCode: 200,
     };
   } catch (error) {
     if (error instanceof Error) {
       return {
         message: `Error creando jefatura: ${error.message}`,
         route: `/company/${companyId}`,
+        statusCode: 500,
       };
     } else {
       return {
         message: "Un error ha ocurrido",
         route: `/company/${companyId}`,
+        statusCode: 500,
       };
     }
   }

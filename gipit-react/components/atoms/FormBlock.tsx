@@ -1,11 +1,11 @@
 "use client";
-
 import { FormInputProps, FormBlockProps } from "@/app/lib/types";
 import "./formBlock.css";
 import "./button.css";
 import Link from "next/link";
 import { FormEvent, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 function FormRow({ row }: { row: FormInputProps[] }) {
   return row.map((row, index: number) => {
@@ -102,9 +102,22 @@ function FormItem({ field }: { field: FormInputProps }) {
   }
 }
 
-function FormBlock({ rows, onSubmit }: FormBlockProps) {
+function FormBlock({ rows, onSubmit, validationSchema }: FormBlockProps) {
   const router = useRouter();
   const actualRoute = usePathname();
+
+  //funcion para mostrar la notificación
+  const showToast = (response: {
+    message: string;
+    statusCode: number;
+    route: string;
+  }) => {
+    if (response.statusCode == 200) {
+      toast.success(response.message);
+    } else {
+      toast.error(response.message);
+    }
+  };
 
   return (
     <form
@@ -114,14 +127,35 @@ function FormBlock({ rows, onSubmit }: FormBlockProps) {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
 
-        // Aquí puedes ver los datos antes de enviarlos
-        console.log("datos antes de enviarse");
-        for (const [key, value] of formData.entries()) {
-          console.log(`Key: ${key}, Value:`, value);
+        let response: { message: string; statusCode: number; route: string } = {
+          message: "",
+          statusCode: 0,
+          route: "",
+        };
+
+        if (validationSchema) {
+          const formObj = Object.fromEntries(formData.entries());
+          const parsedData = validationSchema.safeParse(formObj);
+
+          const validationErrors: string[] = [];
+          if (!parsedData.success) {
+            parsedData.error.errors.forEach((error) => {
+              validationErrors.push(error.message);
+              console.log(error);
+            });
+            validationErrors.forEach((e) => {
+              toast.error(e);
+            });
+          }
+          if (validationErrors.length === 0) {
+            response = await onSubmit(formData, actualRoute);
+            showToast(response);
+          }
+        } else {
+          response = await onSubmit(formData, actualRoute);
+          showToast(response);
         }
 
-        const response = await onSubmit(formData, actualRoute);
-        alert(response.message);
         router.push(response.route);
       }}
     >

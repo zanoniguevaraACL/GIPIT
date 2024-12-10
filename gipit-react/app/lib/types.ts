@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { ZodType } from "zod";
 
 export interface RouteItem {
   icon?: ReactNode;
@@ -45,10 +46,11 @@ export type FormBlockProps = {
   onSubmit: (
     formData: FormData,
     actualRoute: string
-  ) => Promise<{ message: string; route: string }>;
+  ) => Promise<{ message: string; route: string; statusCode: number }>;
   title?: string;
   message?: string;
   editor?: React.ReactNode; // Añadir esta línea
+  validationSchema?: ZodType<unknown>;
 };
 
 export interface NavBarCTAProps {
@@ -65,4 +67,23 @@ export interface InnerTabProps {
   root?: string;
   selected?: boolean;
   match?: number; // lo usaremos para mostrar el por ciento de compatibilidad y al mismo tiempo como bandera para saber si es un tab de compañia o de candidato, porque las compañias no tienen compatibilidad.
+}
+
+export interface Integrante {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+}
+
+export interface Jefatura {
+  name: string;
+  id: number;
+  integrantes?: Integrante[]; // Lista de integrantes
+}
+
+export interface CompanyDetails {
+  id: number;
+  name: string;
+  jefaturas?: Jefatura[]; // Lista de jefaturas
 }
