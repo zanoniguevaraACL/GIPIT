@@ -3,71 +3,15 @@ import { IconChevronDown, IconUserShield } from "@tabler/icons-react";
 import Button from "../atoms/Button";
 import "./accordion.css";
 import { useState } from "react";
-
-interface Integrante {
-  id: number;
-  name: string;
-  email: string;
-  role: string;
-}
-
-interface Jefatura {
-  name: string;
-  id: number;
-  integrantes?: Integrante[]; // Lista de integrantes
-}
-
-interface CompanyDetails {
-  id: number;
-  name: string;
-  jefaturas?: Jefatura[]; // Lista de jefaturas
-}
+import { CompanyDetails } from "@/app/lib/types";
 
 function Accordion({ details }: { details: CompanyDetails }) {
-  const [expanded, setExpanded] = useState<number | null>(null); // Jefatura expandida
-  const [jefaturas, setJefaturas] = useState<Jefatura[]>(
-    details.jefaturas || []
-  );
-
-  // Función para cargar los integrantes de una jefatura
-  const fetchIntegrantes = async (managementId: number) => {
-    try {
-      //const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user-management/${managementId}`);
-      const response = await fetch(
-        `https://gipit-back.vercel.app/api/user-management/${managementId}`
-      );
-      if (!response.ok) {
-        throw new Error("Error fetching integrantes");
-      }
-
-      const integrantes = await response.json();
-      setJefaturas((prevJefaturas) =>
-        prevJefaturas.map((jef) =>
-          jef.id === managementId
-            ? {
-                ...jef,
-                integrantes, // Reemplaza los integrantes por la lista obtenida del backend
-              }
-            : jef
-        )
-      );
-    } catch (error) {
-      console.error("Error fetching integrantes:", error);
-    }
-  };
-
-  // Cargar integrantes al expandir una jefatura
-  const handleExpand = (index: number, managementId: number) => {
-    setExpanded((prev) => (prev === index ? null : index)); // Expandir/contraer
-    if (!jefaturas[index].integrantes) {
-      fetchIntegrantes(managementId); // Cargar integrantes si no están definidos
-    }
-  };
+  const [expanded, setExpanded] = useState<number>(0); // Jefatura expandida
 
   return (
     <div>
-      {jefaturas.length > 0 ? (
-        jefaturas.map((jef, index: number) => (
+      {details.jefaturas ? (
+        details.jefaturas.map((jef, index: number) => (
           <div
             key={index}
             className={`management-container ${
@@ -76,7 +20,7 @@ function Accordion({ details }: { details: CompanyDetails }) {
           >
             <div
               className="management-name-container"
-              onClick={() => handleExpand(index, jef.id)}
+              onClick={() => setExpanded(index)}
             >
               <h3>{jef.name}</h3>
               <IconChevronDown className="management-chevron" />

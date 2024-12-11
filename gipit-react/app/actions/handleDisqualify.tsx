@@ -8,5 +8,9 @@ export const handleDisqualify = async (
 ) => {
   const res = await serverAction(formData);
   const routeToRedirect = "/" + actualRoute.split("/").slice(1, 4).join("/");
-  return { message: res.message, route: routeToRedirect };
+  return {
+    message: res.message,
+    route: routeToRedirect,
+    statusCode: res.statusCode,
+  };
 };

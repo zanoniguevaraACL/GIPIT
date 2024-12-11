@@ -36,6 +36,7 @@ export const handleCreateCandidate = async (
       message:
         "No se encontró el process_id, no se puede asociar el candidato al proceso.",
       route: actualRoute,
+      statusCode: 500,
     };
   }
 
@@ -48,6 +49,7 @@ export const handleCreateCandidate = async (
       return {
         message: "No se pudo obtener la descripción de la vacante.",
         route: actualRoute,
+        statusCode: 500,
       };
     }
   } catch (error) {
@@ -55,6 +57,7 @@ export const handleCreateCandidate = async (
     return {
       message: "Error al obtener los detalles del proceso.",
       route: actualRoute,
+      statusCode: 500,
     };
   }
 
@@ -65,6 +68,7 @@ export const handleCreateCandidate = async (
     return {
       message: "Archivo no proporcionado o inválido",
       route: actualRoute,
+      statusCode: 500,
     };
   }
   console.log("Archivo recibido:", file);
@@ -83,6 +87,7 @@ export const handleCreateCandidate = async (
     return {
       message: "Error al procesar el archivo o ID de transcripción no válido.",
       route: actualRoute,
+      statusCode: 500,
     };
   }
 
@@ -102,6 +107,7 @@ export const handleCreateCandidate = async (
       return {
         message: "Error al verificar el estado del documento.",
         route: actualRoute,
+        statusCode: 500,
       };
     }
     console.log("Verificando estado del documento:", respuestaJob);
@@ -111,6 +117,7 @@ export const handleCreateCandidate = async (
     return {
       message: `Error al procesar el documento: ${respuestaJob?.error_message}`,
       route: actualRoute,
+      statusCode: 500,
     };
   }
 
@@ -145,6 +152,7 @@ export const handleCreateCandidate = async (
       return {
         message: "No se pudo obtener el texto del CV.",
         route: actualRoute,
+        statusCode: 500,
       };
     }
 
@@ -169,6 +177,7 @@ export const handleCreateCandidate = async (
       return {
         message: "Error en la compatibilidad con la vacante.",
         route: actualRoute,
+        statusCode: 500,
       };
     } else {
       console.error(
@@ -177,6 +186,7 @@ export const handleCreateCandidate = async (
       return {
         message: "No se pudo obtener la compatibilidad del candidato.",
         route: actualRoute,
+        statusCode: 500,
       };
     }
 
@@ -188,6 +198,7 @@ export const handleCreateCandidate = async (
         return {
           message: "Error al analizar la respuesta de compatibilidad.",
           route: actualRoute,
+          statusCode: 500,
         };
       }
     }
@@ -203,6 +214,7 @@ export const handleCreateCandidate = async (
       return {
         message: "Error al limpiar el HTML generado.",
         route: actualRoute,
+        statusCode: 500,
       };
     }
   }
@@ -220,6 +232,7 @@ export const handleCreateCandidate = async (
     return {
       message: "No se pudo agregar el texto procesado.",
       route: actualRoute,
+      statusCode: 500,
     };
   }
   formData.append("process_id", processId.toString());
@@ -249,5 +262,9 @@ export const handleCreateCandidate = async (
   // Ruta del edición del usuario
   const routeToRedirect = `/${routeSegments[1]}/${routeSegments[2]}/${idUser}/edit-candidate`;
 
-  return { message: createResponse.message, route: routeToRedirect };
+  return {
+    message: createResponse.message,
+    route: routeToRedirect,
+    statusCode: 200,
+  };
 };

@@ -1,12 +1,13 @@
 import { fetchCompanyDetails } from "@/app/actions/fetchCompanies";
 import Button from "@/components/atoms/Button";
-import Accordion from "@/components/molecules/Accordion";
+import Accordion from "@/components/molecules/Accordion_backup";
+import logoPlaceHolder from "@/src/company-logo-placeholder.webp";
 
 export default async function Page(props: {
-  searchParams?: Promise<{
+  searchParams?: {
     query?: string;
     page?: string;
-  }>;
+  };
   params: {
     companyId: string;
   };
@@ -14,7 +15,7 @@ export default async function Page(props: {
   const { companyId } = props.params;
   const companyDetails = await fetchCompanyDetails(parseInt(companyId));
 
-  let logoUrl: string = "";
+  let logoUrl: string = logoPlaceHolder.src;
   if (companyDetails.logo) {
     const base64String = btoa(
       String.fromCharCode(...new Uint8Array(companyDetails.logo.data))

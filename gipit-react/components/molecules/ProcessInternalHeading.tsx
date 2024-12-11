@@ -52,7 +52,7 @@ function ProcessInternalHeading({
       </div>
       {/* Detalles */}
       <div className="process-details-container">
-        <form onSubmit={() => alert(FormData)}>
+        <form>
           <label>
             Etapa
             <select
