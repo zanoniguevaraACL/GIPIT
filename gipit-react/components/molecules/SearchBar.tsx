@@ -8,9 +8,11 @@ import { IconSearch } from "@tabler/icons-react";
 const SearchBar = ({
   buttonLink,
   buttonText,
+  noSearch = false,
 }: {
   buttonLink: string;
   buttonText: string;
+  noSearch?: boolean;
 }) => {
   const searchParams = useSearchParams();
   const iconRef = useRef<HTMLDivElement | null>(null);
@@ -28,16 +30,20 @@ const SearchBar = ({
   }
 
   return (
-    <div className="search-container">
-      <div ref={iconRef} className="icon-search">
-        <IconSearch />
-      </div>
-      <input
-        type="text"
-        placeholder="Buscar..."
-        onChange={(e) => handleSearch(e.target.value)}
-        defaultValue={searchParams.get("query")?.toString()}
-      />
+    <div className={`search-container ${noSearch && "no-search"}`}>
+      {!noSearch && (
+        <>
+          <div ref={iconRef} className="icon-search">
+            <IconSearch />
+          </div>
+          <input
+            type="text"
+            placeholder="Buscar..."
+            onChange={(e) => handleSearch(e.target.value)}
+            defaultValue={searchParams.get("query")?.toString()}
+          />
+        </>
+      )}
       <Button href={buttonLink} text={buttonText} type="tertiary" />
     </div>
   );

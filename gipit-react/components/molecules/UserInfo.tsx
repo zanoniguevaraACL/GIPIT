@@ -18,7 +18,10 @@ function UserInfo({ newNotifications = false }: { newNotifications: boolean }) {
         )}
       </Link>
       <Avatar src={session?.user?.image} name={session?.user?.name} />
-      <UserNameAndRole name={session?.user?.name} role={session?.user?.role} />
+      <UserNameAndRole
+        name={session?.user?.name}
+        position={session?.user?.position}
+      />
     </div>
   );
 }

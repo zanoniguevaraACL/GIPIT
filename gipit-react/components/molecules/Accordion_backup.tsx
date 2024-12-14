@@ -8,7 +8,7 @@ interface Integrante {
   id: number;
   name: string;
   email: string;
-  role: string;
+  position: string;
 }
 
 interface Jefatura {

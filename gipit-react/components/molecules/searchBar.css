@@ -7,6 +7,10 @@
   margin-bottom: 24px;
   position: relative;
 
+  &.no-search {
+    justify-content: flex-end;
+  }
+
   input {
     flex-grow: 1;
     padding-left: 32px;

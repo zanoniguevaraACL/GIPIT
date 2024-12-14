@@ -1,8 +1,18 @@
 import Link from "next/link";
 import "./navBarTab.css";
-import { RouteItem } from "@/app/lib/types";
+import { ReactNode } from "react";
 
-function NavBarTab({ icon, text, href, selected = false }: RouteItem) {
+function NavBarTab({
+  icon,
+  text,
+  href,
+  selected = false,
+}: {
+  icon?: ReactNode;
+  text: string;
+  href: string;
+  selected?: boolean;
+}) {
   return (
     <Link href={href} className="tab-linkt-item">
       <div

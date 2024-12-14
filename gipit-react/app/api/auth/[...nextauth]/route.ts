@@ -24,12 +24,13 @@ const handler = NextAuth({
         const userInfo = await response.json();
 
         // Si no existe el usuario o no cumple requisitos, rechaza el inicio de sesión
-        if (!userInfo || !userInfo.role) {
+        if (!userInfo || !userInfo.roles.nombre) {
           return false;
         }
 
         // Adjunta la información del usuario al objeto `user`
-        user.role = userInfo.role;
+        user.role = userInfo.roles.nombre;
+        user.position = userInfo.position;
 
         return true; // Permite el inicio de sesión
       } catch (error) {
@@ -41,6 +42,7 @@ const handler = NextAuth({
       if (user) {
         // Agrega el rol del usuario al token si está presente
         token.role = user.role || undefined;
+        token.position = user.position || undefined;
       }
       return token; // Devuelve el token actualizado
     },
@@ -50,9 +52,15 @@ const handler = NextAuth({
       } else {
         session.user.role = undefined; // Asegura que el rol sea `undefined` si no está definido
       }
+      if (typeof token.position === "string") {
+        session.user.position = token.position;
+      } else {
+        session.user.position = undefined;
+      }
+
       return session; // Devuelve la sesión actualizada
     },
-    async redirect({ url, baseUrl }) {
+    async redirect({ baseUrl }) {
       return baseUrl; // Redirigir siempre al baseUrl después del login
     },
   },
