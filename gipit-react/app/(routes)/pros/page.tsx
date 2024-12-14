@@ -9,7 +9,7 @@ interface Professional {
   address?: string;
   cv?: string;
   company?: string;
-  role?: string;
+  position?: string;
   startDate?: string;
   endDate?: string | null;
   hourValue?: number;
@@ -47,7 +47,7 @@ export default async function Page(props: {
     data = {
       columns: [
         { name: "Nombre", key: "name", width: 1.1 },
-        { name: "Rol", key: "role", width: 1.1 },
+        { name: "Rol", key: "position", width: 1.1 },
         { name: "Cliente", key: "company", width: 1 },
         { name: "Inicio", key: "startDate", width: 0.7 },
         { name: "Término", key: "endDate", width: 0.7 },
@@ -61,7 +61,7 @@ export default async function Page(props: {
     data = {
       columns: [
         { name: "Nombre", key: "name", width: 1.1 },
-        { name: "Rol", key: "role", width: 1.1 },
+        { name: "Rol", key: "position", width: 1.1 },
         //{ name: "Cliente", key: "company", width: 1 },
         { name: "Inicio", key: "startDate", width: 0.7 },
         { name: "Término", key: "endDate", width: 0.7 },

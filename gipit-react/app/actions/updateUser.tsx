@@ -8,12 +8,12 @@ export const updateUser = async (
   try {
     const name = formData.get("name") as string;
     const email = formData.get("email") as string;
-    const role = formData.get("role") as string;
+    const position = formData.get("position") as string;
 
-    const payload: { name?: string; role?: string; email?: string } = {};
+    const payload: { name?: string; position?: string; email?: string } = {};
     if (name) payload.name = name;
     if (email) payload.email = email;
-    if (role) payload.role = role;
+    if (position) payload.position = position;
 
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/users/${userId}`,

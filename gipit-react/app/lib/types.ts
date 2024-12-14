@@ -6,13 +6,14 @@ export interface RouteItem {
   text: string;
   href: string;
   selected?: boolean;
+  roles: ("client" | "kam" | "gest" | "mkt" | "admin")[];
 }
 
 export interface UserInfoProps {
   avatarSrc: string;
   avatarType?: "user" | "logo";
   name: string;
-  role: string;
+  position: string;
   newNotifications: boolean;
 }
 
@@ -73,7 +74,7 @@ export interface Integrante {
   user_id: number;
   name: string;
   email: string;
-  role: string;
+  position: string;
 }
 
 export interface Jefatura {

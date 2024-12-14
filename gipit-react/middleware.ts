@@ -4,7 +4,6 @@ import { getToken } from "next-auth/jwt";
 export async function middleware(req: NextRequest) {
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
-  console.log("middleware token ->> ", token);
   // Si no hay token y la ruta no es '/login', redirige al login
   if (!token && req.nextUrl.pathname !== "/api/auth/signin") {
     return NextResponse.redirect(new URL("/api/auth/signin", req.url));

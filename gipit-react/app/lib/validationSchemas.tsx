@@ -9,7 +9,7 @@ export const userSchema = z.object({
         "El nombre solo puede contener letras, números, espacios, puntos y guiones",
     }),
   email: z.string().email("El correo electrónico debe ser válido"),
-  role: z.string().min(2, "El rol debe tener mínimo 2 caracteres"),
+  position: z.string().min(2, "El rol debe tener mínimo 2 caracteres"),
 });
 
 export const companySchema = z.object({

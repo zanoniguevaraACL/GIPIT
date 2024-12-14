@@ -41,7 +41,7 @@ function Accordion({ details }: { details: CompanyDetails }) {
                   </div>
                   <p className="text-14">{integ.name}</p>
                   <p className="text-14">{integ.email}</p>
-                  <p className="text-14">{integ.role}</p>
+                  <p className="text-14">{integ.position}</p>
                   <div className="icon-edit">
                     <IconEdit />
                   </div>

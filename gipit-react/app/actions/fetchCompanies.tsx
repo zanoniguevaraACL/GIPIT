@@ -24,7 +24,7 @@ export const fetchAllCompanies = async () => {
         headers: {
           "Content-Type": "application/json",
         },
-        cache: "no-store",
+        //cache: "no-store",
       }
     );
 

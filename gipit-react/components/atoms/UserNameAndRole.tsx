@@ -3,10 +3,10 @@ import { IconChevronDown } from "@tabler/icons-react";
 
 function UserNameAndRole({
   name,
-  role,
+  position,
 }: {
   name: string | null | undefined;
-  role: string | null | undefined;
+  position: string | null | undefined;
 }) {
   let nameToUse: string = "User";
   if (name) {
@@ -18,7 +18,7 @@ function UserNameAndRole({
         <h4> {nameToUse}</h4>
         <IconChevronDown />
       </div>
-      <p className="text-12">{role}</p>
+      <p className="text-12">{position}</p>
     </div>
   );
 }
