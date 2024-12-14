@@ -7,7 +7,6 @@ import { useSession } from "next-auth/react";
 
 function UserInfo({ newNotifications = false }: { newNotifications: boolean }) {
   const { data: session } = useSession();
-  
 
   return (
     <div className="userinfo-container">
@@ -18,8 +17,8 @@ function UserInfo({ newNotifications = false }: { newNotifications: boolean }) {
           <IconBell />
         )}
       </Link>
-      <Avatar src={session?.user?.image} name={session?.user?.name}/>
-      <UserNameAndRole name={session?.user?.name} role={session?.user?.email} />
+      <Avatar src={session?.user?.image} name={session?.user?.name} />
+      <UserNameAndRole name={session?.user?.name} role={session?.user?.role} />
     </div>
   );
 }

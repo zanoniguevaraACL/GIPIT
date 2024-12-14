@@ -98,15 +98,20 @@ export const fetchCompanyDetails = async (id: number) => {
   const fetchUsersByManagement = async (managementId: number) => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/user-management/${managementId}`
+        `${process.env.NEXT_PUBLIC_API_URL}/api/user-management/${managementId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          cache: "no-store",
+        }
       );
-      // const response = await fetch(
-      //   `https://gipit-back.vercel.app/api/user-management/${managementId}`
-      // );
       if (!response.ok) {
         throw new Error("Error fetching integrantes");
       }
-      return response.json();
+      const integrantes = await response.json();
+      return integrantes;
     } catch (error) {
       console.error("Error fetching integrantes:", error);
     }
@@ -162,7 +167,6 @@ export const fetchCompanyDetails = async (id: number) => {
       jefaturas: managementsToReturn,
       logo: companyData.logo,
     };
-
     return companyDetails;
   } catch (error) {
     if (error instanceof Error) {

@@ -36,10 +36,10 @@ function Page() {
       name: "email",
     },
     {
-      label: "Rol",
-      placeholder: "Rol del usuario",
+      label: "Cargo",
+      placeholder: "Cargo del usuario",
       type: "text",
-      name: "role",
+      name: "position",
     },
     [
       {

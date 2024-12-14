@@ -4,7 +4,8 @@ import { FormInputsRow } from "@/app/lib/types";
 import { useParams } from "next/navigation";
 import { updateCompany } from "@/app/actions/updateCompany";
 import { useState, useEffect } from "react";
-import { z } from "zod";
+import { companySchema } from "@/app/lib/validationSchemas";
+import Loader from "@/components/atoms/Loader";
 
 function Page() {
   const params = useParams();
@@ -51,28 +52,6 @@ function Page() {
     fetchCompanyData();
   }, [companyId]);
 
-  if (loading) {
-    return <p>Cargando información de la compañía...</p>;
-  }
-
-  const companySchema = z.object({
-    logo: z.instanceof(File).optional(),
-    name: z
-      .string()
-      .min(3, "El nombre debe tener mínimo 3 caracteres")
-      .regex(/^[A-Za-zÀ-ÿ0-9 .-]+$/, {
-        message:
-          "El nombre solo puede contener letras, números, espacios, puntos y guiones",
-      }),
-    description: z
-      .string()
-      .min(3, "La descripción debe tener mínimo 3 caracteres")
-      .regex(/^[A-Za-zÀ-ÿ0-9 .-]+$/, {
-        message:
-          "La descripción solo puede contener letras, números, espacios, puntos y guiones",
-      }),
-  });
-
   const fields: FormInputsRow = [
     {
       label: "Logo",
@@ -94,10 +73,12 @@ function Page() {
       defaultValue: companyData.description,
     },
     [
-      { type: "cancel", value: "Cancelar", href: "/company" },
+      { type: "cancel", value: "Cancelar", href: `/company/${companyId}` },
       { type: "submit", value: "Guardar" },
     ],
   ];
+
+  if (loading) return <Loader />;
 
   return (
     <Modal

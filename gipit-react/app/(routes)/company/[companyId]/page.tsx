@@ -1,6 +1,6 @@
 import { fetchCompanyDetails } from "@/app/actions/fetchCompanies";
 import Button from "@/components/atoms/Button";
-import Accordion from "@/components/molecules/Accordion_backup";
+import Accordion from "@/components/molecules/Accordion";
 import logoPlaceHolder from "@/src/company-logo-placeholder.webp";
 
 export default async function Page(props: {

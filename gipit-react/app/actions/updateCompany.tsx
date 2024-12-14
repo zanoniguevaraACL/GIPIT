@@ -61,7 +61,7 @@ export const updateCompany = async (
 
     return {
       message: "Compañia actualizada correctamente",
-      route: "/company",
+      route: `/company/${companyId}`,
       statusCode: 200,
     };
   } catch (error) {

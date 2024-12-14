@@ -15,7 +15,7 @@ export const createUserManagement = async (
     // Extrae los datos del formulario
     const userEmail = formData.get("email") as string;
     const userName = formData.get("name") as string;
-    const userRole = formData.get("role") as string;
+    const userPosition = formData.get("position") as string;
 
     // Valida que el correo electrónico esté presente
     if (!userEmail) {
@@ -39,8 +39,9 @@ export const createUserManagement = async (
 
     const payload = {
       name: userName,
-      role: userRole,
+      position: userPosition,
       email: userEmail,
+      role: 1,
     };
 
     const newUser = await fetch(

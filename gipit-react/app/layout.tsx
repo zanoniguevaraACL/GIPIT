@@ -1,9 +1,9 @@
 import NavBar from "@/components/organisms/NavBar";
 import "./globals.css";
 import TopBar from "@/components/organisms/TopBar";
-import { kamRoutes } from "@/app/lib/routes";
+import { routes } from "@/app/lib/routes";
 import AuthProvider from "./lib/AuthProvider";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function RootLayout({
@@ -16,19 +16,25 @@ export default function RootLayout({
       <AuthProvider>
         <body>
           <div className="app-container">
-            <NavBar routes={kamRoutes} />
+            <NavBar routes={routes} />
             <main>
-              <TopBar routes={kamRoutes} />
+              <TopBar routes={routes} />
               <div className="children-container">{children}</div>
             </main>
           </div>
 
           <ToastContainer
             position="top-center"
-            autoClose={5000}
-            hideProgressBar={false}
+            autoClose={3000}
+            hideProgressBar
             newestOnTop={false}
-            closeButton={true}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+            transition={Slide}
           />
         </body>
       </AuthProvider>
