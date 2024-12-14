@@ -3,7 +3,8 @@ import Modal from "@/components/molecules/Modal";
 import { FormInputsRow } from "@/app/lib/types";
 import { updateManagement } from "@/app/actions/updateManagement";
 import { useState, useEffect } from "react";
-import { z } from "zod";
+import { managementSchema } from "@/app/lib/validationSchemas";
+import Loader from "@/components/atoms/Loader";
 
 function Page({
   params,
@@ -11,8 +12,7 @@ function Page({
   params: { companyId: string; managementId: string };
 }) {
   const { companyId, managementId } = params;
-
-  const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [managementData, setManagementData] = useState({
     name: "",
     description: "",
@@ -40,29 +40,12 @@ function Page({
           error
         );
       } finally {
-        setIsLoading(false);
+        setLoading(false);
       }
     };
 
     fetchManagementData();
   }, [managementId]);
-
-  const managementSchema = z.object({
-    name: z
-      .string()
-      .min(3, "El nombre debe tener mínimo 3 caracteres")
-      .regex(/^[A-Za-zÀ-ÿ0-9 .-]+$/, {
-        message:
-          "El nombre solo puede contener letras, números, espacios, puntos y guiones",
-      }),
-    description: z
-      .string()
-      .min(3, "La descripción debe tener mínimo 3 caracteres")
-      .regex(/^[A-Za-zÀ-ÿ0-9 .-]+$/, {
-        message:
-          "La descripción solo puede contener letras, números, espacios, puntos y guiones",
-      }),
-  });
 
   const fields: FormInputsRow = [
     {
@@ -85,9 +68,7 @@ function Page({
     ],
   ];
 
-  if (isLoading) {
-    return <p>Cargando la información de la jefatura...</p>;
-  }
+  if (loading) return <Loader />;
 
   return (
     <Modal

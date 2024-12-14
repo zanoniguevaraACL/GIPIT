@@ -20,11 +20,10 @@ export const clientRoutes: RouteItem[] = [
   { text: "Notificaciones", href: "/notifications" },
 ];
 
-export const kamRoutes: RouteItem[] = [
+export const routes: RouteItem[] = [
   { icon: <IconLayoutDashboard />, text: "Clientes", href: "/company" },
   { icon: <IconUserSearch />, text: "Procesos", href: "/process" },
   { icon: <IconUserScan />, text: "Profesionales", href: "/pros" },
-  { icon: <IconMessageChatbot />, text: "Seguimiento", href: "/follow-up" },
   { icon: <IconReceipt2 />, text: "Facturación", href: "/invoices" },
 
   //Rutas con título pero que no están en la barra de navegación

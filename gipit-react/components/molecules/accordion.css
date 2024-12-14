@@ -1,3 +1,9 @@
+.jefaturas-details-card {
+  margin: 24px 12px -12px 12px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
 .management-container {
   padding: 24px;
   border-radius: 4px;
@@ -8,10 +14,6 @@
   flex-direction: column;
   gap: 24px;
   margin-top: 24px;
-
-  * {
-    transition: all 0.2s ease-in-out;
-  }
 
   &.expanded {
     .management-name-container {
@@ -41,14 +43,29 @@
   .users-container {
     display: none;
     flex-direction: column;
-    gap: 24px;
+    gap: 12px;
 
     .management-user-row {
       display: grid;
       align-items: center;
       gap: 24px;
-      grid-template-columns: 24px 1.5fr 1.5fr 1fr;
-      padding: 0 12px;
+      grid-template-columns: 24px 1fr 1.5fr 1.5fr 24px;
+      padding: 8px 12px;
+      text-decoration: none;
+      color: var(--secondary);
+      border-radius: 4px;
+
+      .icon-edit {
+        display: none;
+        color: var(--dark-tertiary);
+      }
+
+      &:hover {
+        background-color: var(--tertiary);
+        .icon-edit {
+          display: block;
+        }
+      }
     }
 
     .buttons-row {
