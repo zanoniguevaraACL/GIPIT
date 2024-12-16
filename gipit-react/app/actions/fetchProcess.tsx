@@ -1,23 +1,26 @@
 "use server";
 
-type Candidate = {
-  id: number;
-  name: string;
-  email: string;
-  phone: string;
-  address: string;
-  jsongpt_text: string;
-};
+// type Candidate = {
+//   id: number;
+//   name: string;
+//   email: string;
+//   phone: string;
+//   address: string;
+//   jsongpt_text: string;
+// };
 
-type ProcessData = {
-  id: number;
-  name: string;
-  startAt: Date;
-  endAt: Date | null;
-  pre_filtered: number;
-  candidates: Candidate[];
-  state: string;
-};
+// type ProcessData = {
+//   id: number;
+//   job_offer: string;
+//   job_offer_description: string;
+//   opened_at: Date;
+//   closed_at: Date | null;
+//   pre_filtered: number;
+//   candidatesIds: [number];
+//   status: string;
+//   stage: string;
+//   candidates: number
+// };
 
 type Proceso = {
   id: number;
@@ -30,7 +33,6 @@ type Proceso = {
   candidatesIds: number[];
   jobOffer: string | null;
   stage: string;
-  isInternal: boolean;
 };
 
 export const fetchProcess = async (page: number) => {
@@ -46,7 +48,7 @@ export const fetchProcess = async (page: number) => {
         headers: {
           "Content-Type": "application/json",
         },
-        // cache: 'no-store',
+        cache: 'no-store',
       }
     );
 
@@ -66,14 +68,15 @@ export const fetchProcess = async (page: number) => {
     );
     return {
       total: data.total,
-      batch: data.batch.map((process: ProcessData) => ({
+      batch: data.batch.map((process: Proceso) => ({
         id: process.id,
         name: process.name,
-        startAt: process.startAt ? process.startAt : "",
-        endAt: process.endAt ? process.endAt : null,
-        preFiltered: process.pre_filtered ? 1 : 0,
-        candidates: process.candidates ? process.candidates.length : 0,
-        state: process.state,
+        startAt: process.startAt ? new Date(process.startAt).toLocaleDateString() : "No hay inicio",
+        endAt: process.endAt ? new Date(process.endAt).toLocaleDateString() : "No hay cierre",
+        preFiltered: process.preFiltered ? 1 : 0,
+        candidates: process.candidates,
+        status: process.status.toLowerCase() == "open" ? "Abierto"  : "Pendiente",
+        stage: process.stage ?? "Entrevistas (default)"
       })),
     };
   } catch (error) {
@@ -130,7 +133,6 @@ export const fetchProcessDetails = async (
       candidatesIds: candidatesIds,
       jobOffer: proceso.jobOfferDescription ?? "",
       stage: proceso.stage ?? "Desconocido",
-      isInternal: proceso.isInternal ?? false,
     };
   } catch (error) {
     if (error instanceof Error) {
