@@ -10,7 +10,7 @@
 
   &.user {
     img {
-      border: 2px solid black;
+      border: 2px solid #ccc;
       border-radius: 50%;
       object-fit: cover;
     }
@@ -25,7 +25,7 @@
   width: 40px; /* Ajusta según sea necesario */
   height: 40px; /* Ajusta según sea necesario */
   border-radius: 50%;
-  background-color: #484848; /* Fondo para las iniciales */
+  background-color: #ccc; /* Fondo para las iniciales */
 }
 
 .avatar-initials {
