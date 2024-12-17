@@ -15,7 +15,7 @@ export const routes: RouteItem[] = [
     icon: <IconLayoutDashboard />,
     text: "Dashboard",
     href: "/dashboard",
-    roles: ["client"],
+    roles: ["client", "admin"],
   },
   {
     // solo para profesionales internos autorizados
