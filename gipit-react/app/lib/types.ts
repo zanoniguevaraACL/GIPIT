@@ -42,12 +42,34 @@ export interface FormInputProps {
 
 export type FormInputsRow = (FormInputProps | FormInputProps[])[];
 
+export type Candidate = {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  jsongptText: string;
+  match?: number;
+};
+
+export type Proceso = {
+  id: number;
+  name: string;
+  startAt: string;
+  endAt: string | null;
+  preFiltered: number;
+  candidates: Candidate[];
+  status: string;
+  jobOffer?: string; // Hacerlo opcional
+  stage: string;
+};
+
 export type FormBlockProps = {
   rows: FormInputsRow;
   onSubmit: (
     formData: FormData,
-    actualRoute: string
-  ) => Promise<{ message: string; route: string; statusCode: number }>;
+    actualRoute: string,
+  ) => Promise<{ message: string; route: string; statusCode: number}>;
   title?: string;
   message?: string;
   editor?: React.ReactNode; // Añadir esta línea

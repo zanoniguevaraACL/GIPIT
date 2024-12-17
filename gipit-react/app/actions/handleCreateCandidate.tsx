@@ -262,6 +262,12 @@ export const handleCreateCandidate = async (
   // Ruta del edición del usuario
   const routeToRedirect = `/${routeSegments[1]}/${routeSegments[2]}/${idUser}/edit-candidate`;
 
+  // Redirige a la página de edición del candidato
+
+  // Actualiza los detalles del proceso (refresca la lista de candidatos)
+  const updatedProcessDetails = await fetchProcessDetails(processId);
+  console.log(updatedProcessDetails)
+
   return {
     message: createResponse.message,
     route: routeToRedirect,
