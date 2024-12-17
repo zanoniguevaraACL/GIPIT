@@ -21,7 +21,6 @@ type Proceso = {
   status: string;
   jobOffer?: string; // Hacerlo opcional
   stage: string;
-  isInternal: boolean;
 };
 
 type Candidate = {
