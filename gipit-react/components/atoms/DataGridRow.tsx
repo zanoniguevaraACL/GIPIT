@@ -20,6 +20,8 @@ const DataGridRow = <T extends { id: string | number }>({
   baseUrl,
   hasNoClick,
 }: DataGridRowProps<T>) => {
+
+  console.log("DATOS DE LA TABLA--->",data);
   const spacing = columns.map((c) => `${c.width}fr`).join(" ");
   return (
     <Link
