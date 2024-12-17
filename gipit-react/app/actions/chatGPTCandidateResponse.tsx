@@ -95,7 +95,7 @@ export async function compatibilityResponse(
     }
 
     const promptComp = `
-Analiza detalladamente la compatibilidad entre un currículum vitae (CV) y una oferta laboral. Además, proporciona 20 preguntas que un entrevistador de Recursos Humanos (RRHH) pueda hacerle al candidato para explorar su ajuste a la oferta laboral. Para ello, ten en cuenta los principales apartados esenciales del CV y la oferta laboral, comparándolos punto por punto para establecer el grado de correspondencia.  
+Analiza detalladamente la compatibilidad entre un currículum vitae (CV) y una oferta laboral. Además, proporciona 20 preguntas que un entrevistador de Recursos Humanos (RRHH) pueda hacerle al candidato para explorar su ajuste a la oferta laboral. Para ello, ten en cuenta los principales apartados esenciales del CV y la oferta laboral, comparándolos punto por punto para establecer el grado de correspondencia, la respuesta tiene que ser únicamente un JSON sin texto adicional 
 
 Este es el Curriculum:
  ${textoCV}
@@ -110,10 +110,13 @@ Y esta es la oferta laboral:
 3. **Evaluar Compatibilidad**: Evalúa qué tan bien se alinean las capacidades y experiencias del candidato con los requerimientos del puesto.
 4. **Generar Conclusión**: Determina el grado de compatibilidad general entre el CV y la oferta laboral.
 5. **Generar Preguntas de RRHH**: Proporciona 20 posibles preguntas que un entrevistador de RRHH pueda preguntar al candidato durante la entrevista, enfocándose en comprender la adecuación a los requisitos del puesto y otras cualidades relevantes.
+6. **Extrae los años de experiencia**:
+   - Si se mencionan los años de experiencia, utilízalos.
+   - Si no, calcula los años sumando los períodos laborales encontrados en la sección "Experiencia Laboral".
 
-# Formato de Salida
 
-Proporciona una evaluación en formato de párrafo o JSON que detalle las coincidencias específicas, las potenciales áreas de desarrollo y una puntuación general (de 0 a 100) para la compatibilidad.
+# Formato de Salida (Devuelve únicamente un JSON sin texto adicional)
+Proporciona una evaluación en JSON que detalle las coincidencias específicas, las potenciales áreas de desarrollo y una puntuación general (de 0 a 100) para la compatibilidad.
 No utilices espacios ni tildes en los key del json.
 
 Adicionalmente, proporciona las 20 preguntas generadas.
@@ -124,8 +127,8 @@ Adicionalmente, proporciona las 20 preguntas generadas.
 - **Oferta laboral**: Ingeniero de Software, requiere experiencia en Java, conocimiento en SQL, 3 años de experiencia mínima, inglés avanzado.
 - **CV**: Experiencia en Java (5 años), conocimiento en SQL y Python, inglés avanzado.
 
-**Formato Salida** Devuelve exclusivamente un JSON con el siguiente formato:
-**Manten un estandar en la estructura del JSON**
+**Formato Salida**
+- Devuelve únicamente un JSON sin texto adicional
 {
   "evaluacion": {
     "coincidencias": {
@@ -136,6 +139,7 @@ Adicionalmente, proporciona las 20 preguntas generadas.
     },
     "faltas": [],
     "puntuacion_general": 95
+    "total_experiencia": 5
   },
   "preguntas_rrhh": [
     "¿Por qué decidiste aplicar a esta oferta laboral de Ingeniero de Software?",
