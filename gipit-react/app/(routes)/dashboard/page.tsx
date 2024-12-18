@@ -8,17 +8,6 @@ import { IconReceipt } from "@tabler/icons-react";
 import Button from '@/components/atoms/Button';
 import "./invoices.css";
 
-interface InvoiceDetails {
-  id: number;
-  name: string;
-  service: string;
-  rate: number;
-  hours: number;
-  subtotal: number;
-  vat: number;
-  total: number;
-  description: string;
-}
 
 async function DashboardPage() {
   const stats = await fetchDashboardStats();
@@ -40,18 +29,6 @@ async function DashboardPage() {
       ).toFixed(2)
     : "0.0";
 
-  const fechaFin = new Date();
-  const fechaInicio = new Date();
-  fechaInicio.setMonth(fechaInicio.getMonth() - 3);
-
-  const formatearFecha = (fecha: Date) => {
-    return fecha.toLocaleDateString('es-ES', { 
-      day: 'numeric',
-      month: 'short'
-    });
-  };
-
-  const subtituloCerrados = `${stats.cerradosUltimoTrimestre} procesos desde ${formatearFecha(fechaInicio)} hasta ${formatearFecha(fechaFin)}`;
 
   const dashboardCards = {
     card1: {

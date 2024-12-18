@@ -23,7 +23,7 @@ export async function fetchDashboardStats(): Promise<DashboardStats> {
         headers: {
           'Content-Type': 'application/json',
         },
-        cache: 'no-store',
+        next: { revalidate: 60 }
       }
     );
 
