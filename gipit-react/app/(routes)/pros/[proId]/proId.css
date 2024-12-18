@@ -48,7 +48,7 @@
     color: var(--dark-tertiary);
     margin: 24px 0 12px 0;
   }
-  .rates-dashboard {
+  .pro-rates-dashboard {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 24px;

@@ -1,6 +1,6 @@
 import "./proId.css";
 import Button from "@/components/atoms/Button";
-import DashboardCard from "./DashboardCard";
+import DashboardCard from "../../../../components/molecules/DashboardCard";
 import {
   IconAward,
   IconCircleDashedCheck,
@@ -172,7 +172,7 @@ export default async function Page(props: {
         <br></br>
         {/* Dashboard */}
         <p className="section-title text-14">Evaluación profesional</p>
-        <div className="rates-dashboard">
+        <div className="pro-rates-dashboard">
           <DashboardCard datos={dashboardData.card1} />
           <DashboardCard datos={dashboardData.card2} />
           <DashboardCard datos={dashboardData.card3} />

@@ -1,0 +1,25 @@
+.inner-page-container {
+  padding: 24px;
+}
+
+.dashboard-header {
+  margin-bottom: 24px;
+}
+
+.section-title {
+  margin-bottom: 16px;
+  color: var(--text-secondary);
+}
+
+.rates-dashboard {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+/* El card del gráfico ocupará todo el ancho */
+.rates-dashboard > div:last-child {
+  grid-column: 1 / -1;
+  height: 240px; /* O el alto que prefieras para el gráfico */
+}
