@@ -25,7 +25,7 @@
 type Proceso = {
   id: number;
   name: string;
-  startAt: string;
+  startAt: string | null;
   endAt: string | null;
   preFiltered: number;
   candidates: number;
@@ -68,16 +68,27 @@ export const fetchProcess = async (page: number) => {
     );
     return {
       total: data.total,
-      batch: data.batch.map((process: Proceso) => ({
+      batch: data.batch.map((process: Proceso) => {
+        //Valida que las fechas no sean null, ni vacio, ni formato inva
+        const validStartAt =
+        process.startAt && !isNaN(Date.parse(process.startAt))
+          ? new Date(process.startAt).toLocaleDateString()
+          : "No hay inicio";
+
+      const validEndAt =
+        process.endAt && !isNaN(Date.parse(process.endAt))
+          ? new Date(process.endAt).toLocaleDateString()
+          : "No hay cierre";
+        return{
         id: process.id,
         name: process.name,
-        startAt: process.startAt ? new Date(process.startAt).toLocaleDateString() : "No hay inicio",
-        endAt: process.endAt ? new Date(process.endAt).toLocaleDateString() : "No hay cierre",
-        preFiltered: process.preFiltered ? 1 : 0,
-        candidates: process.candidates,
+        startAt: validStartAt,
+        endAt: validEndAt,
+        preFiltered: process.preFiltered ?? 0,
+        candidates: process.candidates ?? 0,
         status: process.status.toLowerCase() == "open" ? "Abierto"  : "Pendiente",
-        stage: process.stage ?? "Entrevistas (default)"
-      })),
+        stage: process.stage ?? "Entrevistas"
+      }}),
     };
   } catch (error) {
     console.error("Error detallado:", error);

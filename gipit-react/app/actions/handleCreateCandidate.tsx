@@ -9,6 +9,8 @@ import { checkJob } from "./processDocumentAction";
 import { getText } from "./processDocumentAction";
 import { fetchProcessDetails } from "./fetchProcessDetails";
 import { DocumentResponse } from "./processDocumentAction";
+import calcularExperienciaTotal from "../lib/calcularExperienciaTotal";
+import { extraerPeriodosTrabajoCV } from "./chatGPTCandidateResponse";
 
 interface CompatibilityResponse {
   evaluacion?: {
@@ -18,6 +20,7 @@ interface CompatibilityResponse {
     };
     faltas?: string[];
     puntuacion_general?: number;
+    total_experience?: number;
   };
   preguntas_rrhh?: string[];
 }
@@ -44,7 +47,6 @@ export const handleCreateCandidate = async (
   let vacante;
   try {
     vacante = await fetchProcessDetails(processId);
-    console.log("Vacante==== :", vacante);
     if (!vacante || !vacante.jobOfferDescription) {
       return {
         message: "No se pudo obtener la descripción de la vacante.",
@@ -126,6 +128,7 @@ export const handleCreateCandidate = async (
   let resultadoCompatibilidad: CompatibilityResponse | null = null;
   let cleanedHtml: string | null = null;
   let compatibilidadTexto: string | null = null;
+  //SI la respuesta se resolvió
   if (respuestaJob?.status === "SUCCESS") {
     // Comunicación para obtener la transcripción en texto
     const textoHTMLResult = await getText(respuestaJob?.id);
@@ -219,10 +222,23 @@ export const handleCreateCandidate = async (
     }
   }
 
+
   // **Se recupera respuestas del json devuelto por chatGPT**
   const interviewQuestions = JSON.stringify(
     resultadoCompatibilidad?.preguntas_rrhh || 0
   ).toString();
+
+  // const totalExperiencia = resultadoCompatibilidad?.evaluacion?.total_experience ?? 0;
+  const periodosTrabajo = await extraerPeriodosTrabajoCV(resultadoEstandarizado);
+  if (periodosTrabajo.error) {
+    console.error("Error al obtener los períodos laborales del candidato:", periodosTrabajo.error);
+    return {
+      message: "No se pudieron calcular los períodos laborales.",
+      route: actualRoute,
+      statusCode: 500,
+    };
+  }
+  const totalExperiencia = calcularExperienciaTotal(periodosTrabajo);
 
   // Preparar los datos para la creación del candidato y la asociación con el proceso
   if (cleanedHtml) {
@@ -247,6 +263,10 @@ export const handleCreateCandidate = async (
       : ""
   );
   formData.append(
+    "total_experience",
+    totalExperiencia.toString()
+  );
+  formData.append(
     "match_percent",
     (resultadoCompatibilidad?.evaluacion?.puntuacion_general || 0).toString()
   );
@@ -254,6 +274,8 @@ export const handleCreateCandidate = async (
   const softSkills =
     resultadoCompatibilidad?.evaluacion?.coincidencias?.soft_skills ?? "";
   formData.append("soft_skills", softSkills);
+
+
 
   // Agrega candidatos a la base de datos
   const createResponse = await createCandidateAction(formData, processId);
@@ -264,9 +286,8 @@ export const handleCreateCandidate = async (
 
   // Redirige a la página de edición del candidato
 
-  // Actualiza los detalles del proceso (refresca la lista de candidatos)
-  const updatedProcessDetails = await fetchProcessDetails(processId);
-  console.log(updatedProcessDetails)
+  // Actualiza los detalles del proceso (refresca la lista de candidatos) no se
+  // const updatedProcessDetails = await fetchProcessDetails(processId);
 
   return {
     message: createResponse.message,

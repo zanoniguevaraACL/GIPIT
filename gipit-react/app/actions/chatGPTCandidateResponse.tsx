@@ -31,6 +31,7 @@ Convierte el contenido de un CV proporcionado en un formato HTML limpio y bien e
 
 El resultado deberá ser solo el contenido necesario del currículum en HTML plano. A continuación el formato esperado:
 
+- Cada sección debe estar contenida en un '<div>' con una clase única.
 - Usa etiquetas '<h2>' para cada encabezado principal.
 - Usa listas '<ul>' y '<li>' para enumeraciones.
 - Incluye detalles en párrafos '<p>'.
@@ -52,19 +53,30 @@ Con el CV proporcionado, intenta llevarlo a la siguiente estructura:
   
 **Output (HTML esperado)**:
 '
-<h2>Resumen General</h2>
-<p>Ingeniero de software con más de 5 años de experiencia en desarrollo web.</p>
-
-<h2>Experiencia Laboral</h2>
-<ul>
-  <li>Desarrollador Frontend en XYZ (2018-2021): Implementación de interfaces de usuario en React y Angular.</li>
-</ul>
+<div class="resume-summary">
+  <h2>Resumen General</h2>
+  <p>Ingeniero de software con más de 5 años de experiencia en desarrollo web.</p>
+</div>
+<div class="resume-experience">
+  <h2>Experiencia Laboral</h2>
+  <ul>
+    <li>Desarrollador Frontend en XYZ (2018-2021): Implementación de interfaces de usuario en React y Angular.</li>
+  </ul>
+</div>
+<div class="resume-education">
+  <h2>Formación Profesional</h2>
+  <p>Detalles de la formación académica del candidato.</p>
+</div>
+<div class="resume-references">
+  <h2>Referencias</h2>
+  ...
+</div>
 '
 
 # Notas 
-
 - Mantén el HTML fácil de leer y semántico, lo que mejorará la comprensión tanto humana como por parte de motores de búsqueda.
 - No uses caracteres especiales que no pertenezcan al contenido, como símbolos de escape o etiquetas extrínsecas.
+- Asegúrate de que cada sección principal esté contenida en un <div> con su propia clase fija, no la modifiques.
   `;
 
     //solicitud a la API de OpenAI
@@ -95,7 +107,7 @@ export async function compatibilityResponse(
     }
 
     const promptComp = `
-Analiza detalladamente la compatibilidad entre un currículum vitae (CV) y una oferta laboral. Además, proporciona 20 preguntas que un entrevistador de Recursos Humanos (RRHH) pueda hacerle al candidato para explorar su ajuste a la oferta laboral. Para ello, ten en cuenta los principales apartados esenciales del CV y la oferta laboral, comparándolos punto por punto para establecer el grado de correspondencia.  
+Analiza detalladamente la compatibilidad entre un currículum vitae (CV) y una oferta laboral. Además, proporciona 20 preguntas que un entrevistador de Recursos Humanos (RRHH) pueda hacerle al candidato para explorar su ajuste a la oferta laboral. Para ello, ten en cuenta los principales apartados esenciales del CV y la oferta laboral, comparándolos punto por punto para establecer el grado de correspondencia, la respuesta tiene que ser únicamente un JSON sin texto adicional 
 
 Este es el Curriculum:
  ${textoCV}
@@ -110,10 +122,13 @@ Y esta es la oferta laboral:
 3. **Evaluar Compatibilidad**: Evalúa qué tan bien se alinean las capacidades y experiencias del candidato con los requerimientos del puesto.
 4. **Generar Conclusión**: Determina el grado de compatibilidad general entre el CV y la oferta laboral.
 5. **Generar Preguntas de RRHH**: Proporciona 20 posibles preguntas que un entrevistador de RRHH pueda preguntar al candidato durante la entrevista, enfocándose en comprender la adecuación a los requisitos del puesto y otras cualidades relevantes.
+6. **Extrae los años de experiencia**:
+   - Si se mencionan los años de experiencia, utilízalos.
+   - Si no, calcula los años sumando los períodos laborales encontrados en la sección "Experiencia Laboral".
 
-# Formato de Salida
 
-Proporciona una evaluación en formato de párrafo o JSON que detalle las coincidencias específicas, las potenciales áreas de desarrollo y una puntuación general (de 0 a 100) para la compatibilidad.
+# Formato de Salida (Devuelve únicamente un JSON sin texto adicional)
+Proporciona una evaluación en JSON que detalle las coincidencias específicas, las potenciales áreas de desarrollo y una puntuación general (de 0 a 100) para la compatibilidad.
 No utilices espacios ni tildes en los key del json.
 
 Adicionalmente, proporciona las 20 preguntas generadas.
@@ -124,8 +139,8 @@ Adicionalmente, proporciona las 20 preguntas generadas.
 - **Oferta laboral**: Ingeniero de Software, requiere experiencia en Java, conocimiento en SQL, 3 años de experiencia mínima, inglés avanzado.
 - **CV**: Experiencia en Java (5 años), conocimiento en SQL y Python, inglés avanzado.
 
-**Formato Salida** Devuelve exclusivamente un JSON con el siguiente formato:
-**Manten un estandar en la estructura del JSON**
+**Formato Salida**
+- Devuelve únicamente un JSON sin texto adicional
 {
   "evaluacion": {
     "coincidencias": {
@@ -136,6 +151,7 @@ Adicionalmente, proporciona las 20 preguntas generadas.
     },
     "faltas": [],
     "puntuacion_general": 95
+    "total_experiencia": 5
   },
   "preguntas_rrhh": [
     "¿Por qué decidiste aplicar a esta oferta laboral de Ingeniero de Software?",
@@ -182,5 +198,73 @@ Adicionalmente, proporciona las 20 preguntas generadas.
   } catch (error) {
     console.error("Error en la compatibilidad con el candidato:", error);
     return { error: "Failed to generate content." };
+  }
+}
+
+
+export async function extraerPeriodosTrabajoCV(textoCV: string | null) {
+  try {
+    if (!textoCV) {
+      return {
+        error: "El texto del CV es obligatorio para procesar los períodos laborales.",
+      };
+    }
+
+    const prompt = `
+Analiza el siguiente texto que corresponde al contenido de un CV. Extrae exclusivamente los períodos laborales mencionados en el formato JSON que se especifica a continuación.
+
+El formato esperado debe contener:
+- **inicio**: Fecha de inicio del trabajo (formato: "YYYY-MM").
+- **fin**: Fecha de fin del trabajo o \`null\` si está en curso.
+
+Si no encuentras información sobre períodos laborales, devuelve un JSON vacío:
+[]
+
+Este es el texto del CV:
+${textoCV}
+
+Ejemplo de salida válida:
+ [
+    { "inicio": "2018-01", "fin": "2020-12" },
+    { "inicio": "2021-01", "fin": null }
+  ]
+
+Notas importantes:
+- No incluyas ningún texto adicional fuera del JSON.
+- Considera únicamente las fechas claras y verificables.
+- Usa el formato ISO "YYYY-MM" para las fechas.
+    `;
+
+    const completion = await openai.chat.completions.create({
+      model: "chatgpt-4o-latest",
+      messages: [{ role: "user", content: prompt }],
+      max_tokens: 500,
+    });
+
+    let response = completion.choices[0]?.message?.content;
+
+    if (response) {
+      // Limpia el contenido extra como ```json o ``` si existe
+      response = response.replace(/```json\n?/, "").replace(/```$/, "");
+
+      try {
+        // Intenta analizar el JSON devuelto por ChatGPT
+        const parsedResponse = JSON.parse(response);
+        return parsedResponse;
+      } catch (error) {
+        console.error("Error al analizar el JSON devuelto por ChatGPT:", error);
+        return {
+          error: "La respuesta de ChatGPT no pudo ser analizada como JSON.",
+        };
+      }
+    } else {
+      console.error("La respuesta de ChatGPT es null o no contiene contenido.");
+      return {
+        error: "La respuesta de ChatGPT no contiene datos válidos.",
+      };
+    }
+  } catch (error) {
+    console.error("Error al comunicarse con ChatGPT:", error);
+    return { error: "Fallo la comunicación con ChatGPT." };
   }
 }

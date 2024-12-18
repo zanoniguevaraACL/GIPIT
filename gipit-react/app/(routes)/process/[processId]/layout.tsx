@@ -9,6 +9,7 @@ import ClientProvider from "@/contexts/ClientProvider";
 import ProcessInternalHeading from "@/components/molecules/ProcessInternalHeading";
 import { fetchProcessDetails } from "@/app/actions/fetchProcessDetails";
 import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 
 // Define the types for Proceso and Candidate
 type Proceso = {
@@ -37,6 +38,9 @@ export default function Layout({
   children,
   params,
 }: Readonly<{ children: React.ReactNode; params: { processId: string } }>) {
+
+    const { data: session } = useSession();
+
   const { processId } = params;
   const [proceso, setProceso] = useState<Proceso | null>(null);
   const [candidatesTabs, setCandidatesTabs] = useState<Candidate[]>([]);
@@ -164,7 +168,8 @@ export default function Layout({
     }
   });
 
-  const isInternal = true;
+  //ADMIN O KAM
+  const isInternal = ["admin", "kam"].some(palabra => session?.user?.role == palabra);
 
   return (
     <div className="inner-page-container">
