@@ -31,6 +31,7 @@ Convierte el contenido de un CV proporcionado en un formato HTML limpio y bien e
 
 El resultado deberá ser solo el contenido necesario del currículum en HTML plano. A continuación el formato esperado:
 
+- Cada sección debe estar contenida en un '<div>' con una clase única.
 - Usa etiquetas '<h2>' para cada encabezado principal.
 - Usa listas '<ul>' y '<li>' para enumeraciones.
 - Incluye detalles en párrafos '<p>'.
@@ -52,19 +53,30 @@ Con el CV proporcionado, intenta llevarlo a la siguiente estructura:
   
 **Output (HTML esperado)**:
 '
-<h2>Resumen General</h2>
-<p>Ingeniero de software con más de 5 años de experiencia en desarrollo web.</p>
-
-<h2>Experiencia Laboral</h2>
-<ul>
-  <li>Desarrollador Frontend en XYZ (2018-2021): Implementación de interfaces de usuario en React y Angular.</li>
-</ul>
+<div class="resume-summary">
+  <h2>Resumen General</h2>
+  <p>Ingeniero de software con más de 5 años de experiencia en desarrollo web.</p>
+</div>
+<div class="resume-experience">
+  <h2>Experiencia Laboral</h2>
+  <ul>
+    <li>Desarrollador Frontend en XYZ (2018-2021): Implementación de interfaces de usuario en React y Angular.</li>
+  </ul>
+</div>
+<div class="resume-education">
+  <h2>Formación Profesional</h2>
+  <p>Detalles de la formación académica del candidato.</p>
+</div>
+<div class="resume-references">
+  <h2>Referencias</h2>
+  ...
+</div>
 '
 
 # Notas 
-
 - Mantén el HTML fácil de leer y semántico, lo que mejorará la comprensión tanto humana como por parte de motores de búsqueda.
 - No uses caracteres especiales que no pertenezcan al contenido, como símbolos de escape o etiquetas extrínsecas.
+- Asegúrate de que cada sección principal esté contenida en un <div> con su propia clase fija, no la modifiques.
   `;
 
     //solicitud a la API de OpenAI
@@ -186,5 +198,73 @@ Adicionalmente, proporciona las 20 preguntas generadas.
   } catch (error) {
     console.error("Error en la compatibilidad con el candidato:", error);
     return { error: "Failed to generate content." };
+  }
+}
+
+
+export async function extraerPeriodosTrabajoCV(textoCV: string | null) {
+  try {
+    if (!textoCV) {
+      return {
+        error: "El texto del CV es obligatorio para procesar los períodos laborales.",
+      };
+    }
+
+    const prompt = `
+Analiza el siguiente texto que corresponde al contenido de un CV. Extrae exclusivamente los períodos laborales mencionados en el formato JSON que se especifica a continuación.
+
+El formato esperado debe contener:
+- **inicio**: Fecha de inicio del trabajo (formato: "YYYY-MM").
+- **fin**: Fecha de fin del trabajo o \`null\` si está en curso.
+
+Si no encuentras información sobre períodos laborales, devuelve un JSON vacío:
+[]
+
+Este es el texto del CV:
+${textoCV}
+
+Ejemplo de salida válida:
+ [
+    { "inicio": "2018-01", "fin": "2020-12" },
+    { "inicio": "2021-01", "fin": null }
+  ]
+
+Notas importantes:
+- No incluyas ningún texto adicional fuera del JSON.
+- Considera únicamente las fechas claras y verificables.
+- Usa el formato ISO "YYYY-MM" para las fechas.
+    `;
+
+    const completion = await openai.chat.completions.create({
+      model: "chatgpt-4o-latest",
+      messages: [{ role: "user", content: prompt }],
+      max_tokens: 500,
+    });
+
+    let response = completion.choices[0]?.message?.content;
+
+    if (response) {
+      // Limpia el contenido extra como ```json o ``` si existe
+      response = response.replace(/```json\n?/, "").replace(/```$/, "");
+
+      try {
+        // Intenta analizar el JSON devuelto por ChatGPT
+        const parsedResponse = JSON.parse(response);
+        return parsedResponse;
+      } catch (error) {
+        console.error("Error al analizar el JSON devuelto por ChatGPT:", error);
+        return {
+          error: "La respuesta de ChatGPT no pudo ser analizada como JSON.",
+        };
+      }
+    } else {
+      console.error("La respuesta de ChatGPT es null o no contiene contenido.");
+      return {
+        error: "La respuesta de ChatGPT no contiene datos válidos.",
+      };
+    }
+  } catch (error) {
+    console.error("Error al comunicarse con ChatGPT:", error);
+    return { error: "Fallo la comunicación con ChatGPT." };
   }
 }

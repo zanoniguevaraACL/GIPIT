@@ -22,7 +22,7 @@ async function CandidateDetails({
     <div className="candidate-details-container">
       <h3>{data.name}</h3>
       <div className="experience-n-match-container">
-        <p className="text-14">{data.total_experience ? data.total_experience : 'No se especifican'} año/s de experiencia</p>
+        <p className="text-14">{data.total_experience ? data.total_experience : 'No se especifica en el CV '} año/s de experiencia (valor aproximado)</p>
         <div className="vertical-separator"></div>
         <p className="text-14">
           {data.match}% de compatibilidad <i>(calculado con IA)</i>
