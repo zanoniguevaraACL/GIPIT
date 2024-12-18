@@ -3,9 +3,42 @@ import { IconUsers, IconFolderCheck, IconFolder, IconClock } from '@tabler/icons
 import { fetchDashboardStats } from '@/app/actions/fetchDashboardStats';
 import DashboardCard from '../../../components/molecules/DashboardCard';
 import "./dashboard.css";
+import { fetchInvoiceDetails } from "@/app/actions/fakeApi";
+import { IconReceipt } from "@tabler/icons-react";
+import Button from '@/components/atoms/Button';
+import "./invoices.css";
+
+interface InvoiceDetails {
+  id: number;
+  name: string;
+  service: string;
+  rate: number;
+  hours: number;
+  subtotal: number;
+  vat: number;
+  total: number;
+  description: string;
+}
 
 async function DashboardPage() {
   const stats = await fetchDashboardStats();
+  const invoiceDetails = await fetchInvoiceDetails(1);
+  const visibleDetails = invoiceDetails.details.slice(0, 3);
+  const remainingDetails = invoiceDetails.details.slice(3);
+  const remainingCount = remainingDetails.length;
+  const totalRemainingUF = remainingDetails.reduce(
+    (sum, detail) => sum + detail.total,
+    0
+  );
+
+  const averageRate = remainingDetails.length
+    ? (
+        remainingDetails.reduce(
+          (sum, detail) => sum + detail.total / detail.hours,
+          0
+        ) / remainingCount
+      ).toFixed(2)
+    : "0.0";
 
   const fechaFin = new Date();
   const fechaInicio = new Date();
@@ -68,7 +101,7 @@ async function DashboardPage() {
       </div>
 
       <div className="dashboard-stats">
-        <p className="section-title text-14">Resumen de procesos</p>
+        <p className="header-title">Resumen de procesos</p>
         <div className="rates-dashboard">
           <DashboardCard datos={dashboardCards.card1} />
           <DashboardCard datos={dashboardCards.card2} />
@@ -76,8 +109,57 @@ async function DashboardPage() {
           <DashboardCard datos={dashboardCards.card4} />
         </div>
       </div>
+
+      <div className="dashboard-container">
+        <div className="header-container">
+          <h4 className="header-title">Facturación</h4>
+          <Button 
+            text="Revisar las Facturas"
+            href="/invoices"
+            type="secondary"
+          />
+        </div>
+
+        <div className="row">
+          <div className="col-3">
+            <div className="dashboard-card-container">
+              <div className="text-container">
+                <h2 className="azulcolor">{invoiceDetails.total} UF</h2>
+                <h3>Pendiente por facturar</h3>
+                <small>Hace 3 días</small>
+              </div>
+              <div className="icon-container">
+                <IconReceipt size={24} />
+              </div>
+            </div>
+          </div>
+
+          <div className="col-9">
+            <div className="billing-card">
+              <table>
+                <tbody>
+                  {visibleDetails.map((detail) => (
+                    <tr key={detail.id}>
+                      <td>{detail.name}</td>
+                      <td>{(detail.total / detail.hours).toFixed(2)} UF/h</td>
+                      <td>{detail.total} UF</td>
+                    </tr>
+                  ))}
+                  {remainingCount > 0 && (
+                    <tr>
+                      <td>+ {remainingCount} profesionales</td>
+                      <td>~ {averageRate} UF/h</td>
+                      <td>{totalRemainingUF} UF</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
 
-export default DashboardPage; 
+export default DashboardPage;

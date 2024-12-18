@@ -1,0 +1,178 @@
+/* Contenedor general */
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  gap: 20px;
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between; /* Distribuye los elementos a los extremos */
+  align-items: center; /* Centra verticalmente */
+  margin: 0; /* Elimina cualquier margen */
+  padding: 0; /* Elimina cualquier padding */
+}
+
+.header-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  margin: 0;
+  margin-bottom: 16px;
+}
+
+.review-invoices-button {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #e11b48;
+  background: none;
+  border: none;
+  text-decoration: underline;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.review-invoices-button:hover {
+  color: #c4173a;
+}
+
+/* Layout de columnas */
+.row {
+  display: flex;
+  gap: 20px;
+}
+
+.col-3 {
+  flex: 3;
+  max-width: 30%;
+}
+
+.col-9 {
+  flex: 7;
+  max-width: 70%;
+}
+
+/* Tarjeta de facturación */
+.facturacion-card {
+  background-color: #F9E1E6;
+  padding: 20px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+}
+
+table {
+  width: 100%; /* Asegura que la tabla ocupe todo el ancho */
+  table-layout: fixed; /* Distribuye las columnas equitativamente */
+}
+
+td {
+  
+ 
+text-align: center; /* Centra el texto por defecto */
+}
+
+td:first-child {
+text-align: left; /* Primer TD alineado a la izquierda */
+}
+
+td:last-child {
+  text-align: right; /* Último TD alineado a la derecha */
+}
+.facturacion-card h2 {
+  font-size: 2rem;
+  margin: 0;
+  color: #131432;
+}
+
+.pendiente-text {
+  margin: 5px 0;
+  font-size: 1rem;
+  color: #555;
+}
+
+.icon-container {
+  background-color: #ababab;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 48px;
+  height: 48px;
+}
+
+/* Tabla de detalles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+  font-size: 1rem;
+  color: #333;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+.dashboard-card-container {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  padding: 32px;
+  background-color: var(--tertiary);
+  color: var(--light-secondary);
+  border-radius: 12px;
+  position: relative;
+
+  .chart-container {
+    width: 60%;
+  }
+
+  .text-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+
+    h2 {
+      font-size: 3em;
+      margin-bottom: 24px;
+      font-weight: bold;
+    }
+
+    .subheading {
+      color: var(--primary);
+    }
+  }
+
+  .icon-container {
+    position: absolute;
+    top: 32px;
+    right: 32px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: clip;
+
+    .overlay-color {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0.1;
+    }
+  }
+}
+
