@@ -17,6 +17,7 @@ export const createCandidateAction = async (
     client_comments: formData.get("client_comments") as string,
     match_percent: Number(formData.get("match_percent")),
     interview_questions: formData.get("interview_questions") as string,
+    total_experience: Number(formData.get("total_experience") as string)
   };
 
   try {

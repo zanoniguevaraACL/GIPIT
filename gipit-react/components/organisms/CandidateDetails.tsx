@@ -13,6 +13,7 @@ async function CandidateDetails({
 }) {
   
   const data = await fetchCandidateDetails(id);
+  console.log("Detalle candidate", data)
 
   console.log("En CanidateDetails.tsx Candidato encontrado:--->",data);
   const isInternal = true; // lo identificamos en la sesion, si el user es ACL mostramos el boton de editar candidato
@@ -21,7 +22,7 @@ async function CandidateDetails({
     <div className="candidate-details-container">
       <h3>{data.name}</h3>
       <div className="experience-n-match-container">
-        <p className="text-14">{data.totalExperience ? data.totalExperience : 'No se especifican'} años de experiencia</p>
+        <p className="text-14">{data.total_experience ? data.total_experience : 'No se especifica en el CV '} año/s de experiencia (valor aproximado)</p>
         <div className="vertical-separator"></div>
         <p className="text-14">
           {data.match}% de compatibilidad <i>(calculado con IA)</i>
