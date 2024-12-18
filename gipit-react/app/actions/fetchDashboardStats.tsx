@@ -3,8 +3,15 @@
 interface DashboardStats {
   activosCount: number;
   cerradosCount: number;
+  cerradosUltimoTrimestre: number;
   profesionalesCount: number;
   tiempoCierre: number;
+  historicoTiempos: {
+    labels: string[];
+    values: number[];
+  };
+  cerradostrimestreCount:number;
+  diasDesdeUltimoProcesoActivo:Date;
 }
 
 export async function fetchDashboardStats(): Promise<DashboardStats> {
@@ -32,8 +39,15 @@ export async function fetchDashboardStats(): Promise<DashboardStats> {
     return {
       activosCount: 0,
       cerradosCount: 0,
+      cerradosUltimoTrimestre: 0,
       profesionalesCount: 0,
       tiempoCierre: 0,
+      historicoTiempos: {
+        labels: [],
+        values: [],
+      },
+      cerradostrimestreCount: 0,
+      diasDesdeUltimoProcesoActivo: new Date(),
     };
   }
 } 

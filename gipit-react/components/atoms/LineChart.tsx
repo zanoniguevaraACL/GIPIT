@@ -66,32 +66,32 @@ const LineChart = ({
   // Opciones del gráfico
   const options = {
     responsive: true,
-    aspectRatio: 5,
+    maintainAspectRatio: true,
+    aspectRatio: 3,
     plugins: {
       legend: {
-        display: false, // Oculta la leyenda
+        display: false,
       },
     },
     scales: {
       y: {
-        min: 2,
-        max: 7.5,
+        beginAtZero: false,
         grid: {
-          display: false, // Oculta líneas horizontales
+          display: false,
         },
         ticks: {
-          display: false, // Oculta etiquetas en el eje Y
+          display: false,
         },
-        display: false, // Oculta el eje Y
+        display: false,
       },
       x: {
         grid: {
-          display: false, // Oculta líneas verticales
+          display: false,
         },
         ticks: {
-          display: false, // Oculta etiquetas en el eje X
+          display: false,
         },
-        display: false, // Oculta el eje X
+        display: false,
       },
     },
   };

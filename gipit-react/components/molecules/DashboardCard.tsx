@@ -10,6 +10,7 @@ function DashboardCard({
     hasChart: boolean;
     chartData: { labels?: string[]; values: number[] };
     icon: ReactElement;
+    subtitle?: string;
   };
 }) {
   const chartData = datos.chartData;
@@ -22,19 +23,21 @@ function DashboardCard({
 
   let expression = "";
   let color = "var(--light-secondary)";
-  if (penultimateValue > -1) {
-    if (variation > 0) {
-      expression = `+ ${variation} respecto a la evaluación anterior`;
-      color = "#0095FF";
-    } else if (variation < 0) {
-      expression = `${variation} respecto a la evaluación anterior`;
-      color = "#E04E29";
+  if (!datos.subtitle) {
+    if (penultimateValue > -1) {
+      if (variation > 0) {
+        expression = `+ ${variation} respecto a la evaluación anterior`;
+        color = "#0095FF";
+      } else if (variation < 0) {
+        expression = `${variation} respecto a la evaluación anterior`;
+        color = "#E04E29";
+      } else {
+        expression = `Igual a la evaluación anterior`;
+        color = "#0095FF";
+      }
     } else {
-      expression = `Igual a la evaluación anterior`;
-      color = "#0095FF";
+      expression = "No hay evaluaciones anteriores";
     }
-  } else {
-    expression = "No hay evaluaciones anteriores";
   }
 
   return (
@@ -48,7 +51,7 @@ function DashboardCard({
         <h2>{datos.chartData.values.at(-1)}</h2>
         <h4>{datos.title}</h4>
         <p className="text-12 subheading" style={{ color: color }}>
-          {expression}
+          {datos.subtitle || expression}
         </p>
       </div>
       <div className="icon-container" style={{ color: color }}>
