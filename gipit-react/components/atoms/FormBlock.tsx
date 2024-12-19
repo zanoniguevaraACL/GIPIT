@@ -135,7 +135,12 @@ function FormBlock({ rows, onSubmit, validationSchema }: FormBlockProps) {
 
         if (validationSchema) {
           const formObj = Object.fromEntries(formData.entries());
-          const parsedData = validationSchema.safeParse(formObj);
+
+          // Zod necesita un objeto donde los valores sean "File" para validar el archivo
+          const parsedData = validationSchema.safeParse({
+            ...formObj,
+            cv: formData.get("cv"), // Inyecta el archivo para validación
+          });
 
           const validationErrors: string[] = [];
           if (!parsedData.success) {

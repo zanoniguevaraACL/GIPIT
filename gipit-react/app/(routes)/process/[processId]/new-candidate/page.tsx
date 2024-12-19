@@ -71,12 +71,12 @@ function Page({ params }: { params: { processId: string } }) {
   return (
     <div>
       {isLoading && <Loader />}
-      <Modal 
-				rows={fields} 
-				onSubmit={handleSubmit} 
-				title="Nuevo Candidato"
-				validationSchema={candidateSchema}
-				/>
+        <Modal 
+          rows={fields} 
+          onSubmit={handleSubmit} 
+          title="Nuevo Candidato"
+          validationSchema={candidateSchema}
+        />
     </div>
   );
 }

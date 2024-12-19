@@ -64,7 +64,11 @@ export const candidateSchema = z.object({
       message: "El teléfono solo puede contener números",
     }),
   address: z.string().min(5, "La dirección debe tener mínimo 5 caracteres"),
-  cv: z.instanceof(File).refine((file) => file instanceof File, {
+  cv: z
+  .custom<File | null>((value) => value instanceof File, {
     message: "Debe subir un archivo de CV",
+  })
+  .refine((file) => file !== null && file.size > 0 && file.name.trim() !== "", {
+    message: "Debe subir un archivo válido de CV",
   }),
 });
