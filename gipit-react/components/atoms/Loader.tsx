@@ -5,7 +5,7 @@ function Loader() {
   return (
     <div className="loader-container">
       <div className="loader-icon">
-        <IconLoader2 />
+        <IconLoader2 size={64}/>
       </div>
     </div>
   );

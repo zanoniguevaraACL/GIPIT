@@ -22,3 +22,13 @@ export const fetchCandidateDetails = async (id: number) => {
     throw error;
   }
 };
+
+export const updateCandidateDetails = async (candidateId: string, formData: FormData) => {
+  // Implementa la lógica para actualizar los detalles del candidato
+  const response = await fetch(`/api/candidates/${candidateId}`, {
+    method: 'PUT',
+    body: formData,
+  });
+  const data = await response.json();
+  return data;
+};
