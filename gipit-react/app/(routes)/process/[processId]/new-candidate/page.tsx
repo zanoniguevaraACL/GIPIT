@@ -5,6 +5,9 @@ import Modal from "@/components/molecules/Modal";
 import { FormInputsRow } from "@/app/lib/types";
 import { handleCreateCandidate } from "@/app/actions/handleCreateCandidate";
 import Loader from "@/components/atoms/Loader";
+import { candidateSchema } from "@/app/lib/validationSchemas";
+// import {z} from "zod";
+
 
 
 function Page({ params }: { params: { processId: string } }) {
@@ -68,7 +71,12 @@ function Page({ params }: { params: { processId: string } }) {
   return (
     <div>
       {isLoading && <Loader />}
-      <Modal rows={fields} onSubmit={handleSubmit} title="Nuevo Candidato" />
+      <Modal 
+				rows={fields} 
+				onSubmit={handleSubmit} 
+				title="Nuevo Candidato"
+				validationSchema={candidateSchema}
+				/>
     </div>
   );
 }
