@@ -6,6 +6,7 @@ import { handleCreateProcess } from "@/app/actions/handleCreateProcess";
 import { fetchListCompanies } from "@/app/actions/fetchCompanies";
 import { toast } from "react-toastify";
 import { z } from "zod";
+import Loader from "@/components/atoms/Loader";
 
 const processSchema = z.object({
   client: z
@@ -60,7 +61,7 @@ const Page = () => {
   }, []);
 
   if (isLoading) {
-    return <div>Cargando...</div>;
+    return <div><Loader /></div>;
   }
 
   if (error) {

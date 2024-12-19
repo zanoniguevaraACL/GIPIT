@@ -10,6 +10,7 @@ import ProcessInternalHeading from "@/components/molecules/ProcessInternalHeadin
 import { fetchProcessDetails } from "@/app/actions/fetchProcessDetails";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
+import Loader from "@/components/atoms/Loader";
 
 // Define the types for Proceso and Candidate
 type Proceso = {
@@ -72,7 +73,7 @@ export default function Layout({
   }, [processId]);
 
   if (loading) {
-    return <div>Cargando...</div>;
+    return <div><Loader /></div>;
   }
 
   if (error) {

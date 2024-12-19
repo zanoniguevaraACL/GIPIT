@@ -1,10 +1,11 @@
 "use client";
+import { useState, useEffect } from "react";
 import ModalWithTextEditor from "@/components/molecules/ModalWithTextEditor";
 import { FormInputsRow } from "@/app/lib/types";
 import { handleEditCandidate } from "@/app/actions/handleEditCandidate";
-import { useState, useEffect } from "react";
 import "@/components/molecules/textEditor.css";
 import { fetchCandidateDetails } from "@/app/actions/fetchCandidateDetails";
+import Loader from "@/components/atoms/Loader";
 
 type CandidateDetails = {
   name: string;
@@ -29,22 +30,28 @@ export default function Page({
     useState<CandidateDetails | null>(null);
   const { processId, candidateId } = params;
   const routeToRedirect = `/process/${processId}/${candidateId}`;
+  const [isLoading, setIsLoading] = useState(false);
+
 
   useEffect(() => {
     const fetchDetails = async () => {
       try {
+        setIsLoading(true);
         const details = await fetchCandidateDetails(parseInt(candidateId));
         setCandidateDetails(details);
+        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching candidate details:", error);
       }
+      setIsLoading(false);
     };
-
+  
     fetchDetails();
   }, [candidateId]);
 
-  if (!candidateDetails) {
-    return <div>Loading...</div>;
+
+  if (isLoading || !candidateDetails) {
+    return <div><Loader/></div> 
   }
 
   const fields: FormInputsRow = [

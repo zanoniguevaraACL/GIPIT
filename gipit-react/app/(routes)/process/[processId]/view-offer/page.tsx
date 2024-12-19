@@ -7,6 +7,7 @@ import { updateProcess } from "@/app/actions/updateProcess";
 import { fetchProcessDetails } from "@/app/actions/fetchProcess";
 import { toast } from "react-toastify";
 import { z } from "zod";
+import Loader from "@/components/atoms/Loader";
 
 const processSchema = z.object({
   jobOffer: z
@@ -76,7 +77,7 @@ function Page() {
   }
 
   if (!previousValues) {
-    return <div>Cargando...</div>;
+    return <div><Loader /></div>;
   }
 
   const handleSubmit = async (
