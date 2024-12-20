@@ -6,6 +6,7 @@ import { handleEditCandidate } from "@/app/actions/handleEditCandidate";
 import "@/components/molecules/textEditor.css";
 import { fetchCandidateDetails } from "@/app/actions/fetchCandidateDetails";
 import Loader from "@/components/atoms/Loader";
+// import { useSearchParams } from "next/navigation";
 
 type CandidateDetails = {
   name: string;
@@ -29,8 +30,19 @@ export default function Page({
   const [candidateDetails, setCandidateDetails] =
     useState<CandidateDetails | null>(null);
   const { processId, candidateId } = params;
-  const routeToRedirect = `/process/${processId}/${candidateId}`;
+  const routeToRedirect = `/process/${processId}`;
   const [isLoading, setIsLoading] = useState(false);
+  // const searchParams = useSearchParams();
+
+  // function handleSearch(term: string) {
+  //   const params = new URLSearchParams(searchParams);
+  //   if (term) {
+  //     params.set("query", term);
+  //   } else {
+  //     params.delete("query");
+  //   }
+  //   replace(`${pathname}?${params.toString()}`);
+  // }
 
 
   useEffect(() => {

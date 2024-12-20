@@ -1,6 +1,6 @@
 "use server";
 
-export const handleDisqualify = async (
+export const handleHire = async (
   formData: FormData,
   actualRoute: string
 ): Promise<{ message: string; route: string; statusCode: number }> => {
@@ -17,9 +17,9 @@ export const handleDisqualify = async (
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          action: "disqualify", // Especifica la acción 
-          candidateId // ID del candidato 
-          }),
+          action: "select", // Especifica la acción para contratar
+          candidateId, // ID del candidato
+        }),
       }
     );
 
@@ -35,9 +35,9 @@ export const handleDisqualify = async (
       statusCode: 200,
     };
   } catch (error) {
-    console.error("Error al descalificar el candidato:", error);
+    console.error("Error al contratar el candidato:", error);
     return {
-      message: "Error al descalificar el candidato.",
+      message: "Error al contratar el candidato.",
       route: "/" + actualRoute.split("/").slice(1, 4).join("/"),
       statusCode: 500,
     };

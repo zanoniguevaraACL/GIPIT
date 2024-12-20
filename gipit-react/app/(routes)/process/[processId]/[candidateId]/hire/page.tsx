@@ -1,10 +1,10 @@
 "use client";
 import Modal from "@/components/molecules/Modal";
 import { FormInputsRow } from "@/app/lib/types";
-import { handleDisqualify } from "@/app/actions/handleDisqualify";
 import { usePathname } from "next/navigation";
+import { handleHire } from "@/app/actions/handleHire";
 
-function Page() {
+function Page({ params }: { params: { processId: string; candidateId: string } }) {
   const actualRoute = usePathname();
   const routeToRedirect = "/" + actualRoute.split("/").slice(1, 4).join("/");
 
@@ -15,10 +15,22 @@ function Page() {
     ],
   ];
 
+    const handleSubmit = async (formData: FormData) => {
+      formData.append("candidateId", params.candidateId);
+      formData.append("processId", params.processId);
+      const result = await handleHire(formData, actualRoute);
+      if (result.statusCode === 200) {
+        window.location.href = result.route;
+      } else {
+        console.error(result.message);
+      }
+      return result;
+    };
+
   return (
     <Modal
       rows={fields}
-      onSubmit={handleDisqualify} // seleccionar la funcion correcta
+      onSubmit={handleSubmit} // seleccionar la funcion correcta
       message="¿Deseas Contratar al Candidato?"
     />
   );
