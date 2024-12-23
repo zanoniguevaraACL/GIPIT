@@ -8,21 +8,21 @@ import { IconReceipt } from "@tabler/icons-react";
 
 interface InvoiceDetails {
   id: number;
-  estimated_date: string;
-  expiration_date: string;
-  total_value: string;
-  description: string;
-  status: string;
-  pre_invoice_items: Array<{
-    id: number;
-    service: string;
-    rate: string;
-    hours: string;
-    subtotal: string;
-    vat: string;
-    total: string;
-    candidates: Array<{ id: number; name: string }>;
-  }>;
+  candidateName: string;
+  date: string;
+  rate: number;
+  total: number;
+}
+interface Column<T> {
+  name: string;
+  key: keyof T;
+  width: number;
+}
+
+interface ResponseData<T> {
+  total: number;
+  columns: Column<T>[];
+  batch: T[];
 }
 
 export default async function Page(props: {
@@ -37,16 +37,16 @@ export default async function Page(props: {
     return <div>No se encontró la factura.</div>;
   }
 
-  const dataGridData = {
+  const dataGridData: ResponseData<InvoiceDetails> = {
     columns: [
-      { name: "Nombre", key: "candidateName" as "candidateName", width: 1.5 },
-      { name: "Fecha", key: "date" as "date", width: 1 },
-      { name: "UF por hora", key: "rate" as "rate", width: 1 },
-      { name: "total", key: "total" as "total", width: 1 },
+      { name: "Nombre", key: "candidateName", width: 1.5 },
+      { name: "Fecha", key: "date", width: 1 },
+      { name: "UF por hora", key: "rate", width: 1 },
+      { name: "total", key: "total", width: 1 },
     ],
     total: preInvoice.pre_invoice_items ? preInvoice.pre_invoice_items.length : 0,
-    batch: preInvoice.pre_invoice_items ? preInvoice.pre_invoice_items.map((item: any) => {
-      const candidate = candidates.find((c: any) => c.id === item.candidate_id);
+    batch: preInvoice.pre_invoice_items ? preInvoice.pre_invoice_items.map((item: { id: string; candidate_id: string; rate: string; total: string }) => {
+      const candidate = candidates.find((c: { id: string; name: string }) => c.id === item.candidate_id);
       return {
         id: item.id,
         candidateName: candidate ? candidate.name : "Sin candidato",
@@ -79,7 +79,10 @@ export default async function Page(props: {
             <Button text="Notificar un error" href={`/invoices/${invoiceId}/notify`} type="tertiary" />
           </div>
         </div>
-        <DataGrid data={dataGridData} />
+        <DataGrid 
+          data={dataGridData} 
+          baseUrl={`/invoices/${invoiceId}`}
+        />
         <div className="total-container">
           <h3>Total a pagar</h3>
           <h1>{totalInvoice.toFixed(2)} UF</h1>
