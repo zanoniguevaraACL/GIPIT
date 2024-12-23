@@ -7,6 +7,7 @@ import "@/components/molecules/textEditor.css";
 import { fetchCandidateDetails } from "@/app/actions/fetchCandidateDetails";
 import Loader from "@/components/atoms/Loader";
 // import { useSearchParams } from "next/navigation";
+import { editCandidateSchema } from "../../../../../lib/validationSchemas";
 
 type CandidateDetails = {
   name: string;
@@ -108,6 +109,7 @@ export default function Page({
         onSubmit={handleEditCandidate}
         title="Editar Candidato"
         cvCandidato={candidateDetails.sumary || "Escribe tu contenido aqui..."} // enviar contenido al modal
+        validationSchema={editCandidateSchema} 
       />
     </div>
   );

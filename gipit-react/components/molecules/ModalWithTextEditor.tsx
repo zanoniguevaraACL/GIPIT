@@ -14,7 +14,7 @@ type ModalWithTextEditorProps = FormBlockProps & {
   cvCandidato: string; // Nuevo prop content
 };
 
-function ModalWithTextEditor({ rows, onSubmit, title, message, cvCandidato }: ModalWithTextEditorProps) {
+function ModalWithTextEditor({ rows, onSubmit, title, message, cvCandidato, validationSchema }: ModalWithTextEditorProps) {
   const editorRef = useRef<HTMLDivElement | null>(null);
   const [content, setContent] = useState(cvCandidato || 'Escribe tu contenido aquí...');
 	const editorViewRef = useRef<EditorView | null>(null); // Ref para guardar el EditorView
@@ -95,7 +95,11 @@ function ModalWithTextEditor({ rows, onSubmit, title, message, cvCandidato }: Mo
         {message && <h3>{message}</h3>}
         <div className="modal-content">
           <div className="form-fields">
-            <FormBlock rows={rows} onSubmit={handleSubmit} />
+            <FormBlock 
+              rows={rows}
+              onSubmit={handleSubmit}
+              validationSchema={validationSchema} // Pasa el esquema de validación aquí
+              />
           </div>
           <div className="form-editor">
 						<label htmlFor="editor">CV estandarizado:</label>

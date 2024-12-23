@@ -59,7 +59,7 @@ export const candidateSchema = z.object({
   email: z.string().email("El correo electrónico debe ser válido"),
   phone: z
     .string()
-    .min(10, "El teléfono debe tener mínimo 10 caracteres")
+    .min(10, "El teléfono debe tener mínimo 7 caracteres")
     .regex(/^[0-9]+$/, {
       message: "El teléfono solo puede contener números",
     }),
@@ -84,7 +84,7 @@ export const editCandidateSchema = z.object({
   email: z.string().email("El correo electrónico debe ser válido"),
   phone: z
     .string()
-    .min(10, "El teléfono debe tener mínimo 10 caracteres")
+    .min(10, "El teléfono debe tener mínimo 7 caracteres")
     .regex(/^[0-9]+$/, {
       message: "El teléfono solo puede contener números",
     }),
