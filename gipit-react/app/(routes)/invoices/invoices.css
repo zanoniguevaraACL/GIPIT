@@ -85,3 +85,20 @@ invoices.css
 .pro-buttons-container button[type="danger"]:hover {
   background-color: #b91c1c;
 }
+
+/* GIPITFront/gipit-react/app/(routes)/invoices/invoices.css */
+
+.estado-pendiente {
+  color: orange; /* Color para estado pendiente */
+  font-weight: bold;
+}
+
+.estado-pagado {
+  color: green; /* Color para estado pagado */
+  font-weight: bold;
+}
+
+.estado-cancelado {
+  color: red; /* Color para estado cancelado */
+  font-weight: bold;
+}

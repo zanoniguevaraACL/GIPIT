@@ -2,6 +2,7 @@ import { fetchAllPreInvoices } from "@/app/actions/fetchInvoices";
 import DataGrid from "@/components/molecules/DataGrid";
 import SearchBar from "@/components/molecules/SearchBar";
 
+
 interface InvoiceDetails {
   id: number;
   professionals: string;
@@ -36,6 +37,10 @@ export default async function Page(props: {
   const query = searchParams?.query || "";
 
   const invoicesList = await fetchAllPreInvoices(page);
+  const filteredInvoices = invoicesList.filter((invoice: InvoiceDetails) =>
+    invoice.professionals.toLowerCase().includes(query.toLowerCase())
+  );
+
   const data: ResponseData<InvoiceDetails> = {
     columns: [
       { name: "Profesionales", key: "professionals", width: 2 },
@@ -44,8 +49,8 @@ export default async function Page(props: {
       { name: "Fecha", key: "expiration_date", width: 1 },
       { name: "Estado", key: "status", width: 1 },
     ],
-    total: invoicesList.length,
-    batch: invoicesList.map((invoice: InvoiceDetails) => {
+    total: filteredInvoices.length,
+    batch: filteredInvoices.map((invoice: InvoiceDetails) => {
       const estimatedDate = new Date(invoice.estimated_date);
       const expirationDate = new Date(invoice.expiration_date);
       
@@ -61,9 +66,10 @@ export default async function Page(props: {
 
       return {
         ...invoice,
-        period, // Agregar el nuevo campo period
-        expiration_date: expirationDate.toISOString().split('T')[0], // Extraer solo el año, mes y día
+        period,
+        expiration_date: expirationDate.toISOString().split('T')[0],
         professionals: professionalsDisplay,
+        status: invoice.status,
       };
     }),
   };
