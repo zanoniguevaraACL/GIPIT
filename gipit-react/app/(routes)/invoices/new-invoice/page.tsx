@@ -1,58 +1,122 @@
-import { fetchAllInvoices } from "@/app/actions/fakeApi";
-import DataGrid from "@/components/molecules/DataGrid";
-import SearchBar from "@/components/molecules/SearchBar";
+"use client";
 
-interface InvoiceDetails {
-  id: number;
-  cantidad: number;
-  total: number;
-  date: string;
-  expiration: string;
-  status: string;
-}
+import { useState, useEffect } from "react";
+import { IconCalendar, IconReceipt } from "@tabler/icons-react";
+import Button from "@/components/atoms/Button";
+import { fetchListCompanies } from "@/app/actions/fetchCompanies";
+import './new-invoice.css';
 
-interface Column<T> {
+interface Client {
   name: string;
-  key: keyof T; // Clave que referencia la propiedad del objeto T
-  width: number; // Ancho de la columna
+  value: number;
 }
 
-interface ResponseData<T> {
-  total: number;
-  columns: Column<T>[];
-  batch: T[];
-}
+export default function Page() {
+  const [clients, setClients] = useState<Client[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-export default async function Page(props: {
-  searchParams?: Promise<{
-    query?: string;
-    page?: string;
-  }>;
-}) {
-  const searchParams = await props.searchParams;
-  //const query = searchParams?.query || "";
-  const page = searchParams?.page ? parseInt(searchParams?.page) : 1;
+  useEffect(() => {
+    const loadClients = async () => {
+      setIsLoading(true);
+      try {
+        const clientsList = await fetchListCompanies();
+        const formattedClients = clientsList.map(client => ({
+          name: client.name,
+          value: client.id
+        }));
+        setClients(formattedClients);
+      } catch (error) {
+        console.error("Error al cargar los clientes:", error);
+        setError("Error al cargar los clientes");
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  //const isInternal: boolean = true;
-
-  const invoicesList = await fetchAllInvoices(page);
-
-  const data: ResponseData<InvoiceDetails> = {
-    columns: [
-      { name: "Fecha", key: "date", width: 1.1 },
-      { name: "Exipra", key: "expiration", width: 1.1 },
-      { name: "Profesionales", key: "cantidad", width: 1 },
-      { name: "Monto", key: "total", width: 1 },
-      { name: "Estado", key: "status", width: 1 },
-    ],
-    total: 24,
-    batch: invoicesList,
-  };
+    loadClients();
+  }, []);
 
   return (
-    <div className="inner-page-container">
-      <SearchBar buttonLink="/process/new-pro" buttonText="Nueva Factura" />
-      <DataGrid data={data} baseUrl="/invoices" />
+    <div className="max-container">
+      <div className="header-navigation">
+        <Button
+          text="Facturación"
+          href="/invoices"
+          type="primary"
+        />
+      </div>
+      
+      <div className="invoice-form-container">
+        <h2>Nueva Factura</h2>
+        
+        <form>
+          <div className="form-grid">
+            <div className="form-group">
+              <label>CLIENTE</label>
+              <select defaultValue="Cencosud">
+                <option value="Cencosud">Cencosud</option>
+                {clients.map(client => (
+                  <option key={client.value} value={client.value}>
+                    {client.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            
+            <div className="form-group">
+              <label>EMISIÓN</label>
+              <div className="date-input">
+                <input type="date" defaultValue="2024-12-24" />
+                <IconCalendar size={20} />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label>VENCIMIENTO</label>
+              <div className="date-input">
+                <input type="date" defaultValue="2024-12-24" />
+                <IconCalendar size={20} />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label>PERIODO A FACTURAR</label>
+              <div className="date-input">
+                <input type="text" defaultValue="Mayo - Julio" />
+                <IconCalendar size={20} />
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <div className="professionals-section">
+          <h4>Profesionales</h4>
+          <Button
+            text="Agregar Profesional"
+            type="secondary"
+            href="#"
+          />
+        </div>
+
+        <div className="total-container">
+          <div className="total-info">
+            <h3>Total a pagar</h3>
+            <h1>0 UF</h1>
+          </div>
+          <div className="button-container">
+            <Button
+              text="Cancelar"
+              href="/invoices"
+              type="tertiary"
+            />
+            <Button
+              text="Guardar Factura"
+              type="primary"
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

@@ -1,0 +1,104 @@
+.max-container {
+    height: 100vh;
+    background-color: var(--background);
+    padding: 0;
+  }
+  
+  .header-navigation {
+    padding: 16px 24px;
+    background-color: white;
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .invoice-form-container {
+    max-width: 1200px;
+    margin: 24px auto;
+    padding: 32px;
+    background-color: white;
+    border-radius: 12px;
+  }
+  
+  .invoice-form-container h2 {
+    margin-bottom: 32px;
+    font-size: 1.5rem;
+    font-weight: 500;
+  }
+  
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .form-group label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+  
+  .form-group select,
+  .form-group input {
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 14px;
+    width: 100%;
+  }
+  
+  .date-input {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  
+  .date-input svg {
+    position: absolute;
+    right: 12px;
+    color: var(--text-secondary);
+    pointer-events: none;
+  }
+  
+  .professionals-section {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border-color);
+  }
+  
+  .professionals-section h4 {
+    margin-bottom: 16px;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+  
+  .total-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border-color);
+  }
+  
+  .total-info h3 {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    margin-bottom: 4px;
+  }
+  
+  .total-info h1 {
+    font-size: 2rem;
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+  
+  .button-container {
+    display: flex;
+    gap: 12px;
+  }
