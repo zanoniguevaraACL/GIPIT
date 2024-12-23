@@ -1,0 +1,30 @@
+.filter-container {
+	margin-top: 10px;
+	margin-left: 10px;
+}
+
+.filter-pills {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+	padding-top: 5px
+}
+
+.pill {
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  /* background-color: #f4f4f4; */
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.pill.active {
+  background-color: #E02957;
+  color: white;
+  border-color: #E02957;
+}
+
+.pill:hover {
+  background-color: #e6e6e6;
+}
