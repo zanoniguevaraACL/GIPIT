@@ -4,9 +4,12 @@ import { FormInputsRow } from "@/app/lib/types";
 import { handleDisqualify } from "@/app/actions/handleDisqualify";
 import { usePathname } from "next/navigation";
 
-function Page() {
+function Page({ params }: { params: { processId: string; candidateId: string } }) {
   const actualRoute = usePathname();
-  const routeToRedirect = "/" + actualRoute.split("/").slice(1, 4).join("/");
+  //quiero que me rediriga al listado de candidatos que estaba
+  const routeToRedirect = `/process/${params.processId}`;
+
+
 
   const fields: FormInputsRow = [
     [
@@ -15,10 +18,22 @@ function Page() {
     ],
   ];
 
+  const handleSubmit = async (formData: FormData) => {
+    formData.append("candidateId", params.candidateId);
+    formData.append("processId", params.processId);
+    const result = await handleDisqualify(formData, actualRoute);
+    if (result.statusCode === 200) {
+      window.location.href = result.route;
+    } else {
+      console.error(result.message);
+    }
+    return result;
+  };
+
   return (
     <Modal
       rows={fields}
-      onSubmit={handleDisqualify}
+      onSubmit={handleSubmit}
       message="¿Deseas Descartar al Candidato?"
     />
   );

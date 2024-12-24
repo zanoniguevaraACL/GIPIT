@@ -59,7 +59,7 @@ export const candidateSchema = z.object({
   email: z.string().email("El correo electrónico debe ser válido"),
   phone: z
     .string()
-    .min(10, "El teléfono debe tener mínimo 10 caracteres")
+    .min(10, "El teléfono debe tener mínimo 7 caracteres")
     .regex(/^[0-9]+$/, {
       message: "El teléfono solo puede contener números",
     }),
@@ -71,4 +71,22 @@ export const candidateSchema = z.object({
   .refine((file) => file !== null && file.size > 0 && file.name.trim() !== "", {
     message: "Debe subir un archivo válido de CV",
   }),
+});
+
+export const editCandidateSchema = z.object({
+  name: z
+    .string()
+    .min(3, "El nombre debe tener mínimo 3 caracteres")
+    .regex(/^[A-Za-zÀ-ÿ .-]+$/, {
+      message:
+        "El nombre solo puede contener letras, espacios, puntos y guiones",
+    }),
+  email: z.string().email("El correo electrónico debe ser válido"),
+  phone: z
+    .string()
+    .min(10, "El teléfono debe tener mínimo 7 caracteres")
+    .regex(/^[0-9]+$/, {
+      message: "El teléfono solo puede contener números",
+    }),
+  address: z.string().min(5, "La dirección debe tener mínimo 5 caracteres"),
 });

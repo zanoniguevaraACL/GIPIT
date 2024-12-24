@@ -9,9 +9,9 @@ export const fetchProcessDetails = async (processId: number) => {
     console.log("DETALLE DEL PROCESO: ", data);
 
     return {
-      id: data.processId, // Ajustar el nombre de la propiedad
-      name: data.jobOffer, // Ajustar el nombre de la propiedad para que coincida con `name`
-      stage: data.stage,
+      id: data.processId, 
+      name: data.jobOffer, 
+      stage: data.stage, // Dato para filtrar en procesos
       startAt: data.openedAt ? new Date(data.openedAt).toLocaleDateString() : '',
       endAt: data.closedAt ? new Date(data.closedAt).toLocaleDateString() : null,
       preFiltered: data.preFiltered ? 1 : 0,

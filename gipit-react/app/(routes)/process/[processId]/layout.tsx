@@ -11,6 +11,7 @@ import { fetchProcessDetails } from "@/app/actions/fetchProcessDetails";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import Loader from "@/components/atoms/Loader";
+import './filter-pills.css';
 
 // Define the types for Proceso and Candidate
 type Proceso = {
@@ -33,6 +34,7 @@ type Candidate = {
   address: string;
   jsongptText: string;
   match?: number;
+  stage?: string;
 };
 
 export default function Layout({
@@ -40,13 +42,17 @@ export default function Layout({
   params,
 }: Readonly<{ children: React.ReactNode; params: { processId: string } }>) {
 
-    const { data: session } = useSession();
+  const { data: session } = useSession();
 
   const { processId } = params;
   const [proceso, setProceso] = useState<Proceso | null>(null);
   const [candidatesTabs, setCandidatesTabs] = useState<Candidate[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedStage, setSelectedStage] = useState<string>("entrevistas");
+  const [filteredCandidates, setFilteredCandidates] = useState<Candidate[]>([]);
+
+
 
   useEffect(() => {
     if (processId) {
@@ -56,6 +62,10 @@ export default function Layout({
           const procesoData = await fetchProcessDetails(Number(processId));
 
           if (procesoData) {
+            //Aqui filtramos los candidatos_proceso antes de pasarlos preguntando por el campo stage
+            console.log("Candidatos ---->", procesoData.candidates);
+            console.log("Proceso Data ---->", procesoData);
+
             setProceso(procesoData);
             setCandidatesTabs(procesoData.candidates ?? []); // Asigna directamente los candidatos del proceso
           } else {
@@ -70,7 +80,17 @@ export default function Layout({
 
       fetchData();
     }
-  }, [processId]);
+  }, [processId, selectedStage]);
+
+  // Actualiza `filteredCandidates` cuando cambian los candidatos o la etapa seleccionada
+  useEffect(() => {
+    if (candidatesTabs) {
+      const filtered = candidatesTabs.filter(
+        (candidate) => candidate.stage === selectedStage
+      );
+      setFilteredCandidates(filtered);
+    }
+  }, [selectedStage, candidatesTabs]);
 
   if (loading) {
     return <div><Loader /></div>;
@@ -136,7 +156,7 @@ export default function Layout({
   //     })).then(results => results.flat())
   //   : [];
 
-  const candidatesTabsFinal = candidatesTabs ?? [];
+  // const candidatesTabsFinal = candidatesTabs ?? [];
 
   etapas.forEach((et) => {
     if (et.name.toLowerCase() === proceso.stage.toLowerCase()) {
@@ -184,9 +204,25 @@ export default function Layout({
         />
       )}
 
+      {/* Filtros */}
+      <div className="filter-container">
+        <h3>Filtrar Candidatos</h3>
+        <div className="filter-pills">
+          {["entrevistas", "seleccionado", "descartado"].map((stage) => (
+            <button
+              key={stage}
+              className={`pill ${selectedStage === stage ? "active" : ""}`}
+              onClick={() => setSelectedStage(stage)}
+            >
+              {stage.charAt(0).toUpperCase() + stage.slice(1)}
+            </button>
+          ))}
+        </div>
+      </div>
+
       <ClientProvider
         showCandidates={showCandidates}
-        candidatesTabs={candidatesTabsFinal}
+        candidatesTabs={filteredCandidates}
       >
         {children}
       </ClientProvider>
