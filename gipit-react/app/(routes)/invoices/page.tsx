@@ -2,13 +2,16 @@ import { fetchAllPreInvoices } from "@/app/actions/fetchInvoices";
 import DataGrid from "@/components/molecules/DataGrid";
 import SearchBar from "@/components/molecules/SearchBar";
 
+
 interface InvoiceDetails {
   id: number;
-  cantidad: number;
+  professionals: string;
+  period: string;
   total_value: number;
+  date: string;
+  status: string;
   estimated_date: string;
   expiration_date: string;
-  status: string;
 }
 
 interface Column<T> {
@@ -31,31 +34,53 @@ export default async function Page(props: {
 }) {
   const searchParams = await props.searchParams;
   const page = searchParams?.page ? parseInt(searchParams?.page) : 1;
+  const query = searchParams?.query || "";
 
   const invoicesList = await fetchAllPreInvoices(page);
-  
+  const filteredInvoices = invoicesList.filter((invoice: InvoiceDetails) =>
+    invoice.professionals.toLowerCase().includes(query.toLowerCase())
+  );
 
-  const total = 24; 
-  
   const data: ResponseData<InvoiceDetails> = {
     columns: [
-      { name: "Fecha", key: "estimated_date", width: 1.1 },
-      { name: "Exipra", key: "expiration_date", width: 1.1 },
-      { name: "Profesionales", key: "cantidad", width: 1 },
-      { name: "Monto", key: "total_value", width: 1 },
+      { name: "Profesionales", key: "professionals", width: 2 },
+      { name: "Período", key: "period", width: 1.5 },
+      { name: "Monto (UF)", key: "total_value", width: 1 },
+      { name: "Fecha", key: "expiration_date", width: 1 },
       { name: "Estado", key: "status", width: 1 },
     ],
-    total, 
-    batch: invoicesList, 
+    total: filteredInvoices.length,
+    batch: filteredInvoices.map((invoice: InvoiceDetails) => {
+      const estimatedDate = new Date(invoice.estimated_date);
+      const expirationDate = new Date(invoice.expiration_date);
+      
+      const period = `${estimatedDate.toLocaleString('default', { month: 'long' })} - ${expirationDate.toLocaleString('default', { month: 'long' })}`;
+
+      const candidates = invoice.professionals.split(',').map(professional => professional.trim());
+      const professionals = candidates.slice(0, 3);
+      const additionalCount = candidates.length - 3;
+
+      const professionalsDisplay = additionalCount > 0 
+        ? `${professionals.join(', ')} y otros ${additionalCount}` 
+        : professionals.join(', ');
+
+      return {
+        ...invoice,
+        period,
+        expiration_date: expirationDate.toISOString().split('T')[0],
+        professionals: professionalsDisplay,
+        status: invoice.status,
+      };
+    }),
   };
 
   return (
     <div className="inner-page-container">
-      <SearchBar
-        buttonLink="/invoices/new-invoice"
-        buttonText="Nueva Factura"
+      <SearchBar buttonLink="/invoices/new-invoice" buttonText="Nueva Factura" />
+      <DataGrid 
+        data={data} 
+        baseUrl="/invoices"
       />
-      <DataGrid data={data} baseUrl="/invoices" />
     </div>
   );
 }

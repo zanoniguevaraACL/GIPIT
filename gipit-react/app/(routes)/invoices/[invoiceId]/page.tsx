@@ -1,4 +1,4 @@
-import { fetchInvoiceDetails } from "@/app/actions/fakeApi";
+import { fetchInvoiceDetails } from "@/app/actions/fetchInvoiceDetails";
 import "../../pros/[proId]/proId.css";
 import "./invoice.css";
 import "@/components/molecules/candidateClientNote.css";
@@ -8,20 +8,15 @@ import { IconReceipt } from "@tabler/icons-react";
 
 interface InvoiceDetails {
   id: number;
-  name: string;
-  service: string;
+  candidateName: string;
+  date: string;
   rate: number;
-  hours: number;
-  subtotal: number;
-  vat: number;
   total: number;
-  description: string;
 }
-
 interface Column<T> {
   name: string;
-  key: keyof T; // Clave que referencia la propiedad del objeto T
-  width: number; // Ancho de la columna
+  key: keyof T;
+  width: number;
 }
 
 interface ResponseData<T> {
@@ -36,77 +31,61 @@ export default async function Page(props: {
   };
 }) {
   const { invoiceId } = props.params;
+  const { preInvoice, candidates } = await fetchInvoiceDetails(parseInt(invoiceId));
 
-  const invoiceDetails = await fetchInvoiceDetails(parseInt(invoiceId));
+  if (!preInvoice) {
+    return <div>No se encontró la factura.</div>;
+  }
 
   const dataGridData: ResponseData<InvoiceDetails> = {
     columns: [
-      { name: "Nombre", key: "name", width: 1.3 },
-      { name: "Rol", key: "service", width: 1.5 },
-      { name: "Valor HH", key: "rate", width: 1 },
-      { name: "Horas trabajadas", key: "hours", width: 1 },
-      { name: "Vat", key: "vat", width: 1 },
-      { name: "Total", key: "total", width: 1 },
+      { name: "Nombre", key: "candidateName", width: 1.5 },
+      { name: "Fecha", key: "date", width: 1 },
+      { name: "UF por hora", key: "rate", width: 1 },
+      { name: "total", key: "total", width: 1 },
     ],
-    total: 12,
-    batch: invoiceDetails.details,
+    total: preInvoice.pre_invoice_items ? preInvoice.pre_invoice_items.length : 0,
+    batch: preInvoice.pre_invoice_items ? preInvoice.pre_invoice_items.map((item: { id: string; candidate_id: string; rate: string; total: string }) => {
+      const candidate = candidates.find((c: { id: string; name: string }) => c.id === item.candidate_id);
+      return {
+        id: item.id,
+        candidateName: candidate ? candidate.name : "Sin candidato",
+        date: new Date(preInvoice.estimated_date).toLocaleDateString(),
+        rate: parseFloat(item.rate),
+        total: parseFloat(item.total),
+      };
+    }) : [],
   };
+
+  const totalInvoice = preInvoice.pre_invoice_items 
+    ? preInvoice.pre_invoice_items.reduce((acc: number, item: { total: string }) => acc + parseFloat(item.total), 0) 
+    : 0;
 
   return (
     <div className="max-container">
       <div className="pro-details-container">
-        {/* Header */}
         <div className="pro-header">
           <div className="pro-avatar">
             <IconReceipt />
           </div>
           <div>
-            <div className="flex-row gap-12 name-n-mail-container">
-              <h4>Pre Factura</h4>
-            </div>
+            <h4>Pre Factura</h4>
             <p className="text-12 position">
-              Emitido el 8/02/2025 - Válido hasta el 12/02/2025
+              Emitido el {new Date(preInvoice.estimated_date).toLocaleDateString()} - Válido hasta {new Date(preInvoice.expiration_date).toLocaleDateString()}
             </p>
           </div>
           <div className="pro-buttons-container">
-            <Button
-              text="Notificar un error"
-              href={`/invoices/${invoiceId}/notify`}
-              type="tertiary"
-            />
+            <Button text="Eliminar Factura" href={`/invoices/${invoiceId}/delete`} type="primary" />
+            <Button text="Notificar un error" href={`/invoices/${invoiceId}/notify`} type="tertiary" />
           </div>
         </div>
-        <br></br>
-        {/* Detalle de la factura */}
-        <p className="section-title text-14">Detalles de la factura</p>
-        <DataGrid
-          data={dataGridData}
-          baseUrl={`/pros/${invoiceId}`}
-          hasNoClick={true}
-          hasNoPagination={true}
+        <DataGrid 
+          data={dataGridData} 
+          baseUrl={`/invoices/${invoiceId}`}
         />
-        {/* Total */}
         <div className="total-container">
           <h3>Total a pagar</h3>
-          <h1>{invoiceDetails.total}</h1>
-        </div>
-        {/* boton de comprobar */}
-        <div className="client-note-container">
-          <div className="note-header">
-            <h4>Nota</h4>
-          </div>
-          <p className="text-14">
-            Este resumen es una instancia para validar el monto a facturar y los
-            detalles de la facturación, al confirmarlos procederemos a enviar
-            los documentos legales correspondientes.
-          </p>
-          <div className="button-note-container">
-            <Button
-              text="Confirmar y recibir factura"
-              href={`/invoices/${invoiceId}/confirm`}
-              type="primary"
-            />
-          </div>
+          <h1>{totalInvoice.toFixed(2)} UF</h1>
         </div>
       </div>
     </div>
