@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic"; // No pre-rendering
 import { redirect } from "next/navigation";
 import { fetchFirstCompany } from "../../actions/fetchCompanies";
 
