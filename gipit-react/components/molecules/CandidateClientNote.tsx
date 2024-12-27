@@ -5,7 +5,7 @@ function CandidateClientNote({
   note,
   isInternal,
 }: {
-  note: { tech: number; soft: number; comment: string };
+  note: { tech?: number; soft?: number; comment: string };
   isInternal: boolean;
 }) {
   return (

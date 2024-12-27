@@ -14,7 +14,7 @@ export const handleEditCandidate = async (
 
   return {
     message: res.message,
-    route: `/process/${processId}`,
+    route: `/process/${processId}/${candidateId}`,
     statusCode: res.statusCode,
   };
 };

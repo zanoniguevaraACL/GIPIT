@@ -11,7 +11,7 @@ export const fetchProcessDetails = async (processId: number) => {
     return {
       id: data.processId, 
       name: data.jobOffer, 
-      stage: data.stage, // Dato para filtrar en procesos
+      stage: data.stage, // Dato para filtrar en
       startAt: data.openedAt ? new Date(data.openedAt).toLocaleDateString() : '',
       endAt: data.closedAt ? new Date(data.closedAt).toLocaleDateString() : null,
       preFiltered: data.preFiltered ? 1 : 0,
