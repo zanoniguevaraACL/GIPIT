@@ -6,8 +6,9 @@ import { handleEditCandidate } from "@/app/actions/handleEditCandidate";
 import "@/components/molecules/textEditor.css";
 import { fetchCandidateDetails } from "@/app/actions/fetchCandidateDetails";
 import Loader from "@/components/atoms/Loader";
-// import { useSearchParams } from "next/navigation";
 import { editCandidateSchema } from "../../../../../lib/validationSchemas";
+import { useAppContext } from "../../../../../../contexts/AppContext";
+import { useRouter } from "next/navigation";
 
 type CandidateDetails = {
   name: string;
@@ -21,6 +22,7 @@ type CandidateDetails = {
   clientNote: {
     comment: string;
   };
+  stage: string; // Nuevo campo para la etapa
 };
 
 export default function Page({
@@ -28,11 +30,14 @@ export default function Page({
 }: {
   params: { processId: string; candidateId: string };
 }) {
+  const { refreshCandidates } = useAppContext();
+
   const [candidateDetails, setCandidateDetails] =
     useState<CandidateDetails | null>(null);
   const { processId, candidateId } = params;
-  const routeToRedirect = `/process/${processId}`;
+  const routeToRedirect = `/process/${processId}/${candidateId}`;
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
   // const searchParams = useSearchParams();
 
   // function handleSearch(term: string) {
@@ -52,11 +57,12 @@ export default function Page({
         setIsLoading(true);
         const details = await fetchCandidateDetails(parseInt(candidateId));
         setCandidateDetails(details);
-        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching candidate details:", error);
       }
-      setIsLoading(false);
+      finally {
+        setIsLoading(false);
+      }
     };
   
     fetchDetails();
@@ -98,15 +104,34 @@ export default function Page({
     },
     [
       { type: "cancel", value: "Cancelar", href: routeToRedirect },
-      { type: "submit", value: "Guardar Nota" },
+      { type: "submit", value: "Guardar Cambios" },
     ],
   ];
+
+
+  const handleSubmit = async (formData: FormData, actualRoute: string) => {
+    setIsLoading(true);
+    try {
+      const result = await handleEditCandidate(formData, actualRoute); // Usa el segundo parámetro
+      if (result.statusCode === 200) {
+        await refreshCandidates(Number(processId)); // Refresca la lista de candidatos
+        router.push(result.route); // Redirige
+      }
+      return result; // Retorna el objeto con { message, route, statusCode }
+    } catch (error) {
+      console.error("Error al editar candidato:", error);
+      return { message: "Error al editar candidato", route: actualRoute, statusCode: 500 };
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
 
   return (
     <div className="main-container">
       <ModalWithTextEditor
         rows={fields}
-        onSubmit={handleEditCandidate}
+        onSubmit={handleSubmit}
         title="Editar Candidato"
         cvCandidato={candidateDetails.sumary || "Escribe tu contenido aqui..."} // enviar contenido al modal
         validationSchema={editCandidateSchema} 

@@ -23,6 +23,8 @@ const handler = NextAuth({
         );
         const userInfo = await response.json();
 
+        console.log("Usuario info", userInfo);
+
         // Si no existe el usuario o no cumple requisitos, rechaza el inicio de sesión
         if (!userInfo || !userInfo.roles.nombre) {
           return false;

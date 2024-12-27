@@ -12,6 +12,7 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import Loader from "@/components/atoms/Loader";
 import './filter-pills.css';
+import { useAppContext } from "../../../../contexts/AppContext";
 
 // Define the types for Proceso and Candidate
 type Proceso = {
@@ -37,6 +38,20 @@ type Candidate = {
   stage?: string;
 };
 
+
+type CandidateTab = {
+  id: number | string;
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  jsongptText: string;
+  match?: number;
+  stage?: string;
+  root?: string;
+  selected?: boolean;
+};
+
 export default function Layout({
   children,
   params,
@@ -46,16 +61,20 @@ export default function Layout({
 
   const { processId } = params;
   const [proceso, setProceso] = useState<Proceso | null>(null);
-  const [candidatesTabs, setCandidatesTabs] = useState<Candidate[]>([]);
+  const { candidatesTabs, updateCandidatesTabs, refreshCandidates, resetCandidates } = useAppContext(); // Usar contexto
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedStage, setSelectedStage] = useState<string>("entrevistas");
-  const [filteredCandidates, setFilteredCandidates] = useState<Candidate[]>([]);
+  const [filteredCandidates, setFilteredCandidates] = useState<CandidateTab[]>([]);
 
 
 
   useEffect(() => {
     if (processId) {
+    // Limpiar y refrescar candidatos
+      resetCandidates(); // Resetea los candidatos previos
+      refreshCandidates(Number(processId)); // Carga los nuevos candidatos
+
       const fetchData = async () => {
         try {
           setLoading(true);
@@ -67,7 +86,7 @@ export default function Layout({
             console.log("Proceso Data ---->", procesoData);
 
             setProceso(procesoData);
-            setCandidatesTabs(procesoData.candidates ?? []); // Asigna directamente los candidatos del proceso
+            updateCandidatesTabs(procesoData.candidates ?? [], Number(processId)); // Asigna directamente los candidatos del proceso
           } else {
             setError("Proceso no encontrado");
           }
@@ -82,13 +101,16 @@ export default function Layout({
     }
   }, [processId, selectedStage]);
 
+
+
   // Actualiza `filteredCandidates` cuando cambian los candidatos o la etapa seleccionada
   useEffect(() => {
+    console.log("CandidatosTabs ---->", candidatesTabs);
     if (candidatesTabs) {
       const filtered = candidatesTabs.filter(
         (candidate) => candidate.stage === selectedStage
       );
-      setFilteredCandidates(filtered);
+      setFilteredCandidates(filtered as CandidateTab[]);
     }
   }, [selectedStage, candidatesTabs]);
 

@@ -1,4 +1,19 @@
-import React, { createContext, useContext, ReactNode } from "react";
+'use client'
+import { fetchProcessDetails } from "../app/actions/fetchProcessDetails";
+import React, { createContext, useContext, ReactNode, useState, useCallback } from "react";
+
+type CandidateTab = {
+  id: number | string;
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  jsongptText: string;
+  match?: number;
+  stage?: string;
+  root?: string;
+  selected?: boolean;
+};
 
 type AppContextType = {
   showCandidates?: number; // Hacer que showCandidates sea opcional
@@ -8,7 +23,12 @@ type AppContextType = {
     root?: string;
     selected?: boolean;
     match?: number; // lo usaremos para mostrar el por ciento de compatibilidad y al mismo tiempo como bandera para saber si es un tab de compañia o de candidato, porque las compañias no tienen compatibilidad.
+    stage?: string;
   }[]; // Hacer que candidatesIds sea opcional
+  updateCandidatesTabs: (tabs: CandidateTab[], processId: number) => void;  
+  refreshCandidates: (processId: number) => Promise<void>;
+  resetCandidates: () => void; // Método para reiniciar estado
+  isLoadingCandidates: boolean; // Agregar estado de carga
 };
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -24,28 +44,61 @@ export const useAppContext = () => {
 type AppProviderProps = {
   children: ReactNode;
   initialShowCandidates?: number; // Hacer opcional
-  initialCandidatesTabs?: {
-    name: string;
-    id?: number | string;
-    root?: string;
-    selected?: boolean;
-    match?: number; // lo usaremos para mostrar el por ciento de compatibilidad y al mismo tiempo como bandera para saber si es un tab de compañia o de candidato, porque las compañias no tienen compatibilidad.
-  }[]; // Hacer opcional
+  initialCandidatesTabs?: CandidateTab[]; // Cambiar a Candidate[]
 };
+
+
 
 export const AppProvider: React.FC<AppProviderProps> = ({
   children,
   initialShowCandidates = -1, // Valor por defecto
   initialCandidatesTabs = [], // Valor por defecto
 }) => {
+  const [showCandidates, setShowCandidates] = useState(initialShowCandidates);
+  const [candidatesTabs, setCandidatesTabs] = useState<CandidateTab[]>(initialCandidatesTabs);
+  const [isLoadingCandidates, setIsLoadingCandidates] = useState(false); // Estado inicial de carga
+
+
+  const updateCandidatesTabs = (tabs: CandidateTab[], processId: number) => {
+    console.log(`Actualizando candidatesTabs para el proceso ${processId}:`, tabs);
+    setCandidatesTabs(tabs);
+    setIsLoadingCandidates(false); // Indicar que la carga ha terminado
+  };
+
+  const refreshCandidates = useCallback(async (processId: number) => {
+    // setIsLoadingCandidates(true); // Iniciar carga
+    // Usa fetchProcessDetails para obtener detalles del proceso
+    const processDetails = await fetchProcessDetails(processId);
+
+    if (processDetails && Array.isArray(processDetails.candidates)) {
+      setCandidatesTabs(processDetails.candidates); // Actualiza solo los candidatos del proceso actual
+    } else {
+      setCandidatesTabs([]);
+    }
+      // setIsLoadingCandidates(false); // Indicar que la carga ha terminado
+  }, []);
+
+
+  // Asegúrate de reiniciar los candidatos cuando cambie el proceso
+  const resetCandidates = useCallback(() => {
+    setCandidatesTabs([]);
+    setShowCandidates(-1);
+  }, []);
+
   return (
     <AppContext.Provider
-      value={{
-        showCandidates: initialShowCandidates,
-        candidatesTabs: initialCandidatesTabs,
-      }}
+    value={{
+      showCandidates,
+      candidatesTabs,
+      updateCandidatesTabs,
+      refreshCandidates,
+      isLoadingCandidates,
+      resetCandidates, // Método para reiniciar el estado
+    }}
     >
+      <>
       {children}
+      </>
     </AppContext.Provider>
   );
 };
