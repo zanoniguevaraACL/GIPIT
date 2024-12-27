@@ -25,7 +25,10 @@ function Page({ params }: { params: { processId: string; candidateId: string } }
     try {
       const result = await handleHire(formData, actualRoute);
       if (result.statusCode === 200) {
-        window.location.href = result.route;
+        if (typeof window !== "undefined") {
+          // Código que depende de window
+          window.location.href = result.route;
+        }
       } else {
         console.error(result.message);
       }
