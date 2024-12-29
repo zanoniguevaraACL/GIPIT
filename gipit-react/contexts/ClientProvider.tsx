@@ -4,16 +4,25 @@
 import React from "react";
 import { AppProvider } from "@/contexts/AppContext";
 
+
+type CandidateTab = {
+  id: number | string;
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  jsongptText: string;
+  match?: number;
+  stage?: string;
+  root?: string;
+  selected?: boolean;
+};
+
+
 type ClientProviderProps = {
   children: React.ReactNode;
   showCandidates?: number; // Prop opcional
-  candidatesTabs?: {
-    name: string;
-    id?: number | string;
-    root?: string;
-    selected?: boolean;
-    match?: number;
-  }[]; // Prop opcional
+  candidatesTabs?: CandidateTab[]; // Cambiar a Candidate[]
 };
 
 export default function ClientProvider({

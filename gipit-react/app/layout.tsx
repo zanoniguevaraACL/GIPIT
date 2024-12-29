@@ -1,10 +1,11 @@
-import NavBar from "@/components/organisms/NavBar";
 import "./globals.css";
+import NavBar from "@/components/organisms/NavBar";
 import TopBar from "@/components/organisms/TopBar";
 import { routes } from "@/app/lib/routes";
 import AuthProvider from "./lib/AuthProvider";
 import { ToastContainer, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { AppProvider } from "../contexts/AppContext";
 
 export default function RootLayout({
   children,
@@ -14,12 +15,17 @@ export default function RootLayout({
   return (
     <html lang="es">
       <AuthProvider>
+
         <body>
           <div className="app-container">
             <NavBar routes={routes} />
             <main>
               <TopBar routes={routes} />
-              <div className="children-container">{children}</div>
+              <AppProvider>
+                <div className="children-container">
+                {children}
+                </div>  
+              </AppProvider>
             </main>
           </div>
 

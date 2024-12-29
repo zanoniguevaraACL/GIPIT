@@ -28,7 +28,8 @@ export const handleHire = async (
     }
 
     const result = await response.json();
-    const routeToRedirect = "/" + actualRoute.split("/").slice(1, 4).join("/");
+    // const routeToRedirect = "/" + actualRoute.split("/").slice(1, 4).join("/");
+		const routeToRedirect = `/process/${processId}`;
     return {
       message: result.message,
       route: routeToRedirect,

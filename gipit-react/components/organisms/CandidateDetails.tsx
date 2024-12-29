@@ -1,61 +1,107 @@
-// import { fetchCandidateDetails } from "@/app/actions/fakeApi";
+'use client'
 import "./candidateDetails.css";
 import CandidateClientNote from "../molecules/CandidateClientNote";
 import Button from "../atoms/Button";
 import { fetchCandidateDetails } from "@/app/actions/fetchCandidateDetails";
+import { useEffect, useState } from "react";
+import Loader from "../atoms/Loader";
 
-async function CandidateDetails({
+type CandidateDetails = {
+  name: string;
+  match: number;
+  email: string;
+  phone: string;
+  address: string;
+  sumary: string;
+  techSkills: string;
+  softSkills: string;
+  clientNote: {
+    comment: string;
+  };
+  stage: string; // Nuevo campo para la etapa
+  total_experience: number;
+};
+
+
+function CandidateDetails({
   id,
   processId,
 }: {
   id: number;
   processId: number;
 }) {
-  
-  const data = await fetchCandidateDetails(id);
-  console.log("Detalle candidate", data)
+  const [candidateDetails, setCandidateDetails] = useState<CandidateDetails | null>(null);
+  const [loading, setLoading] = useState(true); // Cambia a true para mostrar el Loader inicial
 
-  console.log("En CanidateDetails.tsx Candidato encontrado:--->",data);
+
+  useEffect(() => {
+    const fetchDetails = async () => {
+      try {
+        const data = await fetchCandidateDetails(id);
+        console.log("En CanidateDetails.tsx Candidato encontrado:--->",data);
+        setCandidateDetails(data);
+      } catch (error) {
+        console.error("Error al obtener detalles del candidato:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDetails();
+  }, [id]);
+
+  if (loading) {
+    return <Loader />;
+  }
+
+  if (!candidateDetails) {
+    return <p>No se encontraron detalles del candidato.</p>;
+  }
+
+  const stage = candidateDetails?.stage; // Obtén la etapa actual del candidato
+  // console.log("En CanidateDetails.tsx Candidato encontrado:--->",data);
   const isInternal = true; // lo identificamos en la sesion, si el user es ACL mostramos el boton de editar candidato
 
   return (
     <div className="candidate-details-container">
-      <h3>{data.name}</h3>
+      <h3>{candidateDetails.name}</h3>
       <div className="experience-n-match-container">
-        <p className="text-14">{data.total_experience ? data.total_experience : 'No se especifica en el CV '} año/s de experiencia (valor aproximado)</p>
+        <p className="text-14">{candidateDetails.total_experience ? candidateDetails.total_experience : 'No se especifica en el CV '} año/s de experiencia (valor aproximado)</p>
         <div className="vertical-separator"></div>
         <p className="text-14">
-          {data.match}% de compatibilidad <i>(calculado con IA)</i>
+          {candidateDetails.match}% de compatibilidad <i>(calculado con IA)</i>
         </p>
       </div>
       <div className="details-block">
-        <div dangerouslySetInnerHTML={{ __html: data.sumary }} className="text-content-display"></div>
+        <div dangerouslySetInnerHTML={{ __html: candidateDetails.sumary }} className="text-content-display"></div>
         {/* <p className="text-14">{data.sumary}</p> */}
       </div>
       <div className="details-block">
         <h4>Habilidades Técnicas</h4>
-        <p className="text-14">{data.techSkills}</p>
+        <p className="text-14">{candidateDetails.techSkills}</p>
       </div>
       <div className="details-block">
         <h4>Habilidades Blandas</h4>
-        <p className="text-14">{data.softSkills}</p>
+        <p className="text-14">{candidateDetails.softSkills}</p>
       </div>
-      {data.clientNote && (
-        <CandidateClientNote note={data.clientNote} isInternal={isInternal} />
+      {candidateDetails.clientNote && (
+        <CandidateClientNote note={candidateDetails.clientNote} isInternal={isInternal} />
       )}
       <div className="buttons-container">
+      {stage !== "descartado" && (
         <Button
           text="Descalificar"
           href={`/process/${processId}/${id}/disqualify`}
           type="secondary"
         />
+         )}
 
         <div className="right-buttons-container">
           {!isInternal ? (
             <Button
-              text={data.clientNote ? "Editar Nota" : "Crear Nota"}
+              text={candidateDetails.clientNote ? "Editar Nota" : "Crear Nota"}
               href={`/process/${processId}/${id}/${
-                data.clientNote ? "edit-note" : "new-note"
+                candidateDetails.clientNote ? "edit-note" : "new-note"
               }`}
               type="secondary"
             />
@@ -66,11 +112,29 @@ async function CandidateDetails({
               type="secondary"
             />
           )}
+
+          {stage !== "seleccionado" && (
           <Button
             text="Contratar Candidato"
             href={`/process/${processId}/${id}/hire`}
             type="primary"
           />
+          )}
+
+          {stage ==="seleccionado" && (
+                    <Button
+                      text="Regresar a Entrevistas"
+                      href={`/process/${processId}/${id}/return-to-interviews`}
+                      type="secondary"
+                    />
+                  )}
+            {stage === "descartado" && (
+                    <Button
+                      text="Regresar a Entrevistas"
+                      href={`/process/${processId}/${id}/return-to-interviews`}
+                      type="secondary"
+                    />
+                  )}
         </div>
       </div>
     </div>

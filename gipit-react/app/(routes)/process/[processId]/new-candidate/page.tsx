@@ -6,11 +6,12 @@ import { FormInputsRow } from "@/app/lib/types";
 import { handleCreateCandidate } from "@/app/actions/handleCreateCandidate";
 import Loader from "@/components/atoms/Loader";
 import { candidateSchema } from "@/app/lib/validationSchemas";
-// import {z} from "zod";
+import { useAppContext } from "../../../../../contexts/AppContext";
 
 
 
 function Page({ params }: { params: { processId: string } }) {
+	const { refreshCandidates } = useAppContext();
   const { processId } = params;
   const routeToRedirect = `/process/${processId}`;
   const [isLoading, setIsLoading] = useState(false);
@@ -54,17 +55,18 @@ function Page({ params }: { params: { processId: string } }) {
 		},
 		[
 			{ type: "cancel", value: "Cancelar", href: routeToRedirect },
-			{ type: "submit", value: "Guardar Nota" },
+			{ type: "submit", value: "Crear Candidato" },
 		],
 	];
 
   const handleSubmit = async (formData: FormData) => {
     setIsLoading(true);
     const result = await handleCreateCandidate(formData, routeToRedirect);
-    if (result.statusCode === 200) {
-      router.push(result.route);
-    }
-    setIsLoading(false);
+		if (result.statusCode === 200) {
+			await refreshCandidates(Number(processId)); // Actualiza los datos
+			router.push(result.route); // Redirige
+		}
+		setIsLoading(false);
     return result;
   };
 
