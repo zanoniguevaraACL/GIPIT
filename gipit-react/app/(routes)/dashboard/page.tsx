@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import React from 'react';
 import { IconUsers, IconFolderCheck, IconFolder, IconClock, IconReceipt } from '@tabler/icons-react';
 import { fetchDashboardStats } from '@/app/actions/fetchDashboardStats';
