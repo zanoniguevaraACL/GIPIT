@@ -101,45 +101,46 @@ async function DashboardPage() {
       ) / remainingCount).toFixed(2)
     : "0.0";
 
-  const dashboardCards = {
-    card1: {
-      title: "Procesos Activos",
-      hasChart: false,
-      chartData: {
-        values: [stats.activosCount]
+    const dashboardCards = {
+      card1: {
+        title: "Procesos Activos",
+        hasChart: false,
+        chartData: {
+          values: [stats.activosCount]
+        },
+        icon: <IconFolder size={24} />,
+        subtitle: `Hace ${stats.diasDesdeUltimoProcesoActivo} días`
       },
-      icon: <IconFolder size={24} />,
-      subtitle: `Hace ${stats.diasDesdeUltimoProcesoActivo} días`
-    },
-    card2: {
-      title: "Procesos Cerrados",
-      hasChart: false,
-      chartData: {
-        values: [stats.cerradosCount]
+      card2: {
+        title: "Procesos Cerrados",
+        hasChart: false,
+        chartData: {
+          values: [stats.cerradosCount]
+        },
+        icon: <IconFolderCheck size={24} />,
+        subtitle: `${stats.cerradostrimestreCount} en el último trimestre`
       },
-      icon: <IconFolderCheck size={24} />,
-      subtitle: `${stats.cerradostrimestreCount} en el último trimestre`
-    },
-    card3: {
-      title: "Profesionales Activos",
-      hasChart: false,
-      chartData: {
-        values: [stats.profesionalesCount]
+      card3: {
+        title: "Profesionales Activos",
+        hasChart: false,
+        chartData: {
+          values: [stats.profesionalesCount]
+        },
+        icon: <IconUsers size={24} />,
+        subtitle: "Por revisar"
       },
-      icon: <IconUsers size={24} />,
-      subtitle: "Por revisar"
-    },
-    card4: {
-      title: "Tiempo promedio de cierre",
-      hasChart: true,
-      chartData: {
-        labels: stats.historicoTiempos.labels,
-        values: stats.historicoTiempos.values
-      },
-      icon: <IconClock size={24} />,
-      subtitle: "Promedio de tiempo de cierre de procesos"
-    }
-  };
+      card4: {
+        title: "Tiempo promedio de cierre",
+        hasChart: true,
+        chartData: {
+          labels: stats.historicoTiempos.labels,
+          values: stats.historicoTiempos.values
+        },
+        value: stats.promedioCierre, // Añadido esta línea
+        icon: <IconClock size={24} />,
+        subtitle: "Promedio de tiempo de cierre de procesos"
+      }
+    };
 
   return (
     <div className="inner-page-container">

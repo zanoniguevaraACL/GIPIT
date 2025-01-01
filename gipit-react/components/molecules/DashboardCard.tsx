@@ -11,15 +11,16 @@ function DashboardCard({
     chartData: { labels?: string[]; values: number[] };
     icon: ReactElement;
     subtitle?: string;
+    value?: number;
   };
 }) {
   const chartData = datos.chartData;
-
+  const displayValue = datos.value ?? datos.chartData.values.at(-1) ?? 0;
   const lastValue: number = datos.chartData.values.at(-1) ?? 0;
   const penultimateValue: number = datos.chartData.values.at(-2) ?? -1;
 
   const variation: number =
-    Math.round((lastValue - penultimateValue) * 100) / 100;
+    Math.round((displayValue - penultimateValue) * 100) / 100;
 
   let expression = "";
   let color = "var(--light-secondary)";
@@ -48,7 +49,7 @@ function DashboardCard({
         </div>
       )}
       <div className="text-container">
-        <h2>{datos.chartData.values.at(-1)}</h2>
+        <h2>{displayValue}</h2>
         <h4>{datos.title}</h4>
         <p className="text-12 subheading" style={{ color: color }}>
           {datos.subtitle || expression}

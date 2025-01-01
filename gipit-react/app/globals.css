@@ -186,16 +186,22 @@ body {
 }
 
 .app-container {
-  height: 100svh;
-  display: flex;
+  display: grid;
+  grid-template-columns: 280px 1fr; /* Ajusta el ancho del sidebar según necesites */
+  height: 100vh;
+  overflow: hidden; /* Importante para contener el scroll */
 }
 
 main {
-  width: 100%;
-  height: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .children-container {
+  flex: 1;
+  overflow-y: auto; /* Esto permite el scroll solo en el contenido */
   padding: 24px;
 }
 
