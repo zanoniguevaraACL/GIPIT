@@ -16,7 +16,6 @@ function DashboardCard({
 }) {
   const chartData = datos.chartData;
   const displayValue = datos.value ?? datos.chartData.values.at(-1) ?? 0;
-  const lastValue: number = datos.chartData.values.at(-1) ?? 0;
   const penultimateValue: number = datos.chartData.values.at(-2) ?? -1;
 
   const variation: number =
