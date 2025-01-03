@@ -5,13 +5,13 @@ interface DashboardStats {
   cerradosCount: number;
   cerradosUltimoTrimestre: number;
   profesionalesCount: number;
-  tiempoCierre: number;
   historicoTiempos: {
     labels: string[];
     values: number[];
   };
-  cerradostrimestreCount:number;
-  diasDesdeUltimoProcesoActivo:Date;
+  cerradostrimestreCount: number;
+  diasDesdeUltimoProcesoActivo: Date;
+  promedioCierre: number;
 }
 
 export async function fetchDashboardStats(): Promise<DashboardStats> {
@@ -35,19 +35,18 @@ export async function fetchDashboardStats(): Promise<DashboardStats> {
     return data;
   } catch (error) {
     console.error('Error al obtener estadísticas:', error);
-    // Valores por defecto en caso de error
     return {
       activosCount: 0,
       cerradosCount: 0,
       cerradosUltimoTrimestre: 0,
       profesionalesCount: 0,
-      tiempoCierre: 0,
       historicoTiempos: {
         labels: [],
         values: [],
       },
       cerradostrimestreCount: 0,
       diasDesdeUltimoProcesoActivo: new Date(),
+      promedioCierre: 0
     };
   }
-} 
+}
