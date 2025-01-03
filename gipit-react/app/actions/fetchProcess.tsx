@@ -1,27 +1,5 @@
 "use server";
 
-// type Candidate = {
-//   id: number;
-//   name: string;
-//   email: string;
-//   phone: string;
-//   address: string;
-//   jsongpt_text: string;
-// };
-
-// type ProcessData = {
-//   id: number;
-//   job_offer: string;
-//   job_offer_description: string;
-//   opened_at: Date;
-//   closed_at: Date | null;
-//   pre_filtered: number;
-//   candidatesIds: [number];
-//   status: string;
-//   stage: string;
-//   candidates: number
-// };
-
 type Proceso = {
   id: number;
   name: string;
@@ -35,22 +13,31 @@ type Proceso = {
   stage: string;
 };
 
-export const fetchProcess = async (page: number) => {
+export const fetchProcess = async (page: number, query?: string) => {
   try {
+    
     if (page < 1) {
       throw new Error("El número de página debe ser mayor que 0.");
     }
 
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/process?page=${page}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        cache: 'no-store',
-      }
-    );
+
+    // Construir la URL con el parámetro `query` opcional
+    const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}/api/process`);
+    url.searchParams.set("page", page.toString());
+    if (query) {
+      url.searchParams.set("query", query);
+    }
+
+    const response = await fetch(url.toString(), {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      cache: "no-store",
+    });
+
+
+    
 
     if (!response.ok) {
       throw new Error(
@@ -69,16 +56,6 @@ export const fetchProcess = async (page: number) => {
     return {
       total: data.total,
       batch: data.batch.map((process: Proceso) => {
-        //Valida que las fechas no sean null, ni vacio, ni formato inva
-        // const validStartAt =
-        // process.startAt && !isNaN(Date.parse(process.startAt))
-        //   ? new Date(process.startAt).toLocaleDateString()
-        //   : "No hay inicio";
-
-      // const validEndAt =
-      //   process.endAt && !isNaN(Date.parse(process.endAt))
-      //     ? new Date(process.endAt).toLocaleDateString()
-      //     : "No hay cierre";
         return{
         id: process.id,
         name: process.name,

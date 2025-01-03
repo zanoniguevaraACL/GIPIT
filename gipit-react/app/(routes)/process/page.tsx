@@ -36,7 +36,8 @@ export default async function Page(props: {
 }) {
   const searchParams = await props.searchParams;
   const page = searchParams?.page ? parseInt(searchParams?.page) : 1;
-  const process = await fetchProcess(page);
+  const query = searchParams?.query || ""; // Obtener el filtro de búsqueda
+  const process = await fetchProcess(page, query);
 
   const data: ResponseData<Proceso> = {
     columns: [

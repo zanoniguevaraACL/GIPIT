@@ -1,9 +1,10 @@
 "use client";
 import "./searchBar.css";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import Button from "@/components/atoms/Button";
 import { IconSearch } from "@tabler/icons-react";
+import { useDebounce } from "@/app/lib/hooks/useDebounce";
 
 const SearchBar = ({
   buttonLink,
@@ -19,15 +20,21 @@ const SearchBar = ({
   const pathname = usePathname();
   const { replace } = useRouter();
 
-  function handleSearch(term: string) {
+  const [searchTerm, setSearchTerm] = useState(
+    searchParams.get("query")?.toString() || ""
+  );
+  const debouncedSearchTerm = useDebounce(searchTerm, 300); // Espera 500ms antes de aplicar el cambio
+
+  // Actualiza la URL solo cuando el valor debounced cambia
+  useEffect(() => {
     const params = new URLSearchParams(searchParams);
-    if (term) {
-      params.set("query", term);
+    if (debouncedSearchTerm) {
+      params.set("query", debouncedSearchTerm);
     } else {
       params.delete("query");
     }
     replace(`${pathname}?${params.toString()}`);
-  }
+  }, [debouncedSearchTerm, searchParams, pathname, replace]);
 
   return (
     <div className={`search-container ${noSearch && "no-search"}`}>
@@ -39,8 +46,8 @@ const SearchBar = ({
           <input
             type="text"
             placeholder="Buscar..."
-            onChange={(e) => handleSearch(e.target.value)}
-            defaultValue={searchParams.get("query")?.toString()}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)} // Actualiza el estado local
           />
         </>
       )}
