@@ -31,7 +31,7 @@ Convierte el contenido de un CV proporcionado en un formato HTML limpio y bien e
 
 El resultado deberá ser solo el contenido necesario del currículum en HTML plano. A continuación el formato esperado:
 
-- Cada sección debe estar contenida en un '<div>' con una clase única.
+- Cada sección debe estar contenida en un '<div>' con una clase identica 'cv-section'.
 - Usa etiquetas '<h2>' para cada encabezado principal.
 - Usa listas '<ul>' y '<li>' para enumeraciones.
 - Incluye detalles en párrafos '<p>'.
@@ -44,6 +44,7 @@ CV proporcionado con los siguientes datos:
 ${textoCV};
 
 Con el CV proporcionado, intenta llevarlo a la siguiente estructura:
+- '<div class="cv-container">' como contenedor principal.
 - <h2>Resumen General</h2>
 - <p>Resumen detallado del candidato.</p>
 - <h2>Experiencia Laboral</h2>
@@ -52,24 +53,25 @@ Con el CV proporcionado, intenta llevarlo a la siguiente estructura:
 - <p>Detalles de la formación académica del candidato.</p>
   
 **Output (HTML esperado)**:
-'
-<div class="resume-summary">
-  <h2>Resumen General</h2>
-  <p>Ingeniero de software con más de 5 años de experiencia en desarrollo web.</p>
-</div>
-<div class="resume-experience">
-  <h2>Experiencia Laboral</h2>
-  <ul>
-    <li>Desarrollador Frontend en XYZ (2018-2021): Implementación de interfaces de usuario en React y Angular.</li>
-  </ul>
-</div>
-<div class="resume-education">
-  <h2>Formación Profesional</h2>
-  <p>Detalles de la formación académica del candidato.</p>
-</div>
-<div class="resume-references">
-  <h2>Referencias</h2>
-  ...
+'<div class="cv-container"> 
+    <div class="cv-section">
+      <h2>Resumen General</h2>
+      <p>Ingeniero de software con más de 5 años de experiencia en desarrollo web.</p>
+    </div>
+    <div class="cv-section">
+      <h2>Experiencia Laboral</h2>
+      <ul>
+        <li>Desarrollador Frontend en XYZ (2018-2021): Implementación de interfaces de usuario en React y Angular.</li>
+      </ul>
+    </div>
+    <div class="cv-section">
+      <h2>Formación Profesional</h2>
+      <p>Detalles de la formación académica del candidato.</p>
+    </div>
+    <div class="cv-section">
+      <h2>Referencias</h2>
+      ...
+    </div>
 </div>
 '
 

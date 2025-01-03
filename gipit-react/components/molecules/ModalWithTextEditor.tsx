@@ -34,12 +34,40 @@ function ModalWithTextEditor({ rows, onSubmit, title, message, cvCandidato, vali
       });
 
 			// string pero estructurado como html
-			function serializeToHTML(doc: Node) {
-				const fragment = DOMSerializer.fromSchema(mySchema).serializeFragment(doc.content);
-				const div = document.createElement('div');
-				div.appendChild(fragment);
-				return div.innerHTML;
-			}
+			// function serializeToHTML(doc: Node) {
+			// 	const fragment = DOMSerializer.fromSchema(mySchema).serializeFragment(doc.content);
+			// 	const div = document.createElement('div');
+			// 	div.appendChild(fragment);
+			// 	return div.innerHTML;
+			// }
+      function serializeToHTML(doc: Node) {
+        const fragment = DOMSerializer.fromSchema(mySchema).serializeFragment(doc.content);
+        const tempDiv = document.createElement('div');
+        tempDiv.appendChild(fragment);
+      
+        // Agrega un contenedor 'cv-container'
+        const cvContainer = document.createElement('div');
+        cvContainer.className = 'cv-container';
+      
+        // Divide cada sección del CV en un <div> separado basado en <h2> (encabezados principales)
+        Array.from(tempDiv.children).forEach((child) => {
+          if (child.tagName === 'H2') {
+            // Crea un nuevo contenedor para cada sección
+            const sectionDiv = document.createElement('div');
+            sectionDiv.className = 'cv-section'; // Clase para cada sección
+            cvContainer.appendChild(sectionDiv);
+            sectionDiv.appendChild(child); // Mueve el <h2> al contenedor
+          } else {
+            // Agregar contenido al último contenedor de sección
+            const lastSection = cvContainer.lastElementChild;
+            if (lastSection) {
+              lastSection.appendChild(child);
+            }
+          }
+        });
+      
+        return cvContainer.outerHTML; // Devuelve el HTML final con las estructuras
+      }
 
       const createDocumentFromHTML = (htmlString: string) => {
         const tempDiv = document.createElement('div');
@@ -58,6 +86,7 @@ function ModalWithTextEditor({ rows, onSubmit, title, message, cvCandidato, vali
           const newState = view.state.apply(transaction);
           view.updateState(newState);
 					const htmlContent = serializeToHTML(newState.doc);
+          console.log("Contenido editado ---> :", htmlContent);
 					setContent(htmlContent);
         },
       });
