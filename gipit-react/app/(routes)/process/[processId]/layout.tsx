@@ -12,6 +12,7 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import Loader from "@/components/atoms/Loader";
 import './filter-pills.css';
+import { useRouter } from "next/navigation";
 import { useAppContext } from "../../../../contexts/AppContext";
 
 // Define the types for Proceso and Candidate
@@ -58,8 +59,9 @@ export default function Layout({
 }: Readonly<{ children: React.ReactNode; params: { processId: string } }>) {
 
   const { data: session } = useSession();
-
   const { processId } = params;
+  const router = useRouter();
+
   const [proceso, setProceso] = useState<Proceso | null>(null);
   const { candidatesTabs, updateCandidatesTabs, refreshCandidates, resetCandidates } = useAppContext(); // Usar contexto
   const [loading, setLoading] = useState(true);
@@ -67,13 +69,11 @@ export default function Layout({
   const [selectedStage, setSelectedStage] = useState<string>("entrevistas");
   const [filteredCandidates, setFilteredCandidates] = useState<CandidateTab[]>([]);
 
-
-
   useEffect(() => {
     if (processId) {
     // Limpiar y refrescar candidatos
       resetCandidates(); // Resetea los candidatos previos
-      refreshCandidates(Number(processId)); // Carga los nuevos candidatos
+      refreshCandidates(Number(processId), selectedStage); // Carga los nuevos candidatos
 
       const fetchData = async () => {
         try {
@@ -113,6 +113,18 @@ export default function Layout({
       setFilteredCandidates(filtered as CandidateTab[]);
     }
   }, [selectedStage, candidatesTabs]);
+
+  // Seleccionar automáticamente el primer candidato de la etapa seleccionada
+  useEffect(() => {
+    if (filteredCandidates.length > 0) {
+      const firstCandidate = filteredCandidates[0].id;
+      if (typeof firstCandidate === "number") {
+        router.push(`/process/${processId}/${firstCandidate}`);
+      } else {
+        console.error("El ID del candidato no es un número:", firstCandidate);
+      }
+    }
+  }, [filteredCandidates]);
 
   if (loading) {
     return <div><Loader /></div>;

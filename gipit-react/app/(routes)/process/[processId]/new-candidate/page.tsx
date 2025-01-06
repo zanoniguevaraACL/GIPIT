@@ -63,7 +63,7 @@ function Page({ params }: { params: { processId: string } }) {
     setIsLoading(true);
     const result = await handleCreateCandidate(formData, routeToRedirect);
 		if (result.statusCode === 200) {
-			await refreshCandidates(Number(processId)); // Actualiza los datos
+			await refreshCandidates(Number(processId), "entrevistas"); // Actualiza los datos
 			router.push(result.route); // Redirige
 		}
 		setIsLoading(false);

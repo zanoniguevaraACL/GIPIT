@@ -26,7 +26,7 @@ type AppContextType = {
     stage?: string;
   }[]; // Hacer que candidatesIds sea opcional
   updateCandidatesTabs: (tabs: CandidateTab[], processId: number) => void;  
-  refreshCandidates: (processId: number) => Promise<void>;
+  refreshCandidates: (processId: number, stage?: string) => Promise<void>;
   resetCandidates: () => void; // Método para reiniciar estado
   isLoadingCandidates: boolean; // Agregar estado de carga
 };
@@ -65,13 +65,22 @@ export const AppProvider: React.FC<AppProviderProps> = ({
     setIsLoadingCandidates(false); // Indicar que la carga ha terminado
   };
 
-  const refreshCandidates = useCallback(async (processId: number) => {
+  const refreshCandidates = useCallback(async (processId: number, stage?: string) => {
     // setIsLoadingCandidates(true); // Iniciar carga
     // Usa fetchProcessDetails para obtener detalles del proceso
     const processDetails = await fetchProcessDetails(processId);
 
     if (processDetails && Array.isArray(processDetails.candidates)) {
-      setCandidatesTabs(processDetails.candidates); // Actualiza solo los candidatos del proceso actual
+      // Actualiza solo los candidatos del proceso actual
+      let updatedCandidates = processDetails?.candidates;
+      // filtra por etapas en cada refresh
+      if (stage) {
+        updatedCandidates = updatedCandidates.filter(
+          (candidate) => candidate.stage === stage
+        );
+
+        setCandidatesTabs(updatedCandidates); 
+      }
     } else {
       setCandidatesTabs([]);
     }
