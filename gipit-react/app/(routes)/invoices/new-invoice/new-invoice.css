@@ -1,0 +1,578 @@
+.max-container {
+  height: 100vh;
+  background-color: var(--background);
+  padding: 0;
+}
+
+.header-navigation {
+  padding: 16px 24px;
+  background-color: white;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.invoice-form-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px;
+  background-color: white;
+  border-radius: 12px;
+}
+
+.invoice-form-container h2 {
+  margin-bottom: 32px;
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.form-group select,
+.form-group input {
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 14px;
+  width: 100%;
+}
+
+.date-input {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.date-input svg {
+  position: absolute;
+  right: 12px;
+  color: var(--text-secondary);
+  pointer-events: none;
+}
+.professionals-section {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.professionals-section h4 {
+  margin-bottom: 16px;
+  font-size: 16px;
+  color: var(--light-secondary);
+}
+
+.total-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-color);
+}
+
+.total-info {
+  text-align: right;
+}
+
+.total-info h3 {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  margin-bottom: 4px;
+}
+
+.total-info h1 {
+  font-size: 2rem;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: -60px;
+}
+
+.button-container button[type="tertiary"] {
+  background: none;
+  color: var(--text-secondary);
+  border: none;
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.button-container button[type="primary"] {
+  background-color: #E4003F;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.button-container button[type="primary"]:hover {
+  background-color: #C8003A;
+}
+
+.form-container {
+  background-color: white;
+  width: 90vw;
+  max-width: 800px;
+  border-radius: 12px;
+  padding: 32px;
+}
+
+.form-fields {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-field label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--light-secondary);
+}
+
+.form-field input,
+.form-field select {
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--tertiary);
+  background-color: var(--light-tertiary);
+  font-size: 14px;
+}
+
+.professionals-section {
+  margin-top: 32px;
+}
+
+.professionals-section h3 {
+  margin-bottom: 16px;
+  font-size: 16px;
+  color: var(--light-secondary);
+}
+
+.add-professional-button {
+  color: var(--primary);
+  background: none;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.add-professional-button:hover {
+  background-color: var(--light-tertiary);
+  border-radius: 8px;
+}
+
+.total-section {
+  margin-top: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.total-amount {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.buttons-container {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.header-section {
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 48px;
+  padding-bottom: 24px;
+}
+
+.form-content {
+  margin-top: 48px;
+}
+
+.professionals-table {
+  width: 100%;
+  margin: 24px 0;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.professionals-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.professionals-table th {
+  background-color: var(--background);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  padding: 12px 16px;
+  text-align: left;
+}
+
+.professionals-table td {
+  padding: 16px;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+.professionals-table td:last-child {
+  color: var(--text-secondary);
+  font-size: 13px;
+  max-width: 300px;
+}
+
+.professionals-section {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-color);
+}
+
+.professionals-section h4 {
+  font-size: 16px;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+.professionals-table {
+  margin-top: 2rem;
+  width: 100%;
+  overflow-x: auto;
+}
+
+.professionals-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.professionals-table th {
+  background-color: #f5f5f5;
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+}
+
+.professionals-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.professionals-table input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.professionals-table input[type="number"] {
+  width: 80px;
+}
+
+.professionals-section .button-container {
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
+}
+
+.professionals-section button[type="secondary"] {
+  background: none;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.professionals-section button[type="secondary"]:hover {
+  background-color: var(--light-tertiary);
+  color: var(--dark-primary);
+  border-color: var(--dark-primary);
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  border-radius: 12px;
+  padding: 32px;
+  width: 90vw;
+  max-width: 600px;
+}
+
+.modal-content h2 {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--text-primary);
+  margin-bottom: 24px;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.modal-content input,
+.modal-content select,
+.modal-content textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #E9ECEF;
+  border-radius: 8px;
+  background-color: #F8F9FA;
+  font-size: 14px;
+  color: #212529;
+}
+
+.modal-content input:focus,
+.modal-content select:focus,
+.modal-content textarea:focus {
+  outline: none;
+  border-color: #E4003F;
+}
+
+.textarea-input {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.button-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.cancel-button {
+  padding: 12px 24px;
+  background: none;
+  color: #E4003F;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.cancel-button:hover {
+  background: rgba(228, 0, 63, 0.1);
+}
+
+.save-button {
+  padding: 12px 24px;
+  background-color: #E4003F;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.save-button:hover {
+  background-color: #C8003A;
+}
+
+.horizontal-inputs {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.input-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.input-group label {
+  margin-bottom: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.input-group input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.form-group textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.date-range-input {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.date-separator {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.date-input {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.date-input input {
+  width: 100%;
+  padding: 8px 12px;
+  padding-right: 36px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.date-input svg {
+  position: absolute;
+  right: 12px;
+  color: var(--text-secondary);
+  pointer-events: none;
+}
+
+.select-input {
+  flex: 1;
+  position: relative;
+}
+
+.select-input select {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 14px;
+  appearance: none;
+  background: white url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center;
+}
+
+.select-input select:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.period-display {
+  display: block;
+  margin-top: 8px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+.date-range-input {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.date-separator {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.month-selection {
+  display: flex;
+  gap: 10px;
+}
+
+.month-selection select {
+  flex: 1;
+}

@@ -1,0 +1,100 @@
+.modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(40px);
+
+  .form-container {
+    background-color: white;
+    min-width: 30svw;
+    border-radius: 12px;
+    padding: 24px;
+
+    h4 {
+      margin-bottom: 24px;
+    }
+
+    h3 {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+  }
+}
+
+
+.modal-content {
+  display: flex;
+  gap: 20px; /* Espacio entre los campos del formulario y el editor */
+}
+
+.form-fields {
+  flex: 1;
+}
+
+.form-editor {
+  flex: 1;
+}
+
+
+
+
+/* Modificaciones para dar scroll solo al interior del text editor */
+
+.modal-overlay {
+  position: fixed; /* Fijar el modal */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  z-index: 1000; /* Asegúrate de que el modal esté al frente */
+}
+
+.form-container {
+  background-color: white;
+  width: 90vw;
+  max-width: 1400px;
+  max-height: 95vh; /* Altura máxima para el contenedor */
+  border-radius: 12px;
+  padding: 24px;
+  overflow: hidden; /* Ocultar cualquier contenido que se desborde */
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-content {
+  display: flex;
+  gap: 20px;
+  height: 100%;
+  overflow: hidden; /* Evitar el desbordamiento del contenedor principal */
+}
+
+.form-fields {
+  flex: 0 0 25%; /* Ocupa el 25% del ancho del contenedor */
+  overflow-y: auto; /* Habilitar scroll en los campos si hay demasiado contenido */
+}
+
+.form-editor {
+  flex: 1 1 75%; /* Ocupa el 75% del ancho del contenedor */
+  overflow-y: auto; /* Habilitar scroll dentro del editor */
+  max-height: calc(90vh - 150px); /* Ajusta este valor para dejar espacio para el encabezado y botones */
+}
+
+.ProseMirror {
+	width: 100% !important;
+  height: 100%; /* Asegúrate de que ocupe todo el espacio disponible */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+}

@@ -1,0 +1,10 @@
+.navbar-container {
+  padding: 24px;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+
+  .tabs-container {
+    flex-grow: 1;
+  }
+}

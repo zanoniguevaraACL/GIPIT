@@ -1,0 +1,31 @@
+.filter-container {
+	margin-top: 20px;
+	margin-left: 10px;
+}
+
+.filter-pills {
+  display: flex;
+  margin-bottom: 16px;
+	padding-top: 10px;
+}
+
+.pill {
+  padding: 16px 46px;
+  border: 0.2px solid #ccc;
+  border: none;
+  border-radius: 1px;
+  background-color: #f4f4f4;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  font-weight: bolder;
+  color: #8f8e8ed7;
+}
+
+.pill.active {
+  color: #444;
+  border-bottom: 3px solid #E02957;
+}
+
+.pill:hover {
+  background-color: #d3d2d2bd;
+}

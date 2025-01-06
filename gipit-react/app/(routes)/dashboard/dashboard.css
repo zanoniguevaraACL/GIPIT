@@ -1,0 +1,75 @@
+.inner-page-container {
+  height: 100%;
+  width: 100%;
+}
+
+.dashboard-header {
+  margin-bottom: 24px;
+}
+
+.section-title {
+  margin-bottom: 16px;
+  color: var(--text-secondary);
+}
+
+.rates-dashboard {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+/* El card del gráfico ocupará todo el ancho y tendrá más altura */
+.rates-dashboard > div:last-child {
+  grid-column: 1 / -1;
+  height: 320px; /* Aumentamos la altura del contenedor */
+}
+
+.dashboard-card {
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+}
+
+.chart-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 24px; /* Aumentamos el padding */
+}
+
+.card-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-wrapper {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+}
+
+/* Ajustamos los estilos del contenedor del gráfico */
+.rates-dashboard > div:last-child .dashboard-card {
+  padding: 24px;
+  background-color: var(--background-secondary);
+  border-radius: 8px;
+}
+
+/* Ajustamos el espacio para el gráfico */
+.rates-dashboard > div:last-child .chart-container {
+  position: relative;
+  height: calc(100% - 60px); /* Más espacio para el contenido */
+  margin-top: 40px; /* Ajustamos el espacio superior */
+  padding: 0 24px 24px 0; /* Añadimos padding asimétrico para mejor visualización */
+}
+
+/* Aseguramos que el gráfico ocupe todo el espacio disponible */
+.rates-dashboard > div:last-child .chart-container > div {
+  width: 100% !important;
+  height: 100% !important;
+}

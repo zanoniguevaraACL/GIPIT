@@ -1,0 +1,207 @@
+.search-and-filter-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+  background: #F9FAFB;
+  padding: 12px;
+  border-radius: 8px;
+  width: 100%;
+}
+
+.search-filters-group {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+}
+
+.search-container {
+  flex: 1;
+}
+
+.filters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 47px;
+}
+
+.filter-select {
+  padding: 8px 32px 8px 12px;
+  border: 1px solid #E5E7EB;
+  border-radius: 6px;
+  background: white;
+  color: #374151;
+  font-size: 14px;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 12 12' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M2.5 4.5L6 8L9.5 4.5' stroke='%236B7280' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  min-width: 140px;
+}
+
+.filter-select:focus {
+  outline: none;
+  border-color: #2563EB;
+}
+
+.inner-page-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.new-factura-button button {
+  background-color: #E4003F;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  min-width: fit-content;
+}
+
+.new-factura-button button:hover {
+  background-color: #C8003A;
+}
+
+.pro-buttons-container button[type="danger"] {
+  background-color: #dc2626;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pro-buttons-container button[type="danger"]:hover {
+  background-color: #b91c1c;
+}
+
+.total-container {
+  margin-top: 2rem;
+  padding: 1rem;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  text-align: right;
+}
+
+.total-container h3 {
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+
+.total-container h1 {
+  color: #333;
+  font-size: 2rem;
+  margin: 0;
+}
+
+.max-container {
+  height: 87svh;
+  overflow: auto;
+  background-color: var(--background);
+  padding: 24px;
+}
+
+.pro-details-container {
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.pro-header {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.invoice-form-container {
+  background-color: white;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.form-row {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.form-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-group select,
+.form-group input {
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.date-input {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.date-input svg {
+  position: absolute;
+  right: 12px;
+  color: var(--text-secondary);
+}
+
+.professionals-section {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-color);
+}
+
+.professionals-section h4 {
+  margin-bottom: 16px;
+}
+
+.total-container {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-color);
+  text-align: right;
+}
+
+.total-container h3 {
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.total-container h1 {
+  font-size: 2rem;
+  color: var(--text-primary);
+  margin-bottom: 24px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+}
