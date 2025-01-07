@@ -15,7 +15,7 @@ export default function Page() {
 
 
   useEffect(() => {
-    refreshCandidates(Number(processId));
+    refreshCandidates(Number(processId), "entrevistas");
   }, [refreshCandidates, processId]);
 
 

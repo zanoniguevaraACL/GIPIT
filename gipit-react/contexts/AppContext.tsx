@@ -66,10 +66,9 @@ export const AppProvider: React.FC<AppProviderProps> = ({
   };
 
   const refreshCandidates = useCallback(async (processId: number, stage?: string) => {
-    // setIsLoadingCandidates(true); // Iniciar carga
     // Usa fetchProcessDetails para obtener detalles del proceso
     const processDetails = await fetchProcessDetails(processId);
-
+    
     if (processDetails && Array.isArray(processDetails.candidates)) {
       // Actualiza solo los candidatos del proceso actual
       let updatedCandidates = processDetails?.candidates;
