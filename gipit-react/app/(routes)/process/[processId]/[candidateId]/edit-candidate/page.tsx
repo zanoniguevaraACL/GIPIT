@@ -114,7 +114,7 @@ export default function Page({
     try {
       const result = await handleEditCandidate(formData, actualRoute); // Usa el segundo parámetro
       if (result.statusCode === 200) {
-        await refreshCandidates(Number(processId)); // Refresca la lista de candidatos
+        await refreshCandidates(Number(processId), candidateDetails.stage); // Refresca la lista de candidatos
         router.push(result.route); // Redirige
       }
       return result; // Retorna el objeto con { message, route, statusCode }
