@@ -1,5 +1,5 @@
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/authOptions";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 export const fetchAllPreInvoices = async (page: number) => {
   try {

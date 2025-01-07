@@ -1,7 +1,7 @@
 'use server';
 
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/authOptions";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 interface DashboardStats {
   activosCount: number;
