@@ -1,16 +1,6 @@
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-
 export const fetchInvoiceDetails = async (invoiceId: number) => {
   try {
-    const session = await getServerSession(authOptions);
-    const companyId = session?.user?.managements?.[0]?.company?.id;
-
-    if (!companyId) {
-      throw new Error('No se encontró ID de compañía');
-    }
-
-    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/preinvoices/${invoiceId}?companyId=${companyId}`;
+    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/preinvoices/${invoiceId}`;
 
     const response = await fetch(apiUrl, {
       method: 'GET',
