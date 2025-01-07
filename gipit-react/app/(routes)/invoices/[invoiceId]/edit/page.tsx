@@ -4,10 +4,11 @@ import React, { useEffect, useState } from 'react';
 import { IconCalendar } from "@tabler/icons-react";
 import Button from "@/components/atoms/Button";
 import { fetchListCompanies } from "@/app/actions/fetchCompanies";
-import './new-invoice.css';
+import './invoiceEdit.css';
 import { fetchProfessionalsBySelectedCompany } from "@/app/actions/fetchProfessionalsByCompany";
 import AddProfessionalModal from "@/components/molecules/AddProfessionalModal";
 import { useRouter } from 'next/navigation';
+import { fetchInvoiceDetails } from '@/app/actions/fetchInvoiceDetails';
 
 interface Client {
   name: string;
@@ -23,6 +24,17 @@ interface Professional {
   vat?: number;
   total?: number;
   notes?: string;
+  
+}
+
+interface PreInvoiceItem {
+    total: string;
+    candidate_id: number;
+    hours: number;
+    description: string;
+    rate: string;
+    vat: string;
+    subtotal: string;
 }
 
 const months = [
@@ -40,7 +52,7 @@ const months = [
   { value: '12', label: 'Diciembre' }
 ];
 
-export default function Page() {
+export default function Page({ params }: { params: { invoiceId: string } }) {
   const [clients, setClients] = useState<Client[]>([]);
   const [professionals, setProfessionals] = useState<Professional[]>([]);
   const [selectedCompany, setSelectedCompany] = useState<number | null>(null);
@@ -48,8 +60,8 @@ export default function Page() {
   const [addedProfessionals, setAddedProfessionals] = useState<Professional[]>([]);
   const [startMonth, setStartMonth] = useState<string>('');
   const [endMonth, setEndMonth] = useState<string>('');
-  const [issueDate, setIssueDate] = useState<string>('2024-12-24');
-  const [expirationDate, setExpirationDate] = useState<string>('2024-12-24');
+  const [issueDate, setIssueDate] = useState<string>('');
+  const [expirationDate, setExpirationDate] = useState<string>('');
   const router = useRouter();
 
   useEffect(() => {
@@ -70,15 +82,65 @@ export default function Page() {
   }, []);
 
   useEffect(() => {
+    const loadInvoiceDetails = async () => {
+      const { preInvoice, candidates } = await fetchInvoiceDetails(parseInt(params.invoiceId));
+      console.log("Detalles de la factura recuperados:", preInvoice);
+      
+      if (preInvoice) {
+        const companyId = preInvoice.company_id || preInvoice.client_id;
+        console.log("ID de la compañía a buscar:", companyId);
+        
+        setSelectedCompany(companyId);
+        
+        const estimatedDate = new Date(preInvoice.estimated_date);
+        const formattedIssueDate = `${estimatedDate.getFullYear()}-${String(estimatedDate.getMonth() + 1).padStart(2, '0')}-${String(estimatedDate.getDate()).padStart(2, '0')}`;
+        setIssueDate(formattedIssueDate);
+        
+        const expirationDate = new Date(preInvoice.expiration_date);
+        const formattedExpirationDate = `${expirationDate.getFullYear()}-${String(expirationDate.getMonth() + 1).padStart(2, '0')}-${String(expirationDate.getDate()).padStart(2, '0')}`;
+        setExpirationDate(formattedExpirationDate);
+        
+        const professionals = preInvoice.pre_invoice_items.map((item: PreInvoiceItem) => {
+          const candidate = candidates.find((c: { id: number }) => c.id === item.candidate_id);
+          return {
+            id: item.candidate_id,
+            name: candidate ? candidate.name : "Sin nombre",
+            hourValue: parseFloat(item.rate),
+            subtotal: parseFloat(item.subtotal || '0'),
+            total: parseFloat(item.total || '0'),
+            hoursWorked: item.hours || 0,
+            notes: item.description || '',
+            vat: parseFloat(item.vat || '0'),
+          };
+        });
+        setAddedProfessionals(professionals);
+        
+        const client = clients.find(client => client.value === companyId);
+        console.log("Cliente recuperado:", client);
+        
+        if (client) {
+          setSelectedCompany(client.value);
+        }
+      }
+    };
+
+    if (clients.length > 0) {
+      loadInvoiceDetails();
+    }
+  }, [params.invoiceId, clients]);
+
+  useEffect(() => {
     if (selectedCompany) {
       const fetchProfessionals = async () => {
         const data = await fetchProfessionalsBySelectedCompany(selectedCompany);
         if (data && Array.isArray(data)) {
-          const formattedProfessionals = data.map(prof => ({
-            id: prof.candidates.id,
-            name: prof.candidates.name.trim(),
-            hourValue: prof.rate || 0
-          }));
+          const formattedProfessionals = data
+            .filter(prof => !addedProfessionals.some(added => added.id === prof.candidates.id))
+            .map(prof => ({
+              id: prof.candidates.id,
+              name: prof.candidates.name.trim(),
+              hourValue: prof.rate || 0
+            }));
           setProfessionals(formattedProfessionals);
         } else {
           console.error("Datos de profesionales no válidos:", data);
@@ -87,7 +149,7 @@ export default function Page() {
 
       fetchProfessionals();
     }
-  }, [selectedCompany]);
+  }, [selectedCompany, addedProfessionals]);
 
   const handleAddProfessional = () => {
     setIsModalOpen(true);
@@ -102,36 +164,35 @@ export default function Page() {
     const subtotal = hoursWorked * professional.hourValue;
     const vatAmount = (subtotal * (professional.vat || 0)) / 100;
     const total = subtotal + vatAmount;
+    
 
     const professionalWithRate = {
-      ...professional,
-      hoursWorked,
-      subtotal: subtotal,
-      total: total,
-      vat: professional.vat || 0
+        ...professional,
+        hoursWorked,
+        subtotal: subtotal,
+        total: total,
+        vat: professional.vat || 0
     };
 
     setAddedProfessionals(prev => [...prev, professionalWithRate]);
-    setProfessionals(prev => prev.filter(pro => pro.id !== professional.id));
-    setIsModalOpen(false);
   };
 
   const handleHoursChange = (id: number, hours: number) => {
     setAddedProfessionals(prevPros => 
-      prevPros.map(pro => {
-        if (pro.id === id) {
-          const subtotal = calculateSubtotal(pro.hourValue, hours);
-          const vatAmount = (subtotal * (pro.vat || 0)) / 100;
-          const total = subtotal + vatAmount;
-          return { 
-            ...pro, 
-            hoursWorked: hours, 
-            subtotal: subtotal, 
-            total: total
-          };
-        }
-        return pro;
-      })
+        prevPros.map(pro => {
+            if (pro.id === id) {
+                const subtotal = hours * pro.hourValue;
+                const vatAmount = (subtotal * (pro.vat || 0)) / 100;
+                const total = subtotal + vatAmount;
+                return { 
+                    ...pro, 
+                    hoursWorked: hours, 
+                    subtotal: subtotal,
+                    total: total 
+                };
+            }
+            return pro;
+        })
     );
   };
 
@@ -143,74 +204,65 @@ export default function Page() {
     );
   };
 
-  const calculateSubtotal = (hourValue: number, hours: number): number => {
-    const baseSubtotal = hourValue * hours;
-    return baseSubtotal;
-  };
-
   const calculateTotal = () => {
     return addedProfessionals.reduce((total, pro) => {
-      return total + (pro.total || 0);
+        const subtotal = pro.subtotal || 0;
+        const vat = pro.vat || 0;
+        const vatAmount = (subtotal * (vat / 100));
+        return total + subtotal + vatAmount;
     }, 0);
   };
 
-  const handleCompanyChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const companyId = Number(event.target.value);
-    console.log("ID de la compañía seleccionada:", companyId);
-    setSelectedCompany(companyId);
-  };
-
   const handleSaveInvoice = async () => {
-    console.log('ID de la compañía antes de enviar:', selectedCompany);
-    
     const professionalsData = addedProfessionals.map(pro => {
-      const subtotal = pro.subtotal || 0;
-      const vat = pro.vat || 0;
-      const total = subtotal + (subtotal * (vat / 100));
-      console.log(`Subtotal: ${subtotal}, VAT: ${vat}, Total: ${total}`);
-      
-      return {
-        id: pro.id,
-        hoursWorked: pro.hoursWorked,
-        notes: pro.notes,
-        subtotal: subtotal,
-        vat: vat,
-        hourValue: pro.hourValue,
-        total: total,
-      };
+        const subtotal = pro.subtotal || 0;
+        const vat = pro.vat || 0;
+        const vatAmount = (subtotal * (vat / 100));
+        const total = parseFloat((subtotal + vatAmount).toFixed(2));
+
+        console.log('vat:', vat);
+
+        return {
+            id: pro.id,
+            hoursWorked: pro.hoursWorked,
+            notes: pro.notes,
+            subtotal: subtotal,
+            vat: vat,
+            hourValue: pro.hourValue,
+            total: total,
+        };
     });
 
     const invoiceData = {
-      total_value: calculateTotal(),
-      description: "Descripción de la factura",
-      status: "activo",
-      professionals: professionalsData,
-      period: `${startMonth} - ${endMonth}`,
-      estimated_date: issueDate,
-      expiration_date: expirationDate,
-      company_id: selectedCompany,
+        total_value: calculateTotal(),
+        description: "Descripción de la factura",
+        status: "activo",
+        professionals: professionalsData,
+        period: `${startMonth} - ${endMonth}`,
+        estimated_date: issueDate,
+        expiration_date: expirationDate,
+        company_id: selectedCompany,
     };
 
     console.log('Datos de la factura a enviar:', invoiceData);
+    console.log('Total a guardar en la base de datos:', professionalsData);
 
     try {
-      const response = await fetch('http://localhost:3001/api/preinvoices', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(invoiceData),
-      });
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/preinvoices/${params.invoiceId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(invoiceData),
+        });
 
-      if (!response.ok) {
-        throw new Error('Error al crear la factura');
-      }
+        if (!response.ok) {
+            throw new Error('Error al actualizar la factura');
+        }
 
-      const result = await response.json();
-      console.log('Factura creada con éxito:', result);
-      router.push(`/invoices/${result.id}`);
+        router.push(`/invoices/${params.invoiceId}`);
     } catch (error) {
-      console.error('Error al crear la factura:', error);
+        console.error('Error al actualizar la factura:', error);
     }
   };
 
@@ -218,7 +270,7 @@ export default function Page() {
     <div className="max-container">
       <div className="invoice-form-container">
         <div className="header-section">
-          <h2>Nueva Factura</h2>
+          <h2>Editar Factura</h2>
           <div className="button-container">
             <Button text="Cancelar" href="/invoices" type="tertiary" />
             <Button text="Guardar Factura" type="primary" onClick={handleSaveInvoice} />
@@ -229,20 +281,9 @@ export default function Page() {
             <div className="form-grid">
               <div className="form-group">
                 <label>CLIENTE</label>
-                <select 
-                  value={selectedCompany || ""}
-                  onChange={handleCompanyChange}
-                  disabled={selectedCompany !== null}
-                >
-                  <option value="" disabled>
-                    Selecciona una compañía
-                  </option>
-                  {clients.map(client => (
-                    <option key={client.value} value={client.value}>
-                      {client.name}
-                    </option>
-                  ))}
-                </select>
+                <div>
+                  {clients.find(client => client.value === selectedCompany)?.name || "No hay compañía seleccionada"}
+                </div>
               </div>
               
               <div className="form-group">
@@ -296,7 +337,7 @@ export default function Page() {
               <table>
                 <thead>
                   <tr>
-                    <th>Profesionales a Facturar</th>
+                    <th>Nombre</th>
                     <th>Valor Hora</th>
                     <th>Horas Trabajadas</th>
                     <th>Subtotal</th>
