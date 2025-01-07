@@ -42,7 +42,7 @@ async function DashboardPage() {
   const invoicesList = await fetchAllPreInvoices(1);
   
   // Obtenemos solo las facturas pendientes
-  const pendingInvoices = invoicesList.filter((invoice: Invoice) => invoice.status === 'pendiente');
+  const pendingInvoices = invoicesList.batch.filter((invoice: Invoice) => invoice.status === 'pendiente');
   
   // Procesamos los datos de todas las facturas pendientes
   let allProfessionalDetails: ProfessionalDetail[] = [];
