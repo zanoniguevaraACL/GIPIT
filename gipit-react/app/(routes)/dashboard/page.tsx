@@ -9,7 +9,7 @@ import Button from '@/components/atoms/Button';
 import "./dashboard.css";
 import "./invoices.css"
 import { getServerSession } from 'next-auth/next';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/app/api/auth/authOptions';
 
 
 interface PreInvoiceItem {
