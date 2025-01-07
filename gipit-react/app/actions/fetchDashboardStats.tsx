@@ -1,8 +1,5 @@
 'use server';
 
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-
 interface DashboardStats {
   activosCount: number;
   cerradosCount: number;
@@ -19,15 +16,8 @@ interface DashboardStats {
 
 export async function fetchDashboardStats(): Promise<DashboardStats> {
   try {
-    const session = await getServerSession(authOptions);
-    const companyId = session?.user?.managements?.[0]?.company?.id;
-
-    if (!companyId) {
-      throw new Error('No se encontró ID de compañía');
-    }
-
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/dashboard/stats?companyId=${companyId}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/dashboard/stats`,
       {
         method: 'GET',
         headers: {

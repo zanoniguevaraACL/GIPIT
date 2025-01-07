@@ -2,16 +2,8 @@ import "next-auth";
 
 declare module "next-auth" {
   interface User {
-    role?: string;
+    role?: string; // Agregar propiedad `role` al usuario
     position?: string;
-    managements?: {
-      id: number;
-      name: string;
-      company: {
-        id: number;
-        name: string;
-      };
-    }[];
   }
 
   interface Session {
@@ -21,27 +13,11 @@ declare module "next-auth" {
       image: string;
       position?: string;
       role?: string;
-      managements?: {
-        id: number;
-        name: string;
-        company: {
-          id: number;
-          name: string;
-        };
-      }[];
     };
   }
 
   interface JWT {
-    role?: string;
+    role?: string; // Agregar propiedad `role` al token JWT
     position?: string;
-    managements?: {
-      id: number;
-      name: string;
-      company: {
-        id: number;
-        name: string;
-      };
-    }[];
   }
 }
