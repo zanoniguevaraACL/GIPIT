@@ -13,6 +13,7 @@ type Proceso = {
   candidatesIds: number[];
   jobOffer: string | null;
   stage: string;
+  company: string;
   isInternal: boolean;
 };
 
@@ -48,6 +49,7 @@ export default async function Page(props: {
       { name: "Pre Filtrados", key: "preFiltered", width: 0.6 },
       { name: "Candidatos", key: "candidates", width: 0.6 },
       { name: "Estado", key: "status", width: 0.6 },
+      { name: "Compañia", key: "company", width: 1 },
     ],
     total: process.total,
     batch: process.batch,

@@ -37,11 +37,19 @@ function ProcessInternalHeading({
             type={"secondary"}
             href={`/process/${process.id}/view-offer`}
           />
+
+          <Button
+            text="Cerrar Proceso"
+            type={"secondary"}
+            href={`/process/${process.id}/close-process`}
+          />
+          
           <Button
             text="Nuevo Candidato"
             type={"primary"}
             href={`/process/${process.id}/new-candidate`}
           />
+
         </div>
       </div>
     </div>
