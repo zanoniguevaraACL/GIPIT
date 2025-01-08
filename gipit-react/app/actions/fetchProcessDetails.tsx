@@ -9,7 +9,7 @@ export const fetchProcessDetails = async (processId: number) => {
     console.log("DETALLE DEL PROCESO: ", data);
 
     return {
-      id: data.processId, 
+      id: data.id, 
       name: data.jobOffer, 
       stage: data.stage, // Dato para filtrar en
       startAt: data.openedAt ? new Date(data.openedAt).toLocaleDateString() : '',

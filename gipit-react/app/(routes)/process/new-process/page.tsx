@@ -5,31 +5,9 @@ import { FormInputsRow } from "@/app/lib/types";
 import { handleCreateProcess } from "@/app/actions/handleCreateProcess";
 import { fetchListCompanies } from "@/app/actions/fetchCompanies";
 import { toast } from "react-toastify";
-import { z } from "zod";
 import Loader from "@/components/atoms/Loader";
+import { processSchema } from "@/app/lib/validationSchemas";
 
-const processSchema = z.object({
-  client: z
-    .string()
-    .transform((val) => parseInt(val, 10))
-    .refine((val) => !isNaN(val), {
-      message: "Selecciona un cliente válido",
-    }),
-  jobOffer: z
-    .string()
-    .min(1, "El perfil buscado es obligatorio")
-    .regex(/^[A-Za-zÀ-ÿ0-9 .-]+$/, {
-      message:
-        "El perfil solo puede contener letras, números, espacios, puntos y guiones",
-    }),
-  jobOfferDescription: z
-    .string()
-    .min(1, "La descripción de la vacante es obligatoria")
-    .regex(/^[A-Za-zÀ-ÿ0-9 .-]+$/, {
-      message:
-        "La descripción solo puede contener letras, números, espacios, puntos y guiones",
-    }),
-});
 
 type Client = {
   id: number;
@@ -82,20 +60,20 @@ const Page = () => {
     formData: FormData
   ): Promise<{ message: string; route: string; statusCode: number }> => {
     try {
-      const formObj = Object.fromEntries(formData.entries());
+      // const formObj = Object.fromEntries(formData.entries());
 
-      const parsedData = processSchema.safeParse(formObj);
+      // const parsedData = processSchema.safeParse(formObj);
 
-      if (!parsedData.success) {
-        parsedData.error.errors.forEach((error) => {
-          toast.error(error.message);
-        });
-        return {
-          message: "validación fallida",
-          route: "/process/new",
-          statusCode: 500,
-        };
-      }
+      // if (!parsedData.success) {
+      //   parsedData.error.errors.forEach((error) => {
+      //     toast.error(error.message);
+      //   });
+      //   return {
+      //     message: "validación fallida",
+      //     route: "/process/new",
+      //     statusCode: 500,
+      //   };
+      // }
 
       const result = await handleCreateProcess(formData);
 
@@ -143,7 +121,7 @@ const Page = () => {
     ],
   ];
 
-  return <Modal rows={fields} onSubmit={handleSubmit} title="Nuevo Proceso" />;
+  return <Modal rows={fields} onSubmit={handleSubmit} title="Nuevo Proceso" validationSchema={processSchema} />;
 };
 
 export default Page;
