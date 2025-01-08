@@ -3,6 +3,7 @@ import DataGrid from "@/components/molecules/DataGrid";
 import SearchBar from "@/components/molecules/SearchBar";
 
 
+
 interface InvoiceDetails {
   id: number;
   professionals: string;
@@ -30,16 +31,17 @@ export default async function Page(props: {
   searchParams?: Promise<{
     query?: string;
     page?: string;
+    status?: string;
+    year?: string;
   }>;
 }) {
   const searchParams = await props.searchParams;
   const page = searchParams?.page ? parseInt(searchParams?.page) : 1;
   const query = searchParams?.query || "";
+  const status = searchParams?.status || "";
+  const year = searchParams?.year || "";
 
-  const invoicesList = await fetchAllPreInvoices(page);
-  const filteredInvoices = invoicesList.filter((invoice: InvoiceDetails) =>
-    invoice.professionals.toLowerCase().includes(query.toLowerCase())
-  );
+  const invoices = await fetchAllPreInvoices(page, query, status, year);
 
   const data: ResponseData<InvoiceDetails> = {
     columns: [
@@ -49,34 +51,40 @@ export default async function Page(props: {
       { name: "Fecha", key: "expiration_date", width: 1 },
       { name: "Estado", key: "status", width: 1 },
     ],
-    total: filteredInvoices.length,
-    batch: filteredInvoices.map((invoice: InvoiceDetails) => {
-      const estimatedDate = new Date(invoice.estimated_date);
-      const expirationDate = new Date(invoice.expiration_date);
-      
-      const period = `${estimatedDate.toLocaleString('default', { month: 'long' })} - ${expirationDate.toLocaleString('default', { month: 'long' })}`;
-
-      const candidates = invoice.professionals.split(',').map(professional => professional.trim());
-      const professionals = candidates.slice(0, 3);
-      const additionalCount = candidates.length - 3;
-
-      const professionalsDisplay = additionalCount > 0 
-        ? `${professionals.join(', ')} y otros ${additionalCount}` 
-        : professionals.join(', ');
-
-      return {
-        ...invoice,
-        period,
-        expiration_date: expirationDate.toISOString().split('T')[0],
-        professionals: professionalsDisplay,
-        status: invoice.status,
-      };
-    }),
+    total: invoices.total,
+    batch: invoices.batch.map((invoice: InvoiceDetails) => ({
+      ...invoice,
+      period: `${new Date(invoice.estimated_date).toLocaleString('default', { month: 'long' })} - ${new Date(invoice.expiration_date).toLocaleString('default', { month: 'long' })}`,
+      expiration_date: new Date(invoice.expiration_date).toISOString().split('T')[0],
+      professionals: invoice.professionals,
+      status: invoice.status,
+    })),
   };
+
+  const currentYear = new Date().getFullYear();
+  const yearOptions = [
+    { value: "", label: "Todos los años" },
+    { value: currentYear.toString(), label: "Año actual" },
+    { value: (currentYear - 1).toString(), label: "Año pasado" }
+  ];
+
+  const statusOptions = [
+    { value: "", label: "Todos los estados" },
+    { value: "activo", label: "Activo" },
+    { value: "pendiente", label: "Pendiente" },
+    { value: "rechazado", label: "Rechazado" }
+  ];
 
   return (
     <div className="inner-page-container">
-      <SearchBar buttonLink="/invoices/new-invoice" buttonText="Nueva Factura" />
+      <SearchBar 
+        buttonLink="/invoices/new-invoice" 
+        buttonText="Nueva Factura" 
+        statusOptions={statusOptions}
+        defaultStatus=""
+        yearOptions={yearOptions}
+        defaultYear=""
+      />
       <DataGrid 
         data={data} 
         baseUrl="/invoices"

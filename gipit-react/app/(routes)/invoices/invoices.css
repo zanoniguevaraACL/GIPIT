@@ -53,22 +53,24 @@
   margin: 0 auto;
 }
 
-.new-factura-button button {
-  background-color: #E4003F;
-  color: white;
-  border: none;
-  border-radius: 6px;
+.new-invoice-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   padding: 8px 16px;
+  background-color: white;
+  color: #E4003F;
+  border: 1px solid #E4003F;
+  border-radius: 6px;
   font-size: 14px;
   font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-  min-width: fit-content;
+  text-decoration: none;
+  transition: background-color 0.2s;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-.new-factura-button button:hover {
-  background-color: #C8003A;
+.new-invoice-button:hover {
+  background-color: #fff5f7;
 }
 
 .pro-buttons-container button[type="danger"] {

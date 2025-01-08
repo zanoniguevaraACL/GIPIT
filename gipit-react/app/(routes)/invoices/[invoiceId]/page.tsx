@@ -25,6 +25,8 @@ interface ResponseData<T> {
   batch: T[];
 }
 
+export const dynamic = "force-dynamic";
+
 export default async function Page(props: {
   params: {
     invoiceId: string;
@@ -75,13 +77,15 @@ export default async function Page(props: {
             </p>
           </div>
           <div className="pro-buttons-container">
-            <Button text="Eliminar Factura" href={`/invoices/${invoiceId}/delete`} type="primary" />
+            {/* <Button text="Rechazar Factura" href={`/invoices/${invoiceId}/delete`} type="primary" /> */}
+            <Button text="Modificar Factura" href={`/invoices/${invoiceId}/edit`} type="primary" />
             <Button text="Notificar un error" href={`/invoices/${invoiceId}/notify`} type="tertiary" />
           </div>
         </div>
         <DataGrid 
           data={dataGridData} 
           baseUrl={`/invoices/${invoiceId}`}
+          hasNoClick={true}
         />
         <div className="total-container">
           <h3>Total a pagar</h3>
@@ -91,3 +95,5 @@ export default async function Page(props: {
     </div>
   );
 }
+
+

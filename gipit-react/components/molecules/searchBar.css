@@ -1,11 +1,78 @@
-.search-container {
+.search-and-filter-container {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  gap: 24px;
-  max-width: 1440px;
-  margin: 0 auto;
+  gap: 16px;
   margin-bottom: 24px;
-  position: relative;
+  background: #F9FAFB;
+  padding: 12px;
+  border-radius: 8px;
+  width: 100%;
+}
+
+.search-filters-group {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+}
+
+.search-input {
+  flex: 1;
+  padding: 8px 12px 8px 36px;
+  border: 1px solid #E5E7EB;
+  border-radius: 6px;
+  background: white url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat 12px center;
+  font-size: 14px;
+  min-width: 200px;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #2563EB;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+}
+
+.status-select {
+  padding: 8px 32px 8px 12px;
+  border: 1px solid #E5E7EB;
+  border-radius: 6px;
+  background: white;
+  color: #374151;
+  font-size: 14px;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 12 12' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2.5 4.5L6 8L9.5 4.5' stroke='%236B7280' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  min-width: 140px;
+}
+
+.status-select:focus {
+  outline: none;
+  border-color: #2563EB;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+}
+
+.new-invoice-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px; /* Ajustar el tamaño */
+  background-color: white;
+  color: #E4003F;
+  border: none;
+  border-radius: 12px; /* Bordes más redondeados */
+  font-size: 16px; /* Tamaño del texto más grande */
+  font-weight: 600; /* Texto más grueso */
+  text-decoration: none;
+  box-shadow: none; /* Sin sombra por defecto */
+  transition: box-shadow 0.2s, transform 0.2s, background-color 0.2s; /* Suavizar transformaciones */
+}
+
+.new-invoice-button:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Sombra al pasar el cursor */
+}
 
   &.no-search {
     justify-content: flex-end;
@@ -28,4 +95,3 @@
     pointer-events: none;
     color: var(--light-secondary);
   }
-}

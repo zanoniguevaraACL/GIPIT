@@ -90,3 +90,26 @@ export const editCandidateSchema = z.object({
     }),
   address: z.string().min(5, "La dirección debe tener mínimo 5 caracteres"),
 });
+
+export const processSchema = z.object({
+  client: z
+    .string()
+    .transform((val) => parseInt(val, 10))
+    .refine((val) => !isNaN(val), {
+      message: "Selecciona un cliente válido",
+    }),
+  jobOffer: z
+    .string()
+    .min(1, "El perfil buscado es obligatorio")
+    .regex(/^[A-Za-zÀ-ÿ0-9 .-]+$/, {
+      message:
+        "El perfil solo puede contener letras, números, espacios, puntos y guiones",
+    }),
+  jobOfferDescription: z
+    .string()
+    .min(1, "La descripción de la vacante es obligatoria")
+    .regex(/^[A-Za-zÀ-ÿ0-9 .-]+$/, {
+      message:
+        "La descripción solo puede contener letras, números, espacios, puntos y guiones",
+    }),
+});

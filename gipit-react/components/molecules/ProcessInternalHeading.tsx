@@ -33,7 +33,7 @@ function ProcessInternalHeading({
         </div>
         <div className="buttons-container">
           <Button
-            text="Revisar Vacante"
+            text="Editar Proceso"
             type={"secondary"}
             href={`/process/${process.id}/view-offer`}
           />
