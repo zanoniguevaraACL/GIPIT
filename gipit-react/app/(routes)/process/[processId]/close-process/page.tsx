@@ -7,40 +7,38 @@ import { FormInputsRow } from "@/app/lib/types";
 import { usePathname } from "next/navigation";
 import Loader from "@/components/atoms/Loader";
 import { useState } from "react";
+import { handleCloseProcess } from "@/app/actions/handleCloseProcess";
 
 function CloseProcessPage({ params }: { params: { processId: string } }) {
   const actualRoute = usePathname();
-	const routeToRedirect = `/process/${params.processId}`;
   const [isLoading, setIsLoading] = useState(false);
 
   const fields: FormInputsRow = [
     [
-      { type: "cancel", value: "Cancelar", href: actualRoute },
+			{ 
+        type: "cancel", 
+        value: "Cancelar",
+				href: `/process/${params.processId}`
+      },
       { type: "submit", value: "Cerrar Proceso" },
     ],
   ];
 
-  const handleSubmit = async (formData: FormData) => {
-    setIsLoading(true);
-    formData.append("processId", params.processId);
-
-    try {
-			alert("Proceso cerrado");
-			return { 
-				statusCode: 200, 
-				route: '/process',
-				message: "Proceso cerrado"
+	const handleSubmit = async (formData: FormData) => {
+		setIsLoading(true); // Inicia el spinner
+		formData.append("processId", params.processId);
+		try{
+			const result = await handleCloseProcess(formData, actualRoute);
+			if (result.statusCode === 200) {
+				window.location.href = result.route;
+			} else {
+				console.error(result.message);
 			}
+			return result;
+		} finally {
+			setIsLoading(false); // Detén el spinner
 		}
-		finally {
-			setIsLoading(false);
-			return {
-				statusCode: 500,
-				route: routeToRedirect,
-				message: "Error al cerrar el proceso"
-			}
-		}
-  };
+	};
 
   return (
     <>
