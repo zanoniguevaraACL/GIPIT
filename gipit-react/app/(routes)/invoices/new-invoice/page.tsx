@@ -7,7 +7,6 @@ import { fetchListCompanies } from "@/app/actions/fetchCompanies";
 import './new-invoice.css';
 import { fetchProfessionalsBySelectedCompany } from "@/app/actions/fetchProfessionalsByCompany";
 import AddProfessionalModal from "@/components/molecules/AddProfessionalModal";
-import { useRouter } from 'next/navigation';
 
 interface Client {
   name: string;
@@ -50,7 +49,6 @@ export default function Page() {
   const [endMonth, setEndMonth] = useState<string>('');
   const [issueDate, setIssueDate] = useState<string>('2024-12-24');
   const [expirationDate, setExpirationDate] = useState<string>('2024-12-24');
-  const router = useRouter();
 
   useEffect(() => {
     const loadClients = async () => {
@@ -182,8 +180,8 @@ export default function Page() {
 
     const invoiceData = {
       total_value: calculateTotal(),
-      description: "Descripción de la factura",
-      status: "activo",
+      description: "Descripción de la compañia " + selectedCompany,
+      status: "pendiente",
       professionals: professionalsData,
       period: `${startMonth} - ${endMonth}`,
       estimated_date: issueDate,
@@ -194,7 +192,7 @@ export default function Page() {
     console.log('Datos de la factura a enviar:', invoiceData);
 
     try {
-      const response = await fetch('http://localhost:3001/api/preinvoices', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/preinvoices`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -208,7 +206,7 @@ export default function Page() {
 
       const result = await response.json();
       console.log('Factura creada con éxito:', result);
-      router.push(`/invoices/${result.id}`);
+      window.location.href = `/invoices/${result.id}`
     } catch (error) {
       console.error('Error al crear la factura:', error);
     }

@@ -1,5 +1,4 @@
 import "./proId.css";
-import Button from "@/components/atoms/Button";
 import DashboardCard from "../../../../components/molecules/DashboardCard";
 import {
   IconAward,
@@ -199,8 +198,7 @@ export default async function Page(props: {
             <p>{professionalDetails?.position || "Posición no disponible"}</p>
           </div>
           <div className="pro-buttons-container">
-            <Button text="Detalles del Profesional" href={`/candidates/${proId}/edit-pro`} type="tertiary" />
-            <Button text="Nueva Evaluación" href={`/candidates/${proId}/new-evaluation`} type="primary" />
+
           </div>
         </div>
         <p className="section-title text-14">Evaluación profesional</p>
@@ -210,7 +208,7 @@ export default async function Page(props: {
           ))}
         </div>
         <p className="section-title text-14">Historial de evaluaciones</p>
-        <DataGrid data={dataGridData} baseUrl={`/candidate/`} />
+        <DataGrid data={dataGridData} baseUrl={`/pros/${proId}`} />
       </div>
     </div>
   );
