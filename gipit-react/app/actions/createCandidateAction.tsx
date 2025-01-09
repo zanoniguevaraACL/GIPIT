@@ -37,14 +37,6 @@ export const createCandidateAction = async (
       throw new Error(`Error: ${response.statusText}`);
     }
 
-    if (response.status === 409) {
-      const errorData = await response.json();
-      return {
-        success: false,
-        message: errorData.message || 'El candidato ya existe.',
-      };
-    }
-
     const result = await response.json();
     return {
       success: true,
