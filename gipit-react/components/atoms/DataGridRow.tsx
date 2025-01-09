@@ -1,10 +1,11 @@
 import Link from "next/link";
+import React from "react";
 import "./dataGridRow.css";
 
 interface Column<T> {
   name: string;
-  key: keyof T; // Clave que referencia la propiedad del objeto T
-  width: number; // Ancho de la columna
+  key: keyof T;
+  width: number;
 }
 
 interface DataGridRowProps<T extends { id: string | number }> {
@@ -20,9 +21,15 @@ const DataGridRow = <T extends { id: string | number }>({
   baseUrl,
   hasNoClick,
 }: DataGridRowProps<T>) => {
-
-  console.log("DATOS DE LA TABLA--->",data);
   const spacing = columns.map((c) => `${c.width}fr`).join(" ");
+
+  const renderCellContent = (value: any) => {
+    if (React.isValidElement(value)) {
+      return value;
+    }
+    return value ? String(value) : "-";
+  };
+
   return (
     <Link
       href={hasNoClick ? "" : `${baseUrl}/${data.id}`}
@@ -31,8 +38,7 @@ const DataGridRow = <T extends { id: string | number }>({
     >
       {columns.map((col, colIndex) => (
         <p className="text-14" key={colIndex}>
-          {data[col.key] ? String(data[col.key]) : "-"}
-          {/* Muestra el valor correspondiente de data */}
+          {renderCellContent(data[col.key])}
         </p>
       ))}
     </Link>

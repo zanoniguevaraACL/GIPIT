@@ -1,0 +1,71 @@
+.status-badge { 
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: 500;
+  width: 105px; /* Ancho fijo para uniformidad */
+  justify-content: flex-start;
+  border: 1px solid transparent;
+  font-family: "Poppins", sans-serif;
+  text-align: left; /* Asegura alineación del texto */
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.status-text {
+  text-transform: capitalize;
+  white-space: nowrap; /* Asegura que el texto no se divida en varias líneas */
+}
+
+/* Estilo para pendiente */
+.pendiente {
+  border: 1px solid #E4003F;
+  background-color: transparent;
+  color: #E4003F;
+}
+
+.pendiente .status-dot {
+  background-color: #E4003F;
+}
+
+/* Estilo para pagado */
+.pagado {
+  border: 1px solid #646C8A;
+  background-color: transparent;
+  color: #646C8A;
+}
+
+.pagado .status-dot {
+  background-color: #646C8A;
+}
+
+/* Estilo para rechazado */
+.rechazado {
+  border: 1px solid #da7807;
+  background-color: transparent;
+  color: #da7807;
+}
+  
+.rechazado .status-dot {
+  background-color: #da7807;
+}
+
+/* Estilo para aprobado */
+.aprobado {
+  border: 1px solid #4c515c;
+  background-color: transparent; 
+  color: #4c515c;
+}
+
+.aprobado .status-dot { 
+  background-color: #4c515c;
+}

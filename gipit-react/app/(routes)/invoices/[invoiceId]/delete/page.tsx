@@ -11,8 +11,12 @@ export default function DeleteInvoicePage({ params }: { params: { invoiceId: str
   useEffect(() => {
     const deleteInvoice = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/api/preinvoices/${invoiceId}`, {
-          method: 'DELETE',
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/preinvoices/${invoiceId}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ action: 'reject' }),
         });
 
         if (response.ok) {
@@ -20,14 +24,14 @@ export default function DeleteInvoicePage({ params }: { params: { invoiceId: str
           console.log(data.message);
           // Redirigir a la página de facturas
           setLoading(false);
-          router.push('/invoices');
+          window.location.href = '/invoices';
         } else {
           const errorData = await response.json();
-          console.error('Error al eliminar la factura:', errorData.error);
+          console.error('Error al rechazar la factura:', errorData.error);
           setLoading(false);
         }
       } catch (error) {
-        console.error('Error al eliminar la factura:', error);
+        console.error('Error al rechazar la factura:', error);
         setLoading(false);
       }
     };
@@ -35,5 +39,5 @@ export default function DeleteInvoicePage({ params }: { params: { invoiceId: str
     deleteInvoice();
   }, [invoiceId, router]);
 
-  return <div>{loading ? 'Eliminando factura, por favor espera...' : 'Factura eliminada.'}</div>;
+  return <div>{loading ? 'Rechazando factura, por favor espera...' : 'Factura rechazada.'}</div>;
 }

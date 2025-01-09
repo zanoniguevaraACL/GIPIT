@@ -235,8 +235,8 @@ export default function Page({ params }: { params: { invoiceId: string } }) {
 
     const invoiceData = {
         total_value: calculateTotal(),
-        description: "Descripción de la factura",
-        status: "activo",
+        description: "Descripción de la factura "+ params.invoiceId + " compañia " + selectedCompany,
+        status: "pendiente",
         professionals: professionalsData,
         period: `${startMonth} - ${endMonth}`,
         estimated_date: issueDate,
@@ -259,8 +259,7 @@ export default function Page({ params }: { params: { invoiceId: string } }) {
         if (!response.ok) {
             throw new Error('Error al actualizar la factura');
         }
-
-        router.push(`/invoices/${params.invoiceId}`);
+        window.location.href = `/invoices/${params.invoiceId}`
     } catch (error) {
         console.error('Error al actualizar la factura:', error);
     }
@@ -279,14 +278,14 @@ export default function Page({ params }: { params: { invoiceId: string } }) {
         <div className="form-content">
           <form>
             <div className="form-grid">
-              <div className="form-group">
+              <div className="form-group-edit">
                 <label>CLIENTE</label>
                 <div>
                   {clients.find(client => client.value === selectedCompany)?.name || "No hay compañía seleccionada"}
                 </div>
               </div>
               
-              <div className="form-group">
+              <div className="form-group-edit">
                 <label>EMISIÓN</label>
                 <div className="date-input">
                   <input 
@@ -298,7 +297,7 @@ export default function Page({ params }: { params: { invoiceId: string } }) {
                 </div>
               </div>
 
-              <div className="form-group">
+              <div className="form-group-edit">
                 <label>VENCIMIENTO</label>
                 <div className="date-input">
                   <input 
@@ -310,7 +309,7 @@ export default function Page({ params }: { params: { invoiceId: string } }) {
                 </div>
               </div>
 
-              <div className="form-group">
+              <div className="form-group-edit">
                 <label>PERIODO A FACTURAR</label>
                 <div className="month-selection">
                   <select value={startMonth} onChange={(e) => setStartMonth(e.target.value)}>
@@ -382,8 +381,8 @@ export default function Page({ params }: { params: { invoiceId: string } }) {
             </div>
           </div>
 
-          <div className="total-container">
-            <div className="total-info">
+          <div className="total-container-edit">
+            <div className="total-info-edit">
               <h3>Total a pagar</h3>
               <h1>{calculateTotal().toFixed(2)} UF</h1>
             </div>
