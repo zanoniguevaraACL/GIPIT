@@ -6,6 +6,7 @@ interface Column<T> {
   name: string;
   key: keyof T;
   width: number;
+  render?: (value: T[keyof T]) => React.ReactNode;
 }
 
 interface DataGridRowProps<T extends { id: string | number }> {
@@ -23,7 +24,7 @@ const DataGridRow = <T extends { id: string | number }>({
 }: DataGridRowProps<T>) => {
   const spacing = columns.map((c) => `${c.width}fr`).join(" ");
 
-  const renderCellContent = (value: unknown) => {
+  const renderCellContent = (value: T[keyof T]) => {
     if (React.isValidElement(value)) {
       return value;
     }
@@ -38,7 +39,7 @@ const DataGridRow = <T extends { id: string | number }>({
     >
       {columns.map((col, colIndex) => (
         <p className="text-14" key={colIndex}>
-          {renderCellContent(data[col.key])}
+          {col.render ? col.render(data[col.key]) : renderCellContent(data[col.key])}
         </p>
       ))}
     </Link>

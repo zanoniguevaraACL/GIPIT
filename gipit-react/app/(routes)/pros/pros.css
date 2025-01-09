@@ -1,0 +1,16 @@
+.candidates-table-container {
+    max-height: 700px; /* Ajusta esta altura según tus necesidades */
+    overflow-y: auto;
+    margin-bottom: 20px; /* Espacio para los botones de paginación */
+  }
+  
+  .candidates-table {
+    width: 100%;
+  }
+  
+  .pagination-controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+  }
