@@ -71,28 +71,6 @@ export default async function Page(props: {
     ? preInvoice.pre_invoice_items.reduce((acc: number, item: { total: string }) => acc + parseFloat(item.total), 0) 
     : 0;
 
-  const handleApproveInvoice = async () => {
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/preinvoices/${invoiceId}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ action: 'approve' }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Error al aprobar la factura');
-      }
-
-      const result = await response.json();
-      console.log(result.message);
-      // Redirigir o actualizar el estado según sea necesario
-      window.location.href = '/invoices';
-    } catch (error) {
-      console.error('Error al aprobar la factura:', error);
-    }
-  };
 
   return (
     <div className="max-container">
