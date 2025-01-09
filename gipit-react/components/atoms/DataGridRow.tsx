@@ -23,7 +23,7 @@ const DataGridRow = <T extends { id: string | number }>({
 }: DataGridRowProps<T>) => {
   const spacing = columns.map((c) => `${c.width}fr`).join(" ");
 
-  const renderCellContent = (value: any) => {
+  const renderCellContent = (value: unknown) => {
     if (React.isValidElement(value)) {
       return value;
     }

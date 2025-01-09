@@ -7,7 +7,6 @@ import { fetchListCompanies } from "@/app/actions/fetchCompanies";
 import './new-invoice.css';
 import { fetchProfessionalsBySelectedCompany } from "@/app/actions/fetchProfessionalsByCompany";
 import AddProfessionalModal from "@/components/molecules/AddProfessionalModal";
-import { useRouter } from 'next/navigation';
 
 interface Client {
   name: string;
@@ -50,7 +49,6 @@ export default function Page() {
   const [endMonth, setEndMonth] = useState<string>('');
   const [issueDate, setIssueDate] = useState<string>('2024-12-24');
   const [expirationDate, setExpirationDate] = useState<string>('2024-12-24');
-  const router = useRouter();
 
   useEffect(() => {
     const loadClients = async () => {
