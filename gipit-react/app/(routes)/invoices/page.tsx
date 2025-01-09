@@ -1,8 +1,7 @@
 import { fetchAllPreInvoices } from "@/app/actions/fetchInvoices";
 import DataGrid from "@/components/molecules/DataGrid";
 import SearchBar from "@/components/molecules/SearchBar";
-
-
+import StatusButton from "@/components/molecules/StatusButton";
 
 interface InvoiceDetails {
   id: number;
@@ -48,16 +47,16 @@ export default async function Page(props: {
       { name: "Profesionales", key: "professionals", width: 2 },
       { name: "Período", key: "period", width: 1.5 },
       { name: "Monto (UF)", key: "total_value", width: 1 },
-      { name: "Fecha", key: "expiration_date", width: 1 },
+      { name: "Fecha", key: "estimated_date", width: 1 },
       { name: "Estado", key: "status", width: 1 },
     ],
     total: invoices.total,
     batch: invoices.batch.map((invoice: InvoiceDetails) => ({
       ...invoice,
       period: `${new Date(invoice.estimated_date).toLocaleString('default', { month: 'long' })} - ${new Date(invoice.expiration_date).toLocaleString('default', { month: 'long' })}`,
-      expiration_date: new Date(invoice.expiration_date).toISOString().split('T')[0],
+      estimated_date: new Date(invoice.estimated_date).toISOString().split('T')[0],
       professionals: invoice.professionals,
-      status: invoice.status,
+      status: <StatusButton status={String(invoice.status)} />, // Aseguramos que sea string antes de pasar a StatusButton
     })),
   };
 
@@ -70,7 +69,7 @@ export default async function Page(props: {
 
   const statusOptions = [
     { value: "", label: "Todos los estados" },
-    { value: "activo", label: "Activo" },
+    { value: "aprobado", label: "Aprobado" },
     { value: "pendiente", label: "Pendiente" },
     { value: "rechazado", label: "Rechazado" }
   ];
