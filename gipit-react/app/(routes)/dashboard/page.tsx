@@ -8,6 +8,8 @@ import DashboardCard from '../../../components/molecules/DashboardCard';
 import Button from '@/components/atoms/Button';
 import "./dashboard.css";
 import "./invoices.css"
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '@/app/api/auth/authOptions';
 
 
 interface PreInvoiceItem {
@@ -40,9 +42,16 @@ interface Invoice {
 async function DashboardPage() {
   const stats = await fetchDashboardStats();
   const invoicesList = await fetchAllPreInvoices(1);
+  const session = await getServerSession(authOptions);
   
   // Obtenemos solo las facturas pendientes
-  const pendingInvoices = invoicesList.batch.filter((invoice: Invoice) => invoice.status === 'pendiente');
+  const pendingInvoices = invoicesList.batch
+  .filter((invoice: Invoice) => invoice.status === 'pendiente')
+  .sort((a: Invoice, b: Invoice) => {
+    const dateA = new Date(a.estimated_date).getTime();
+    const dateB = new Date(b.estimated_date).getTime();
+    return dateB - dateA; // Orden descendente (más reciente primero)
+  });
   
   // Procesamos los datos de todas las facturas pendientes
   let allProfessionalDetails: ProfessionalDetail[] = [];
@@ -54,7 +63,13 @@ async function DashboardPage() {
     const { preInvoice, candidates } = await fetchInvoiceDetails(invoice.id);
     
     // Actualizamos el total pendiente
-    totalPendingValue += parseFloat(preInvoice.total_value.toString());
+    const invoiceTotal = preInvoice.pre_invoice_items.reduce((sum: number, item: PreInvoiceItem) => {
+      // Aseguramos que el total sea un número válido
+      const itemTotal = parseFloat(item.total);
+      return !isNaN(itemTotal) ? sum + itemTotal : sum;
+    }, 0);
+
+    totalPendingValue += invoiceTotal;
     
     // Actualizamos la fecha más antigua
     const invoiceDate = new Date(preInvoice.estimated_date);
@@ -145,7 +160,7 @@ async function DashboardPage() {
   return (
     <div className="inner-page-container">
       <div className="dashboard-header">
-        <h1>Hola,</h1>
+        <h1>Hola, {session?.user.name}</h1>
         <p className="text-14">Simplifica tu gestión de contrataciones y toma decisiones más rápido</p>
       </div>
 
