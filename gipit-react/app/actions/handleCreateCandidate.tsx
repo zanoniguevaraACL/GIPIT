@@ -11,6 +11,7 @@ import { fetchProcessDetails } from "./fetchProcessDetails";
 import { DocumentResponse } from "./processDocumentAction";
 import calcularExperienciaTotal from "../lib/calcularExperienciaTotal";
 import { extraerPeriodosTrabajoCV } from "./chatGPTCandidateResponse";
+import { checkExistingCandidate } from "./checkExistingCandidate";
 
 interface CompatibilityResponse {
   evaluacion?: {
@@ -40,6 +41,28 @@ export const handleCreateCandidate = async (
         "No se encontró el process_id, no se puede asociar el candidato al proceso.",
       route: actualRoute,
       statusCode: 500,
+    };
+  }
+
+  const email = formData.get("email") as string;
+  const phone = formData.get("phone") as string;
+
+  if (!email || !phone) {
+    return {
+      message: "El correo electrónico y el número de teléfono son requeridos.",
+      route: actualRoute,
+      statusCode: 400,
+    };
+  }
+
+  // Validar si el candidato ya existe
+  const candidateExists = await checkExistingCandidate(processId, email, phone);
+
+  if (candidateExists) {
+    return {
+      message: "El candidato ya existe en este proceso.",
+      route: actualRoute,
+      statusCode: 409,
     };
   }
 
