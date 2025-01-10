@@ -2,6 +2,7 @@ import { fetchProcess } from "@/app/actions/fetchProcess";
 import DataGrid from "@/components/molecules/DataGrid";
 import EmptyState from "@/components/molecules/EmptyState";
 import SearchBar from "@/components/molecules/SearchBar";
+import StatusButton from "@/components/molecules/StatusButton";
 import { IconUserSearch } from "@tabler/icons-react";
 
 type Proceso = {
@@ -59,7 +60,10 @@ export default async function Page(props: {
       { name: "Estado", key: "status", width: 0.6 },
     ],
     total: process.total,
-    batch: process.batch,
+    batch: process.batch.map((process: Proceso) => ({
+      ...process,
+      status: <StatusButton status={String(process.status)} />
+    })),
   };
 
   const statusOptions = [

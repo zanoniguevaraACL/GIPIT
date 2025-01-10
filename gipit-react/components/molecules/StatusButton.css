@@ -59,6 +59,35 @@
   background-color: #059669;
 }
 
+/* Estilo para cerrado */
+.cerrado {
+  border: 1px solid #E4003F;
+  background-color: transparent;
+  color: #E4003F;
+}
+
+.cerrado .status-dot {
+  background-color: #E4003F;
+}
+
+
+/* Estilo para pendiente proceso */
+.pending {
+  border: 1px solid #da7807;
+  background-color: transparent;
+  color: #da7807;
+}
+
+.pending .status-dot {
+  background-color: #da7807;
+}
+
+
+.activo .status-dot {
+  background-color: #059669;
+}
+
+
 /* Estilo para rechazado */
 .rechazado {
   border: 1px solid #da7807;

@@ -143,7 +143,7 @@ export default function SearchBar({
           defaultValue={searchParams.get('companyId')?.toString()}
           className="status-select"
         >
-          <option value="">Selecciona una compañía</option>
+          <option value="">Todas las compañias</option>
           {clients.map((client) => (
             <option key={client.value} value={client.value}>
               {client.name}

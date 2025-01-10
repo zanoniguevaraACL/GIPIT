@@ -34,16 +34,6 @@ export const handleCreateCandidate = async (
   const routeSegments = actualRoute.split("/");
   const processId = parseInt(routeSegments[2], 10); // el proceso se encuentra en la tercera parte de la URL
 
-  // Verifica si se obtuvo correctamente el process_id
-  if (!processId) {
-    return {
-      message:
-        "No se encontró el process_id, no se puede asociar el candidato al proceso.",
-      route: actualRoute,
-      statusCode: 500,
-    };
-  }
-
   const email = formData.get("email") as string;
   const phone = formData.get("phone") as string;
 
