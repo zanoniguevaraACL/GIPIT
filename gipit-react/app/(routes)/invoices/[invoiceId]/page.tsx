@@ -6,6 +6,8 @@ import Button from "@/components/atoms/Button";
 import DataGrid from "@/components/molecules/DataGrid";
 import { IconReceipt } from "@tabler/icons-react";
 import ApproveInvoiceButton from "@/components/molecules/ApproveInvoiceButton";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/app/api/auth/authOptions";
 
 
 interface InvoiceDetails {
@@ -71,6 +73,9 @@ export default async function Page(props: {
     ? preInvoice.pre_invoice_items.reduce((acc: number, item: { total: string }) => acc + parseFloat(item.total), 0) 
     : 0;
 
+  const session = await getServerSession(authOptions);
+  const isClient = session?.user?.role === 'client';
+  const canModify = preInvoice.status === 'pendiente';
 
   return (
     <div className="max-container">
@@ -86,9 +91,15 @@ export default async function Page(props: {
             </p>
           </div>
           <div className="pro-buttons-container">
-            <Button text="Rechazar Factura" href={`/invoices/${invoiceId}/delete`} type="primary" /> 
-            <Button text="Modificar Factura" href={`/invoices/${invoiceId}/edit`} type="primary" />
-            <Button text="Notificar un error" href={`/invoices/${invoiceId}/notify`} type="tertiary" />
+            {!isClient && canModify && (
+              <>
+                <Button text="Rechazar Factura" href={`/invoices/${invoiceId}/delete`} type="primary" /> 
+                <Button text="Modificar Factura" href={`/invoices/${invoiceId}/edit`} type="primary" />
+              </>
+            )}
+            {isClient && (
+              <Button text="Notificar un error" href={`/invoices/${invoiceId}/notify`} type="tertiary" />
+            )}
           </div>
         </div>
         <div className="invoice-details-container">

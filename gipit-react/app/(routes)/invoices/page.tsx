@@ -26,6 +26,9 @@ interface ResponseData<T> {
   batch: T[];
 }
 
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/app/api/auth/authOptions";
+
 export default async function Page(props: {
   searchParams?: Promise<{
     query?: string;
@@ -34,6 +37,9 @@ export default async function Page(props: {
     year?: string;
   }>;
 }) {
+  const session = await getServerSession(authOptions);
+  const isClient = session?.user?.role === 'client';
+
   const searchParams = await props.searchParams;
   const page = searchParams?.page ? parseInt(searchParams?.page) : 1;
   const query = searchParams?.query || "";
@@ -77,8 +83,8 @@ export default async function Page(props: {
   return (
     <div className="inner-page-container">
       <SearchBar 
-        buttonLink="/invoices/new-invoice" 
-        buttonText="Nueva Factura" 
+        buttonLink={!isClient ? "/invoices/new-invoice" : undefined}
+        buttonText={!isClient ? "Nueva Factura" : undefined}
         statusOptions={statusOptions}
         defaultStatus=""
         yearOptions={yearOptions}
