@@ -1,4 +1,3 @@
-"use client";
 import { fetchInvoiceDetails } from "@/app/actions/fetchInvoiceDetails";
 import "../../pros/[proId]/proId.css";
 import "./invoice.css";
@@ -6,6 +5,10 @@ import "@/components/molecules/candidateClientNote.css";
 import Button from "@/components/atoms/Button";
 import DataGrid from "@/components/molecules/DataGrid";
 import { IconReceipt } from "@tabler/icons-react";
+import ApproveInvoiceButton from "@/components/molecules/ApproveInvoiceButton";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/app/api/auth/authOptions";
+
 
 interface InvoiceDetails {
   id: number;
@@ -70,28 +73,9 @@ export default async function Page(props: {
     ? preInvoice.pre_invoice_items.reduce((acc: number, item: { total: string }) => acc + parseFloat(item.total), 0) 
     : 0;
 
-  const handleApproveInvoice = async () => {
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/preinvoices/${invoiceId}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ action: 'approve' }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Error al aprobar la factura');
-      }
-
-      const result = await response.json();
-      console.log(result.message);
-      // Redirigir o actualizar el estado según sea necesario
-      window.location.href = '/invoices';
-    } catch (error) {
-      console.error('Error al aprobar la factura:', error);
-    }
-  };
+  const session = await getServerSession(authOptions);
+  const isClient = session?.user?.role === 'client';
+  const canModify = preInvoice.status === 'pendiente';
 
   return (
     <div className="max-container">
@@ -107,9 +91,15 @@ export default async function Page(props: {
             </p>
           </div>
           <div className="pro-buttons-container">
-            <Button text="Rechazar Factura" href={`/invoices/${invoiceId}/delete`} type="primary" /> 
-            <Button text="Modificar Factura" href={`/invoices/${invoiceId}/edit`} type="primary" />
-            <Button text="Notificar un error" href={`/invoices/${invoiceId}/notify`} type="tertiary" />
+            {!isClient && canModify && (
+              <>
+                <Button text="Rechazar Factura" href={`/invoices/${invoiceId}/delete`} type="primary" /> 
+                <Button text="Modificar Factura" href={`/invoices/${invoiceId}/edit`} type="primary" />
+              </>
+            )}
+            {isClient && (
+              <Button text="Notificar un error" href={`/invoices/${invoiceId}/notify`} type="tertiary" />
+            )}
           </div>
         </div>
         <div className="invoice-details-container">
@@ -128,7 +118,7 @@ export default async function Page(props: {
             <p>
               Este resumen es una proforma para validar el monto a facturar y los detalles de la facturación, al confirmarlos procederemos a enviar los documentos legales correspondientes.
             </p>
-            <Button text="Confirmar para pagar" type="primary" onClick={handleApproveInvoice} />
+            <ApproveInvoiceButton invoiceId={invoiceId} />
           </div>
         </div>
       </div>
