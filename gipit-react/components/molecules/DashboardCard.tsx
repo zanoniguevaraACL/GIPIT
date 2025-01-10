@@ -16,15 +16,16 @@ function DashboardCard({
 }) {
   const chartData = datos.chartData;
   const displayValue = datos.value ?? datos.chartData.values.at(-1) ?? 0;
-  const penultimateValue: number = datos.chartData.values.at(-2) ?? -1;
+  const penultimateValue: number = datos.chartData.values.at(-2) ?? displayValue;
 
   const variation: number =
     Math.round((displayValue - penultimateValue) * 100) / 100;
 
   let expression = "";
   let color = "var(--light-secondary)";
+  
   if (!datos.subtitle) {
-    if (penultimateValue > -1) {
+    if (datos.chartData.values.length >= 1) {
       if (variation > 0) {
         expression = `+ ${variation} respecto a la evaluación anterior`;
         color = "#0095FF";
@@ -36,7 +37,8 @@ function DashboardCard({
         color = "#0095FF";
       }
     } else {
-      expression = "No hay evaluaciones anteriores";
+      expression = "Primera evaluación";
+      color = "#0095FF";
     }
   }
 

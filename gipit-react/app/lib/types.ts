@@ -110,3 +110,29 @@ export interface CompanyDetails {
   name: string;
   jefaturas?: Jefatura[]; // Lista de jefaturas
 }
+
+
+export interface FormResponse {
+  message: string;
+  route: string;
+  statusCode: number;
+}
+
+export interface FormInput {
+  label?: string;
+  placeholder?: string;
+  type: string;
+  name?: string;
+  defaultValue?: string | number;
+  minMax?: [number, number];
+  value?: string;
+  href?: string;
+}
+
+export interface Professional {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  total_experience: number;
+}
