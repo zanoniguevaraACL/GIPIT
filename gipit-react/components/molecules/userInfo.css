@@ -84,7 +84,3 @@
   align-items: center;
   gap: 8px;
 }
-
-.dropdown-menu button svg {
-  color: currentColor;
-}
