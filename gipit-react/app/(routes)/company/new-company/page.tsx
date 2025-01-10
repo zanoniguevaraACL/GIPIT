@@ -1,3 +1,5 @@
+"use client";
+
 export const dynamic = "force-dynamic";
 import Modal from "@/components/molecules/Modal";
 import { FormInputsRow } from "@/app/lib/types";
