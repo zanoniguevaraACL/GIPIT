@@ -1,5 +1,5 @@
-"use client";
-
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/authOptions";
 import { fetchCandidates } from "@/app/actions/fetchCandidates";
 import DataGrid from "@/components/molecules/DataGrid";
 import SearchBar from "@/components/molecules/SearchBar";
@@ -24,7 +24,7 @@ interface Column<T> {
   name: string;
   key: keyof T;
   width: number;
-  render?: (value: T[keyof T]) => React.ReactNode; // Aquí está el cambio principal
+  render?: (value: T[keyof T]) => React.ReactNode;
 }
 
 interface ResponseData<T> {
@@ -39,25 +39,42 @@ const statusOptions = [
   { value: "desvinculado", label: "Desvinculado" },
 ];
 
-export default async function CandidatesPage(
-  props: {
-    searchParams?: {
-      query?: string;
-      page?: string;
-      status?: string;
-    };
-  }
-) {
-  const searchParams = props.searchParams || {};
-  const page = searchParams.page ? parseInt(searchParams.page) : 1;
-  const query = searchParams.query?.toLowerCase() || "";
-  const status = searchParams.status || "";
+export default async function CandidatesPage({
+  searchParams
+}: {
+  searchParams?: {
+    query?: string;
+    page?: string;
+    status?: string;
+  };
+}) {
+  // Obtener la sesión de forma segura en el servidor
+  const session = await getServerSession(authOptions);
+  const userRole = session?.user?.role;
+  const companyId = session?.user?.managements?.[0]?.company?.id;
 
-  const response = await fetchCandidates({ page, query, status });
+  const page = searchParams?.page ? parseInt(searchParams.page) : 1;
+  const query = searchParams?.query?.toLowerCase() || "";
+  const status = searchParams?.status || "";
+
+  const response = await fetchCandidates({ 
+    page, 
+    query, 
+    status,
+    userRole,
+    companyId: companyId ? Number(companyId) : undefined
+  });
+
   if (!response || !response.batch) {
-    console.error("Respuesta inválida de fetchCandidates:", response);
     return (
-      <SearchBar />
+      <div className="inner-page-container">
+        <div className="candidates-page-header">
+          <SearchBar
+            statusOptions={statusOptions}
+          />
+        </div>
+        <p>No se encontraron candidatos que coincidan con los criterios de búsqueda.</p>
+      </div>
     );
   }
 
@@ -67,10 +84,6 @@ export default async function CandidatesPage(
     end: candidate.end ?? undefined,
     status: <StatusButton status={String(candidate.status)} />,
   }));
-
-  const filteredCandidates = candidatesList.filter((candidate: CandidateDetails) =>
-    candidate.name?.toLowerCase().includes(query)
-  );
 
   const columns: Column<CandidateDetails>[] = [
     { name: "Nombre", key: "name", width: 1.5 },
@@ -97,19 +110,6 @@ export default async function CandidatesPage(
     columns,
     batch: candidatesList,
   };
-
-  if (filteredCandidates.length === 0) {
-    return (
-      <div className="inner-page-container">
-        <div className="candidates-page-header">
-          <SearchBar
-            statusOptions={statusOptions}
-          />
-        </div>
-        <p>No se encontraron candidatos que coincidan con los criterios de búsqueda.</p>
-      </div>
-    );
-  }
 
   return (
     <div className="inner-page-container">

@@ -9,12 +9,26 @@ interface CandidateResponse {
   status: string;
 }
 
-export const fetchCandidates = async ({ page, query, status }: { page: number; query?: string; status?: string }) => {
+export const fetchCandidates = async ({ 
+  page, 
+  query, 
+  status,
+  userRole,
+  companyId
+}: { 
+  page: number; 
+  query?: string; 
+  status?: string;
+  userRole?: string;
+  companyId?: number;
+}) => {
   try {
     const params = new URLSearchParams();
     params.append('page', page.toString());
     if (query) params.append('query', query);
     if (status) params.append('status', status);
+    if (userRole) params.append('userRole', userRole);
+    if (companyId) params.append('companyId', companyId.toString());
 
     const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/candidate_pros_management?${params.toString()}`;
     
