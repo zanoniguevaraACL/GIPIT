@@ -2,14 +2,12 @@
 'use client'
 
 import Button from "@/components/atoms/Button";
-import { useRouter } from 'next/navigation';
 
 interface ApproveInvoiceButtonProps {
   invoiceId: string;
 }
 
 export default function ApproveInvoiceButton({ invoiceId }: ApproveInvoiceButtonProps) {
-  const router = useRouter();
 
   const handleApproveInvoice = async () => {
     try {
@@ -24,8 +22,7 @@ export default function ApproveInvoiceButton({ invoiceId }: ApproveInvoiceButton
       if (!response.ok) {
         throw new Error('Error al aprobar la factura');
       }
-
-      router.push('/invoices');
+      window.location.href = '/invoices';
     } catch (error) {
       console.error('Error al aprobar la factura:', error);
     }

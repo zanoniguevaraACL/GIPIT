@@ -69,13 +69,14 @@ export default async function Page(props: {
     }) : [],
   };
 
-  const totalInvoice = preInvoice.pre_invoice_items 
-    ? preInvoice.pre_invoice_items.reduce((acc: number, item: { total: string }) => acc + parseFloat(item.total), 0) 
+  const totalInvoice = preInvoice.pre_invoice_items
+    ? preInvoice.pre_invoice_items.reduce((acc: number, item: { total: string }) => acc + parseFloat(item.total), 0)
     : 0;
 
   const session = await getServerSession(authOptions);
   const isClient = session?.user?.role === 'client';
   const canModify = preInvoice.status === 'pendiente';
+
 
   return (
     <div className="max-container">
@@ -93,7 +94,7 @@ export default async function Page(props: {
           <div className="pro-buttons-container">
             {!isClient && canModify && (
               <>
-                <Button text="Rechazar Factura" href={`/invoices/${invoiceId}/delete`} type="primary" /> 
+                <Button text="Rechazar Factura" href={`/invoices/${invoiceId}/delete`} type="primary" />
                 <Button text="Modificar Factura" href={`/invoices/${invoiceId}/edit`} type="primary" />
               </>
             )}
@@ -105,25 +106,27 @@ export default async function Page(props: {
         <div className="invoice-details-container">
           <h4>Detalle de la factura</h4>
         </div>
-        <DataGrid 
-          data={dataGridData} 
+        <DataGrid
+          data={dataGridData}
           baseUrl={`/invoices/${invoiceId}`}
           hasNoClick={true}
         />
         <div className="total-container">
           <h3>Total a pagar</h3>
           <h1>{totalInvoice.toFixed(2)} UF</h1>
-          <div className="note-card">
-            <h3>Nota</h3>
-            <p>
-              Este resumen es una proforma para validar el monto a facturar y los detalles de la facturación, al confirmarlos procederemos a enviar los documentos legales correspondientes.
-            </p>
-            <ApproveInvoiceButton invoiceId={invoiceId} />
-          </div>
+
+          {isClient && preInvoice.status === 'pendiente' && (
+            <div className="note-card">
+              <h3>Nota</h3>
+              <p>
+                Este resumen es una forma para validar el monto a facturar y los detalles de la facturación, al confirmarlos procederemos a enviar los documentos legales correspondientes.
+              </p>
+              <ApproveInvoiceButton invoiceId={invoiceId} />
+            </div>
+          )}
         </div>
+
       </div>
     </div>
   );
 }
-
-
