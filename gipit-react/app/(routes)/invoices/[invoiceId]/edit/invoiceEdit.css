@@ -31,20 +31,20 @@
   margin-bottom: 32px;
 }
 
-.form-group {
+.form-group-edit {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.form-group label {
+.form-group-edit label {
   font-size: 12px;
   color: var(--text-secondary);
   font-weight: 500;
 }
 
-.form-group select,
-.form-group input {
+.form-group-edit select,
+.form-group-edit input {
   padding: 8px 12px;
   border: 1px solid var(--border-color);
   border-radius: 6px;
@@ -80,7 +80,7 @@
   color: var(--light-secondary);
 }
 
-.total-container {
+.total-container-edit {
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -89,17 +89,17 @@
   border-top: 1px solid var(--border-color);
 }
 
-.total-info {
+.total-info-edit {
   text-align: right;
 }
 
-.total-info h3 {
+.total-info-edit h3 {
   color: var(--text-secondary);
   font-size: 0.875rem;
   margin-bottom: 4px;
 }
 
-.total-info h1 {
+.total-info-edit h1 {
   font-size: 2rem;
   color: var(--text-primary);
   font-weight: 600;
@@ -369,11 +369,11 @@
   margin-bottom: 24px;
 }
 
-.form-group {
+.form-group-edit {
   margin-bottom: 16px;
 }
 
-.form-group label {
+.form-group-edit label {
   font-size: 12px;
   font-weight: 600;
   color: var(--text-secondary);
@@ -469,11 +469,11 @@
   font-size: 14px;
 }
 
-.form-group {
+.form-group-edit {
   margin-bottom: 20px;
 }
 
-.form-group label {
+.form-group-edit label {
   display: block;
   margin-bottom: 8px;
   font-size: 12px;
@@ -481,8 +481,8 @@
   color: var(--text-secondary);
 }
 
-.form-group select,
-.form-group textarea {
+.form-group-edit select,
+.form-group-edit textarea {
   width: 100%;
   padding: 8px;
   border: 1px solid #e0e0e0;
@@ -490,7 +490,7 @@
   font-size: 14px;
 }
 
-.form-group textarea {
+.form-group-edit textarea {
   min-height: 100px;
   resize: vertical;
 }

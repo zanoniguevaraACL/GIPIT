@@ -21,6 +21,7 @@
 
   &.secondary {
     background-color: var(--light-tertiary);
+    border: none;
   }
 
   &.tertiary {

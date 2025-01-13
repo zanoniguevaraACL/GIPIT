@@ -1,3 +1,5 @@
+"use client";
+
 import { z } from "zod";
 
 export const userSchema = z.object({
@@ -105,11 +107,7 @@ export const processSchema = z.object({
       message:
         "El perfil solo puede contener letras, números, espacios, puntos y guiones",
     }),
-  jobOfferDescription: z
+    jobOfferDescription: z
     .string()
-    .min(1, "La descripción de la vacante es obligatoria")
-    .regex(/^[A-Za-zÀ-ÿ0-9 .-]+$/, {
-      message:
-        "La descripción solo puede contener letras, números, espacios, puntos y guiones",
-    }),
+    .min(1, "La descripción de la vacante es obligatoria"), // Solo valida que no esté vacío,
 });

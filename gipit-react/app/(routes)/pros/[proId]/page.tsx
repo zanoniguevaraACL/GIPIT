@@ -1,17 +1,37 @@
-import "./proId.css";
-import Button from "@/components/atoms/Button";
-import DashboardCard from "../../../../components/molecules/DashboardCard";
+import "./proId.css"; // Estilo personalizado para la página
+import Button from "@/components/atoms/Button"; // Botones para acciones
+import DashboardCard from "../../../../components/molecules/DashboardCard"; // Componentes de tarjetas de evaluación
 import {
   IconAward,
   IconCircleDashedCheck,
   IconFlame,
   IconMessage2Share,
   IconStack3,
-} from "@tabler/icons-react";
-import DataGrid from "@/components/molecules/DataGrid";
-import { fetchProfessionalDetails } from "@/app/actions/fetchProfessionalDetails";
+} from "@tabler/icons-react"; // Iconos para cada sección
+import DataGrid from "@/components/molecules/DataGrid"; // Tabla de datos para evaluaciones
+import { fetchProfessionalDetails } from "@/app/actions/fetchProfessionalDetails"; // Acción para obtener detalles profesionales
 
-// Define la interfaz para los elementos de evaluación
+// Definición de la interfaz CandidateDetails
+interface CandidateDetails {
+  id: number;
+  candidate_management_id: number;
+  candidates: {
+    name: string;
+    email: string;
+    avatar?: string;
+  };
+  position: string;
+  rate?: string;
+  post_sales_activities: Array<{
+    date: string;
+    eval_stack: number;
+    eval_comunicacion: number;
+    eval_motivacion: number;
+    eval_cumplimiento: number;
+  }>;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface EvaluationItem {
   date: string;
   eval_stack: number;
@@ -28,16 +48,21 @@ type DashboardData = Record<
     chartData: {
       labels?: string[];
       values: number[];
+      diferencia?: string | null;
     };
     icon: JSX.Element;
   }
 >;
+
 const dashboardData: DashboardData = {
   card1: {
     title: "Promedio de evaluación",
     hasChart: true,
-    chartData: {  labels: ["Enero", "Febrero", "Marzo", "Abril", "Mayo"],
-      values: [5, 6, 7, 4, 5] }, // Los valores del gráfico },
+    chartData: {
+      labels: ["Enero", "Febrero", "Marzo", "Abril", "Mayo"],
+      values: [5, 6, 7, 4, 5],
+      diferencia: null
+    },
     icon: <IconAward />,
   },
   card2: {
@@ -72,13 +97,13 @@ interface Column<T> {
   width: number;
 }
 
+// Interfaz genérica para datos de DataGrid
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 interface DataGridData<T = any> {
   columns: Column<T>[];
   total: number;
   batch: T[];
 }
-
 
 export default async function Page(props: {
   searchParams?: Promise<{ query?: string; page?: string }>;
@@ -88,68 +113,82 @@ export default async function Page(props: {
 
   if (!proId) return <p>Error: El ID del profesional no está disponible.</p>;
 
-  let professionalDetails;
+  let professionalDetails: CandidateDetails;
   try {
     professionalDetails = await fetchProfessionalDetails(proId);
   } catch (error) {
-    console.error("Error fetching professional details:", error);
-    return <p>Error cargando los detalles del profesional.</p>;
+    console.error("Error detallado:", error);
+    return <div className="max-container">
+      <p>Error cargando los detalles del profesional.</p>
+      <p>Detalles: {error instanceof Error ? error.message : 'Error desconocido'}</p>
+    </div>;
   }
 
-  const evaluationData: EvaluationItem[] =
-    professionalDetails?.post_sales_activities || [];
+  // Obtenemos los datos de evaluación y los ordenamos por fecha
+  const evaluationData = [...professionalDetails.post_sales_activities].sort(
+    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+  );
 
-  // Cálculo de promedios
-  const eval_motivacionPromedio =
-    evaluationData.reduce(
-      (sum, evalItem) => sum + (evalItem.eval_motivacion || 0),
-      0
-    ) / evaluationData.length || 0;
+  // Calculamos los promedios
+  const eval_motivacionPromedio = evaluationData.length > 0
+    ? (evaluationData.reduce((sum, item) => sum + item.eval_motivacion, 0) / evaluationData.length).toFixed(1)
+    : 0;
 
-  const eval_comunicacionPromedio =
-    evaluationData.reduce(
-      (sum, evalItem) => sum + (evalItem.eval_comunicacion || 0),
-      0
-    ) / evaluationData.length || 0;
+  const eval_comunicacionPromedio = evaluationData.length > 0
+    ? (evaluationData.reduce((sum, item) => sum + item.eval_comunicacion, 0) / evaluationData.length).toFixed(1)
+    : 0;
 
-  const eval_cumplimientoPromedio =
-    evaluationData.reduce(
-      (sum, evalItem) => sum + (evalItem.eval_cumplimiento || 0),
-      0
-    ) / evaluationData.length || 0;
+  const eval_cumplimientoPromedio = evaluationData.length > 0
+    ? (evaluationData.reduce((sum, item) => sum + item.eval_cumplimiento, 0) / evaluationData.length).toFixed(1)
+    : 0;
 
-  const eval_stackPromedio =
-    evaluationData.reduce(
-      (sum, evalItem) => sum + (evalItem.eval_stack || 0),
-      0
-    ) / evaluationData.length || 0;
+  const eval_stackPromedio = evaluationData.length > 0
+    ? (evaluationData.reduce((sum, item) => sum + item.eval_stack, 0) / evaluationData.length).toFixed(1)
+    : 0;
 
-  // Asignación de promedios a los datos de las tarjetas
-  dashboardData.card1.chartData = {
-    labels: evaluationData.map((item) => 
-      item.date ? new Date(item.date).toLocaleDateString("es-ES", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-      }) : "Fecha inválida"
-    ),
-    values: evaluationData.map((item) => {
-      // Calculamos el promedio de cada registro para las cuatro categorías
-      const promedioIndividual =
-        (item.eval_stack + item.eval_comunicacion + item.eval_motivacion + item.eval_cumplimiento) /
-        4;
-  
-      // Redondeamos y lo devolvemos
-      return parseFloat(promedioIndividual.toFixed(1));
-    }),
+  // Asignamos los promedios a las tarjetas
+  dashboardData.card2.chartData = {
+    values: evaluationData.map(item => item.eval_stack),
+    diferencia: eval_stackPromedio.toString()
   };
 
-  dashboardData.card2.chartData.values = [eval_stackPromedio];
-  dashboardData.card3.chartData.values = [eval_comunicacionPromedio];
-  dashboardData.card4.chartData.values = [eval_cumplimientoPromedio];
-  dashboardData.card5.chartData.values = [eval_motivacionPromedio];
+  dashboardData.card3.chartData = {
+    values: evaluationData.map(item => item.eval_comunicacion),
+    diferencia: eval_comunicacionPromedio.toString()
+  };
 
-  // Datos de la tabla de evaluación
+  dashboardData.card4.chartData = {
+    values: evaluationData.map(item => item.eval_cumplimiento),
+    diferencia: eval_cumplimientoPromedio.toString()
+  };
+
+  dashboardData.card5.chartData = {
+    values: evaluationData.map(item => item.eval_motivacion),
+    diferencia: eval_motivacionPromedio.toString()
+  };
+
+  // Calculamos el promedio general para cada evaluación
+  if (evaluationData.length > 0) {
+    dashboardData.card1.chartData = {
+      labels: evaluationData.map(item => 
+        new Date(item.date).toLocaleDateString("es-ES", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        })
+      ),
+      values: evaluationData.map(item => 
+        parseFloat(((
+          item.eval_stack + 
+          item.eval_comunicacion + 
+          item.eval_cumplimiento + 
+          item.eval_motivacion
+        ) / 4).toFixed(1))
+      )
+    };
+  }
+
+  // Datos para la tabla
   const dataGridData: DataGridData = {
     columns: [
       { name: "Fecha", key: "date", width: 1.1 },
@@ -161,23 +200,17 @@ export default async function Page(props: {
     ],
     total: evaluationData.length,
     batch: evaluationData.map((item) => ({
-      date: item.date
-        ? new Date(item.date).toLocaleDateString("es-ES", {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
-          })
-        : "Fecha inválida",
+      date: new Date(item.date).toLocaleDateString("es-ES", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      }),
       stack: item.eval_stack,
       comunicacion: item.eval_comunicacion,
       motivacion: item.eval_motivacion,
       cumplimiento: item.eval_cumplimiento,
       promedio: (
-        (item.eval_comunicacion +
-          item.eval_motivacion +
-          item.eval_cumplimiento +
-          item.eval_stack) /
-        4
+        (item.eval_comunicacion + item.eval_motivacion + item.eval_cumplimiento + item.eval_stack) / 4
       ).toFixed(1),
     })),
   };
@@ -186,21 +219,11 @@ export default async function Page(props: {
     <div className="max-container">
       <div className="pro-details-container">
         <div className="pro-header">
-          <div className="pro-avatar">
-            {professionalDetails?.avatar ? (
-              <img src={professionalDetails.avatar} alt="Avatar" />
-            ) : (
-              "PG"
-            )}
-          </div>
+
           <div>
             <h4>{professionalDetails?.candidates.name || "Nombre no disponible"}</h4>
             <p>{professionalDetails?.candidates.email || "(correo@ejemplo.com)"}</p>
             <p>{professionalDetails?.position || "Posición no disponible"}</p>
-          </div>
-          <div className="pro-buttons-container">
-            <Button text="Detalles del Profesional" href={`/candidates/${proId}/edit-pro`} type="tertiary" />
-            <Button text="Nueva Evaluación" href={`/candidates/${proId}/new-evaluation`} type="primary" />
           </div>
         </div>
         <p className="section-title text-14">Evaluación profesional</p>
@@ -209,8 +232,20 @@ export default async function Page(props: {
             <DashboardCard key={key} datos={dashboardData[key]} />
           ))}
         </div>
-        <p className="section-title text-14">Historial de evaluaciones</p>
-        <DataGrid data={dataGridData} baseUrl={`/candidate/`} />
+        
+        <div className="pro-buttons-container pro-header">
+          <div className="">
+          <p className="section-title text-14">Historial de evaluaciones</p>
+          </div>
+
+        <div className="pro-buttons-container">
+
+            <Button text="Nueva Evaluación" href={`/pros/${proId}/new-evaluation`} type="primary" />
+          </div>
+          </div>
+        <DataGrid  data={dataGridData} 
+  baseUrl={`/pros/${proId}`}
+ />
       </div>
     </div>
   );

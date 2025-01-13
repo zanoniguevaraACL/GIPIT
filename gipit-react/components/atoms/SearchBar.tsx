@@ -1,15 +1,7 @@
 "use client";
-import { useState, useEffect } from 'react';
 import "./searchBar.css";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
-import { fetchListCompanies } from '@/app/actions/fetchCompanies';
-
-
-interface Client {
-  name: string;
-  value: number;
-}
 
 interface StatusOption {
   value: string;
@@ -24,7 +16,8 @@ interface SearchBarProps {
   yearOptions?: StatusOption[];
   defaultYear?: string;
   noSearch?: boolean;
-  companyFilter?: boolean;
+  onSearch?: (term: string) => void;
+  onStatusChange?: (status: string) => void;
 }
 
 export default function SearchBar({ 
@@ -34,72 +27,33 @@ export default function SearchBar({
   defaultStatus,
   yearOptions,
   defaultYear,
-  companyFilter = false
+  onSearch,
+  onStatusChange
 }: SearchBarProps) {
-  const [clients, setClients] = useState<Client[]>([]);
-  const [selectedCompany, setSelectedCompany] = useState<number | null>(null);
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
-
-  useEffect(() => {
-    const loadClients = async () => {
-      try {
-        const clientsList = await fetchListCompanies();
-        const formattedClients = clientsList.map(client => ({
-          name: client.name,
-          value: client.id
-        }));
-        setClients(formattedClients);
-      } catch (error) {
-        console.error("Error al cargar los clientes:", error);
-      }
-    };
-
-    loadClients();
-  }, []);
-
-
-  const handleStatusChange = (status: string) => {
-    const params = new URLSearchParams(searchParams);
-    if (status) {
-      params.set('status', status);
-      console.log("Actualizando URL con parámetros:", params.toString());
-    } else {
-      params.delete('status');
-    }
-    router.replace(`${pathname}?${params.toString()}`);
-  };
 
   const handleSearch = (term: string) => {
     const params = new URLSearchParams(searchParams);
     if (term) {
       params.set('query', term);
-      console.log("Actualizando URL con parámetros:", params.toString());
     } else {
       params.delete('query');
     }
     router.replace(`${pathname}?${params.toString()}`);
+    if (onSearch) onSearch(term);
   };
 
-
-
-  const handleCompanyChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const companyId = event.target.value;
-  
-    // Actualizar el estado
-    setSelectedCompany(companyId ? parseInt(companyId) : null);
-  
-    // Actualizar los parámetros de búsqueda
+  const handleStatusChange = (status: string) => {
     const params = new URLSearchParams(searchParams);
-    if (companyId) {
-      params.set("companyId", companyId);
-      console.log("Actualizando URL con parámetros:", params.toString());
+    if (status) {
+      params.set('status', status);
     } else {
-      params.delete("companyId");
+      params.delete('status');
     }
-  
     router.replace(`${pathname}?${params.toString()}`);
+    if (onStatusChange) onStatusChange(status);
   };
 
   const handleYearChange = (year: string) => {
@@ -135,23 +89,6 @@ export default function SearchBar({
             ))}
           </select>
         )}
-
-        {companyFilter && (
-          <select
-          value={selectedCompany || ""}
-          onChange={e =>handleCompanyChange(e)}
-          defaultValue={searchParams.get('companyId')?.toString()}
-          className="status-select"
-        >
-          <option value="">Todas las compañias</option>
-          {clients.map((client) => (
-            <option key={client.value} value={client.value}>
-              {client.name}
-            </option>
-          ))}
-        </select>
-        )}
-
         {yearOptions && (
           <select
             onChange={(e) => handleYearChange(e.target.value)}

@@ -223,6 +223,8 @@ export default function Layout({
     }
   });
 
+  console.log(description);
+
   //ADMIN O KAM
   const isInternal = ["admin", "kam"].some(palabra => session?.user?.role == palabra);
 
@@ -233,8 +235,6 @@ export default function Layout({
       ) : (
         <ProcessHeading
           process={proceso}
-          etapasToUse={etapasToUse}
-          description={description}
         />
       )}
 

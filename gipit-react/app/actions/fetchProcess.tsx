@@ -11,9 +11,10 @@ type Proceso = {
   candidatesIds: number[];
   jobOffer: string | null;
   stage: string;
+  company: string;
 };
 
-export const fetchProcess = async (page: number, query?: string) => {
+export const fetchProcess = async (page: number, query?: string, status?: string, companyId?: number) => {
   try {
     
     if (page < 1) {
@@ -26,6 +27,12 @@ export const fetchProcess = async (page: number, query?: string) => {
     url.searchParams.set("page", page.toString());
     if (query) {
       url.searchParams.set("query", query);
+    }
+    if (status) {
+      url.searchParams.set("status", status);
+    }
+    if (companyId) {
+      url.searchParams.set("companyId", companyId.toString());
     }
 
     const response = await fetch(url.toString(), {
@@ -63,8 +70,9 @@ export const fetchProcess = async (page: number, query?: string) => {
         endAt: process.endAt ?? "No hay cierre",
         preFiltered: process.preFiltered ?? 0,
         candidates: process.candidates ?? 0,
-        status: process.status.toLowerCase() == "open" ? "Abierto"  : "Pendiente",
-        stage: process.stage ?? "Entrevistas"
+        status: process.status ? process.status.charAt(0).toUpperCase() + process.status.slice(1) : "Desconocido",
+        stage: process.stage ?? "Entrevistas",
+        company: process.company ?? "No hay empresa",
       }}),
     };
   } catch (error) {
@@ -121,6 +129,7 @@ export const fetchProcessDetails = async (
       candidatesIds: candidatesIds,
       jobOffer: proceso.jobOfferDescription ?? "",
       stage: proceso.stage ?? "Desconocido",
+      company: proceso.company ?? "Desconocido",
     };
   } catch (error) {
     if (error instanceof Error) {

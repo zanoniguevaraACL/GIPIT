@@ -1,6 +1,26 @@
+'use server'
+
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/app/api/auth/authOptions";
+
 export const fetchInvoiceDetails = async (invoiceId: number) => {
   try {
-    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/preinvoices/${invoiceId}`;
+    const session = await getServerSession(authOptions);
+    const isClient = session?.user?.role === 'client';
+    const companyId = session?.user?.role === 'client' ? 
+      session?.user?.managements?.[0]?.company?.id : 
+      null;
+
+    const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/preinvoices/${invoiceId}`;
+    const params = new URLSearchParams();
+    if (isClient && companyId) {
+      params.append('companyId', companyId.toString());
+    }
+    params.append('userRole', session?.user?.role || '');
+    
+    const apiUrl = session?.user?.role === 'client' && companyId ? 
+      `${baseUrl}?companyId=${companyId}` : 
+      baseUrl;
 
     const response = await fetch(apiUrl, {
       method: 'GET',
@@ -15,13 +35,9 @@ export const fetchInvoiceDetails = async (invoiceId: number) => {
     }
 
     const { preInvoice, candidates } = await response.json();
-
     return { preInvoice, candidates }; 
   } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(`Error al obtener los detalles de la factura: ${error.message || 'Error desconocido'}`);
-    } else {
-      throw new Error('Error desconocido al obtener los detalles de la factura');
-    }
+    console.error('Error en fetchInvoiceDetails:', error);
+    throw error;
   }
-}; 
+};
