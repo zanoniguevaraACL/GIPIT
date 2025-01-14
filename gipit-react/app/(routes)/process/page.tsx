@@ -56,7 +56,7 @@ export default async function Page(props: {
       { name: "Cierre", key: "endAt", width: 1 },
       { name: "Pre Filtrados", key: "preFiltered", width: 1 },
       { name: "Candidatos", key: "candidates", width: 1 },
-      { name: "Compañia", key: "company", width: 0.9 },
+      { name: "Cliente", key: "company", width: 0.9 },
       { name: "Estado", key: "status", width: 0.6 },
     ],
     total: process.total,

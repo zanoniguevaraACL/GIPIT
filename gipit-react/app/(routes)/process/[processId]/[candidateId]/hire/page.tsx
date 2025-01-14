@@ -14,7 +14,7 @@ function Page({ params }: { params: { processId: string; candidateId: string } }
   const fields: FormInputsRow = [
     [
       { type: "cancel", value: "Cancelar", href: routeToRedirect },
-      { type: "submit", value: "Contratar" },
+      { type: "submit", value: "Seleccionar" },
     ],
   ];
 
@@ -44,7 +44,7 @@ function Page({ params }: { params: { processId: string; candidateId: string } }
     <Modal
       rows={fields}
       onSubmit={handleSubmit} // seleccionar la funcion correcta
-      message="¿Deseas Contratar al Candidato?"
+      message="¿Deseas seleccionar al Candidato?"
     />
     </>
   );
