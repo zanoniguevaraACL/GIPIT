@@ -90,7 +90,7 @@ function CandidateDetails({
       <div className="buttons-container">
       {stage !== "descartado" && (
         <Button
-          text="Descalificar"
+          text="Descartar Candidato"
           href={`/process/${processId}/${id}/disqualify`}
           type="secondary"
         />
@@ -115,7 +115,7 @@ function CandidateDetails({
 
           {stage !== "seleccionado" && (
           <Button
-            text="Contratar Candidato"
+            text="Seleccionar Candidato"
             href={`/process/${processId}/${id}/hire`}
             type="primary"
           />
