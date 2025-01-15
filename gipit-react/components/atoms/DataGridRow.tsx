@@ -25,7 +25,7 @@ const DataGridRow = <T extends { id: string | number }>({
 
   const renderCellContent = (value: unknown) => {
     if (React.isValidElement(value)) {
-      return value;
+      return <span className="cell-content">{value}</span>;
     }
     return value ? String(value) : "-";
   };
@@ -37,9 +37,9 @@ const DataGridRow = <T extends { id: string | number }>({
       style={{ gridTemplateColumns: spacing }}
     >
       {columns.map((col, colIndex) => (
-        <p className="text-14" key={colIndex}>
+        <div className="text-14 cell-wrapper" key={colIndex}>
           {renderCellContent(data[col.key])}
-        </p>
+        </div>
       ))}
     </Link>
   );
