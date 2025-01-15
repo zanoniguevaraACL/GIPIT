@@ -107,7 +107,13 @@ export const processSchema = z.object({
       message:
         "El perfil solo puede contener letras, números, espacios, puntos y guiones",
     }),
-    jobOfferDescription: z
+  jobOfferDescription: z
     .string()
     .min(1, "La descripción de la vacante es obligatoria"), // Solo valida que no esté vacío,
-});
+  management_id: z
+    .string()
+    .transform((val) => parseInt(val, 10))
+    .refine((val) => !isNaN(val) && val > 0, {
+      message: "Selecciona una jefatura válida",
+    }),
+  });
