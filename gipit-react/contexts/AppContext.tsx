@@ -66,24 +66,27 @@ export const AppProvider: React.FC<AppProviderProps> = ({
   };
 
   const refreshCandidates = useCallback(async (processId: number, stage?: string) => {
-    // Usa fetchProcessDetails para obtener detalles del proceso
-    const processDetails = await fetchProcessDetails(processId);
-    
-    if (processDetails && Array.isArray(processDetails.candidates)) {
-      // Actualiza solo los candidatos del proceso actual
-      let updatedCandidates = processDetails?.candidates;
-      // filtra por etapas en cada refresh
-      if (stage) {
-        updatedCandidates = updatedCandidates.filter(
-          (candidate) => candidate.stage === stage
-        );
-
-        setCandidatesTabs(updatedCandidates); 
+    setIsLoadingCandidates(true); // Indicar inicio de carga
+    try {
+      const processDetails = await fetchProcessDetails(processId);
+      
+      if (processDetails && Array.isArray(processDetails.candidates)) {
+        let updatedCandidates = processDetails.candidates;
+        if (stage) {
+          updatedCandidates = updatedCandidates.filter(
+            (candidate) => candidate.stage === stage
+          );
+        }
+        setCandidatesTabs(updatedCandidates);
+      } else {
+        setCandidatesTabs([]);
       }
-    } else {
+    } catch (error) {
+      console.error('Error refreshing candidates:', error);
       setCandidatesTabs([]);
+    } finally {
+      setIsLoadingCandidates(false); // Indicar fin de carga
     }
-      // setIsLoadingCandidates(false); // Indicar que la carga ha terminado
   }, []);
 
 
