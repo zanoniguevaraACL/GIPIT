@@ -12,10 +12,16 @@ import { processSchema } from "@/app/lib/validationSchemas";
 type Client = {
   id: number;
   name: string;
+  managements: { id: number; name: string }[]; // Jefaturas del cliente
 };
 
 const Page = () => {
   const [clientsList, setClientsList] = useState<Client[]>([]);
+  const [selectedClientId, setSelectedClientId] = useState<number | null>(null);
+
+  const [managements, setManagements] = useState<{ id: number; name: string }[]>(
+    []
+  );
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -38,6 +44,20 @@ const Page = () => {
     getClients();
   }, []);
 
+    // Actualizar las jefaturas al seleccionar un cliente
+useEffect(() => {
+  console.log("Cliente seleccionado:", selectedClientId);
+  if (selectedClientId) {
+    const selectedClient = clientsList.find(
+      (client) => client.id === selectedClientId
+    );
+    console.log("Jefaturas del cliente seleccionado:", selectedClient?.managements);
+    setManagements(selectedClient?.managements || []);
+  } else {
+    setManagements([]);
+  }
+}, [selectedClientId, clientsList]);
+
   if (isLoading) {
     return <div><Loader /></div>;
   }
@@ -54,6 +74,11 @@ const Page = () => {
   const selectFieldOptions = clientsList.map((client) => ({
     name: client.name,
     value: client.id,
+  }));
+
+  const managementFieldOptions = managements.map((management) => ({
+    name: management.name,
+    value: management.id,
   }));
 
   const handleSubmit = async (
@@ -101,6 +126,19 @@ const Page = () => {
       type: "select",
       name: "client",
       options: selectFieldOptions,
+      value: selectedClientId || "",
+      onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        if (e.target instanceof HTMLSelectElement) {
+          setSelectedClientId(Number(e.target.value)); // Aseguramos que es un <select>
+        }
+      },
+    },
+    {
+      label: "Jefatura",
+      placeholder: "Seleccionar jefatura",
+      type: "select",
+      name: "management_id",
+      options: managementFieldOptions, // Opciones dinámicas basadas en el cliente seleccionado
     },
     {
       label: "Perfil buscado",
