@@ -3,29 +3,26 @@ import { useEffect } from "react";
 import { useAppContext } from "@/contexts/AppContext";
 import EmptyState from "@/components/molecules/EmptyState";
 import { IconUserScan } from "@tabler/icons-react";
-import { redirect, usePathname, useParams } from "next/navigation";
-
+import { usePathname, useRouter } from "next/navigation";
 
 export default function Page() {
-  // Accede al valor de `showCandidates` y la función `setShowCandidates`
-  // const { showCandidates, candidatesTabs = [] } = useAppContext(); // Valor predeterminado [] showCandidates en desuso
-  const { candidatesTabs = [], isLoadingCandidates, refreshCandidates } = useAppContext(); // Valor predeterminado [
-  const actualRoute = usePathname();
-  const { processId } = useParams(); // Obtiene el processId de la URL
-
+  const { candidatesTabs = [], isLoadingCandidates } = useAppContext();
+  const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
-    refreshCandidates(Number(processId), "entrevistas");
-  }, [refreshCandidates, processId]);
-
+    // Solo redirigir si no estamos ya en una ruta de candidato
+    if (candidatesTabs.length > 0 && candidatesTabs[0].id && !pathname.includes('/candidate/')) {
+      const timeoutId = setTimeout(() => {
+        router.push(`${pathname}/${candidatesTabs[0].id}`);
+      }, 100);
+      
+      return () => clearTimeout(timeoutId);
+    }
+  }, [candidatesTabs, pathname, router]);
 
   if (isLoadingCandidates) {
     return <p>Cargando candidatos...</p>;
-  }
-
-  if (candidatesTabs.length > 0) {
-    redirect(`${actualRoute}/${candidatesTabs[0].id}`);
-    return null;
   }
 
   if (candidatesTabs.length === 0) {
@@ -38,5 +35,5 @@ export default function Page() {
     );
   }
 
-  return null; // Evita renderizar nada mientras se redirige
+  return null;
 }

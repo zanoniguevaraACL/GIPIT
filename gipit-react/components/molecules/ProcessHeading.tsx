@@ -17,8 +17,8 @@ function ProcessHeading({
     status: string;
   };
 }) {
-  const [contracted, setContracted] = useState(false);
-  setContracted(false);
+  const [contracted] = useState(false);
+  // setContracted(false);
 
   return (
     <div className={`header-macro-container ${contracted && "contracted"}`}>

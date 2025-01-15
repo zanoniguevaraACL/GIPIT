@@ -1,9 +1,11 @@
 import { fetchProcess } from "@/app/actions/fetchProcess";
+import { authOptions } from "@/app/api/auth/authOptions";
 import DataGrid from "@/components/molecules/DataGrid";
 import EmptyState from "@/components/molecules/EmptyState";
 import SearchBar from "@/components/molecules/SearchBar";
 import StatusButton from "@/components/molecules/StatusButton";
 import { IconUserSearch } from "@tabler/icons-react";
+import { getServerSession } from "next-auth";
 
 type Proceso = {
   id: number;
@@ -45,8 +47,10 @@ export default async function Page(props: {
   const query = searchParams?.query || ""; // Obtener el filtro de búsqueda
   const status = searchParams?.status || "";
   const companyId = searchParams?.companyId || "";
+  const session = await getServerSession(authOptions);
+  if (!session) throw new Error('No se pudo obtener la sesión del servidor');
   // const company = searchParams?.company || "";
-  const process = await fetchProcess(page, query, status, Number(companyId));
+  const process = await fetchProcess(page, query, status, Number(companyId), session);
 
   const data: ResponseData<Proceso> = {
     columns: [
