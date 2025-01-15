@@ -73,7 +73,10 @@ function FormItem({ field }: { field: FormInputProps }) {
       return (
         <label>
           <div>{field.label}</div>
-          <select name={field.name} defaultValue={field.defaultValue || ""}>
+          <select 
+            name={field.name} defaultValue={field.defaultValue || ""}
+            onChange={field.onChange} // Aseguramos que el onChange se pase correctamente
+          >
             {field.options?.map((option, index) => (
               <option key={index} value={option.value}>
                 {option.name}

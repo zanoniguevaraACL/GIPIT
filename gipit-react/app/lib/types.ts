@@ -38,7 +38,7 @@ export interface FormInputProps {
   height?: string;
   options?: { name: string; value: number }[];
   minMax?: number[];
-}
+  onChange?: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;}
 
 export type FormInputsRow = (FormInputProps | FormInputProps[])[];
 
