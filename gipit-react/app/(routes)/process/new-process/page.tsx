@@ -76,10 +76,13 @@ useEffect(() => {
     value: client.id,
   }));
 
-  const managementFieldOptions = managements.map((management) => ({
-    name: management.name,
-    value: management.id,
-  }));
+  const managementFieldOptions = [
+    { name: "Selecciona una jefatura", value: "" }, // Opción por defecto
+    ...managements.map((management) => ({
+      name: management.name,
+      value: management.id,
+    })),
+  ];
 
   const handleSubmit = async (
     formData: FormData

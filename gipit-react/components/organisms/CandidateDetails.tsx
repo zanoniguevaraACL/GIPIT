@@ -5,6 +5,7 @@ import Button from "../atoms/Button";
 import { fetchCandidateDetails } from "@/app/actions/fetchCandidateDetails";
 import { useEffect, useState } from "react";
 import Loader from "../atoms/Loader";
+import { useSession } from "next-auth/react";
 
 type CandidateDetails = {
   name: string;
@@ -32,7 +33,7 @@ function CandidateDetails({
 }) {
   const [candidateDetails, setCandidateDetails] = useState<CandidateDetails | null>(null);
   const [loading, setLoading] = useState(true); // Cambia a true para mostrar el Loader inicial
-
+  const { data: session } = useSession();
 
   useEffect(() => {
     const fetchDetails = async () => {
@@ -60,7 +61,8 @@ function CandidateDetails({
 
   const stage = candidateDetails?.stage; // Obtén la etapa actual del candidato
   // console.log("En CanidateDetails.tsx Candidato encontrado:--->",data);
-  const isInternal = true; // lo identificamos en la sesion, si el user es ACL mostramos el boton de editar candidato
+  const isInternal = ["admin", "kam"].some(palabra => session?.user?.role == palabra);
+
 
   return (
     <div className="candidate-details-container">
@@ -76,14 +78,14 @@ function CandidateDetails({
         <div dangerouslySetInnerHTML={{ __html: candidateDetails.sumary }} className="text-content-display"></div>
         {/* <p className="text-14">{data.sumary}</p> */}
       </div>
-      <div className="details-block">
+      {/* <div className="details-block">
         <h4>Habilidades Técnicas</h4>
         <p className="text-14">{candidateDetails.techSkills}</p>
       </div>
       <div className="details-block">
         <h4>Habilidades Blandas</h4>
         <p className="text-14">{candidateDetails.softSkills}</p>
-      </div>
+      </div> */}
       {candidateDetails.clientNote && (
         <CandidateClientNote note={candidateDetails.clientNote} isInternal={isInternal} />
       )}

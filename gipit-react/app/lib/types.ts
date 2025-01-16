@@ -36,7 +36,7 @@ export interface FormInputProps {
   defaultValue?: string | number;
   href?: string;
   height?: string;
-  options?: { name: string; value: number }[];
+  options?: { name: string; value: number | string }[];
   minMax?: number[];
   onChange?: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;}
 

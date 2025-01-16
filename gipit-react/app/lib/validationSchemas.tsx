@@ -100,6 +100,11 @@ export const processSchema = z.object({
     .refine((val) => !isNaN(val), {
       message: "Selecciona un cliente válido",
     }),
+    management_id: z
+    .string()
+    .refine((val) => val !== "", {
+      message: "Selecciona una jefatura válida", // Mensaje claro para el usuario
+    }),
   jobOffer: z
     .string()
     .min(1, "El perfil buscado es obligatorio")
@@ -107,7 +112,7 @@ export const processSchema = z.object({
       message:
         "El perfil solo puede contener letras, números, espacios, puntos y guiones",
     }),
-    jobOfferDescription: z
+  jobOfferDescription: z
     .string()
     .min(1, "La descripción de la vacante es obligatoria"), // Solo valida que no esté vacío,
-});
+  });
