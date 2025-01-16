@@ -8,6 +8,7 @@ import './invoiceEdit.css';
 import { fetchProfessionalsBySelectedCompany } from "@/app/actions/fetchProfessionalsByCompany";
 import AddProfessionalModal from "@/components/molecules/AddProfessionalModal";
 import { fetchInvoiceDetails } from '@/app/actions/fetchInvoiceDetails';
+import ConfirmationModal from "@/components/molecules/ConfirmationModal";
 
 interface Client {
   name: string;
@@ -61,6 +62,7 @@ export default function Page({ params }: { params: { invoiceId: string } }) {
   const [endMonth, setEndMonth] = useState<string>('');
   const [issueDate, setIssueDate] = useState<string>('');
   const [expirationDate, setExpirationDate] = useState<string>('');
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
   useEffect(() => {
     const loadClients = async () => {
@@ -263,6 +265,11 @@ export default function Page({ params }: { params: { invoiceId: string } }) {
     }
   };
 
+  const handleConfirmSaveInvoice = async () => {
+    await handleSaveInvoice();
+    setIsConfirmModalOpen(false);
+  };
+
   return (
     <div className="max-container">
       <div className="invoice-form-container">
@@ -270,7 +277,7 @@ export default function Page({ params }: { params: { invoiceId: string } }) {
           <h2>Editar Factura</h2>
           <div className="button-container">
             <Button text="Cancelar" href="/invoices" type="tertiary" />
-            <Button text="Guardar Factura" type="primary" onClick={handleSaveInvoice} />
+            <Button text="Guardar Factura" type="primary" onClick={() => setIsConfirmModalOpen(true)} />
           </div>
         </div>
         <div className="form-content">
@@ -393,6 +400,13 @@ export default function Page({ params }: { params: { invoiceId: string } }) {
         onClose={handleCloseModal}
         onSave={handleSaveProfessional}
         availableProfessionals={professionals}
+      />
+
+      <ConfirmationModal 
+        isOpen={isConfirmModalOpen} 
+        onClose={() => setIsConfirmModalOpen(false)} 
+        onConfirm={handleConfirmSaveInvoice} 
+        message="¿Estás seguro de que deseas guardar esta factura?" 
       />
     </div>
   );
