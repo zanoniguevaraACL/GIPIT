@@ -152,14 +152,17 @@ function FormBlock({ rows, onSubmit, validationSchema }: FormBlockProps) {
               validationErrors.push(error.message);
               console.log(error);
             });
+            
             validationErrors.forEach((e) => {
               toast.error(e);
             });
           }
+
           if (validationErrors.length === 0) {
             response = await onSubmit(formData, actualRoute);
             showToast(response);
           }
+          
         } else {
           response = await onSubmit(formData, actualRoute);
           showToast(response);

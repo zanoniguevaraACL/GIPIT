@@ -99,7 +99,7 @@ function CandidateDetails({
          )}
 
         <div className="right-buttons-container">
-          {isInternal ? (
+          {!isInternal ? (
             <Button
               text={candidateDetails.clientNote ? "Editar Nota" : "Crear Nota"}
               href={`/process/${processId}/${id}/${

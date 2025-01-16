@@ -100,6 +100,11 @@ export const processSchema = z.object({
     .refine((val) => !isNaN(val), {
       message: "Selecciona un cliente válido",
     }),
+    management_id: z
+    .string()
+    .refine((val) => val !== "", {
+      message: "Selecciona una jefatura válida", // Mensaje claro para el usuario
+    }),
   jobOffer: z
     .string()
     .min(1, "El perfil buscado es obligatorio")
@@ -110,10 +115,4 @@ export const processSchema = z.object({
   jobOfferDescription: z
     .string()
     .min(1, "La descripción de la vacante es obligatoria"), // Solo valida que no esté vacío,
-  management_id: z
-    .string()
-    .transform((val) => parseInt(val, 10))
-    .refine((val) => !isNaN(val) && val > 0, {
-      message: "Selecciona una jefatura válida",
-    }),
   });
