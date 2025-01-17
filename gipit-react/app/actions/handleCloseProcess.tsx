@@ -16,7 +16,8 @@ export async function handleCloseProcess(
   }
 
   try {
-    const response = await fetch(
+    // 1. Cierra el proceso
+    const closeProcessResponse = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/process/${processId}`,
       {
         method: "PUT",
@@ -25,25 +26,51 @@ export async function handleCloseProcess(
         },
         body: JSON.stringify({
           action: "close",
-					processId
+          processId,
         }),
       }
     );
 
-    if (!response.ok) {
-      throw new Error(`Error al cerrar el proceso: ${response.statusText}`);
-    }		
+    if (!closeProcessResponse.ok) {
+      throw new Error(
+        `Error al cerrar el proceso: ${closeProcessResponse.statusText}`
+      );
+    }
 
-    const result = await response.json();
+    // 2. Crea el candidate_management
+    const candidateManagementResponse = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/candidate-management`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          processId, // Relación con el proceso cerrado
+          action: "create",
+        }),
+      }
+    );
+
+    if (!candidateManagementResponse.ok) {
+      throw new Error(
+        `Error al crear candidate_management: ${candidateManagementResponse.statusText}`
+      );
+    }
+
+    // 3. Procesa las respuestas
+    const closeProcessResult = await closeProcessResponse.json();
+    const candidateManagementResult = await candidateManagementResponse.json();
+
     return {
-      message: result.message,
-      route: result.route || `/process`,
-      statusCode: response.status,
+      message: `${closeProcessResult.message}. ${candidateManagementResult.message}`,
+      route: closeProcessResult.route || `/process`,
+      statusCode: 200,
     };
   } catch (error) {
-    console.error("Error al cerrar el proceso:", error);
+    console.error("Error al manejar el cierre del proceso:", error);
     return {
-      message: "Error inesperado al cerrar el proceso.",
+      message: "Error inesperado al cerrar el proceso y crear candidate_management.",
       route: actualRoute,
       statusCode: 500,
     };
