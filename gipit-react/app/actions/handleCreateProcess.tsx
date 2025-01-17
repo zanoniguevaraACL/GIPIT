@@ -5,9 +5,11 @@ export const handleCreateProcess = async (formData: FormData) => {
     const data = Object.fromEntries(formData.entries());
 
     const companyId = parseInt(data.client as string, 10);
+    const managementId = parseInt(data.management_id as string, 10);
 
-    if (isNaN(companyId)) {
-      throw new Error("ID de empresa inválido.");
+    console.log("Management ID -->", managementId);
+    if (isNaN(companyId) || isNaN(managementId)) {
+      throw new Error("ID de compañía o jefatura inválido.");
     }
 
     const isValidDateString = (value: FormDataEntryValue): value is string => {
@@ -17,7 +19,7 @@ export const handleCreateProcess = async (formData: FormData) => {
     const mappedData = {
       job_offer: data.jobOffer,
       job_offer_description: data.jobOfferDescription,
-      company_id: companyId,
+      managementId: managementId,
       opened_at: isValidDateString(data.openedAt) ? new Date(data.openedAt) : null,
       closed_at: isValidDateString(data.closedAt) ? new Date(data.closedAt) : null,
       pre_filtered: data.preFiltered === 'true',
