@@ -21,6 +21,7 @@ export async function fetchDashboardStats(): Promise<DashboardStats> {
   try {
     const session = await getServerSession(authOptions);
     const isClient = session?.user?.role === 'client';
+    // Obtenemos el company_id a través del management del usuario
     const companyId = isClient ? session?.user?.managements?.[0]?.company?.id : null;
 
     const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}/api/dashboard/stats`);
