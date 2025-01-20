@@ -241,6 +241,24 @@ export default function Page() {
     }
   };
 
+  const handleVatChange = (id: number, vat: number) => {
+    setAddedProfessionals(prevPros => 
+        prevPros.map(pro => {
+            if (pro.id === id) {
+                const subtotal = pro.subtotal || 0;
+                const vatAmount = (subtotal * (vat / 100));
+                const total = subtotal + vatAmount;
+                return { 
+                    ...pro, 
+                    vat, 
+                    total 
+                };
+            }
+            return pro;
+        })
+    );
+  };
+
   return (
     <div className="max-container">
       <ToastContainer />
@@ -346,7 +364,13 @@ export default function Page() {
                         />
                       </td>
                       <td>{pro.subtotal ? pro.subtotal.toFixed(2) : '0.00'} UF</td>
-                      <td>{pro.vat ? pro.vat.toFixed(2) : '0.00'} %</td>
+                      <td>
+                        <input 
+                          type="number" 
+                          value={pro.vat || 0}
+                          onChange={(e) => handleVatChange(pro.id, parseFloat(e.target.value) || 0)}
+                        />
+                      </td>
                       <td>{pro.total ? pro.total.toFixed(2) : '0.00'} UF</td>
                       <td>
                         <input 

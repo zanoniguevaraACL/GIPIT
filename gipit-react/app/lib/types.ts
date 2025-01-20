@@ -136,3 +136,10 @@ export interface Professional {
   phone: string;
   total_experience: number;
 }
+
+export interface Column<T> {
+    name: string;
+    key: keyof T;
+    width: number;
+    render?: (value: T[keyof T]) => React.ReactNode;
+}
