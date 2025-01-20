@@ -3,10 +3,11 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Button from "@/components/atoms/Button";
 import "./create.css";
+import { fetchRoles } from "@/app/actions/fetchUsers";
 
 interface Role {
   id: number;
-  name: string;
+  nombre: string;
 }
 
 function CreateUserPage() {
@@ -18,29 +19,40 @@ function CreateUserPage() {
   const router = useRouter();
 
   useEffect(() => {
-    const fetchRoles = async () => {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/roles`);
-      const data = await response.json();
-      setRoles(data);
+    const loadRoles = async () => {
+      try {
+        const data = await fetchRoles();
+        console.log("Roles recuperados:", data);
+        setRoles(data);
+      } catch (error) {
+        console.error("Error al recuperar roles:", error);
+      }
     };
 
-    fetchRoles();
+    loadRoles();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (roleId === null) {
+      console.error("El rol debe ser seleccionado.");
+      return;
+    }
+
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ name, email, position, roleId }),
+      body: JSON.stringify({ name, email, position, role_id: roleId }),
     });
 
     if (response.ok) {
       router.push("/admin");
     } else {
-      console.error("Error al crear el usuario");
+      const errorMessage = await response.text();
+      console.error("Error al crear el usuario:", errorMessage);
     }
   };
 
@@ -64,9 +76,13 @@ function CreateUserPage() {
           <label>Rol</label>
           <select value={roleId || ""} onChange={(e) => setRoleId(Number(e.target.value))} required>
             <option value="" disabled>Selecciona un rol</option>
-            {roles.map(role => (
-              <option key={role.id} value={role.id}>{role.name}</option>
-            ))}
+            {roles.length > 0 ? (
+              roles.map(role => (
+                <option key={role.id} value={role.id}>{role.nombre}</option>
+              ))
+            ) : (
+              <option value="" disabled>No hay roles disponibles</option>
+            )}
           </select>
         </div>
         <div className="button-container">

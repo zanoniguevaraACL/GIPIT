@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import DataGrid from "@/components/molecules/DataGrid";
-import { fetchUsers } from "@/app/actions/fetchUsers";
+import { fetchUsers, fetchRoles } from "@/app/actions/fetchUsers";
 import { Column } from "@/app/lib/types";
 import './admin.css';
 import { useSearchParams } from "next/navigation";
@@ -16,22 +16,35 @@ interface User {
     roleName: string;
 }
 
+interface Role {
+    id: number;
+    nombre: string;
+}
+
 function AdminPage() {
     const [users, setUsers] = useState<User[]>([]);
+    const [totalUsers, setTotalUsers] = useState(0);
+    const [roles, setRoles] = useState<Role[]>([]);
     const searchParams = useSearchParams();
+    const page = parseInt(searchParams.get('page') || '1');
 
     useEffect(() => {
-        const loadUsers = async () => {
+        const loadData = async () => {
             try {
-                const data = await fetchUsers();
-                setUsers(data);
+                const [userData, rolesData] = await Promise.all([
+                    fetchUsers(page),
+                    fetchRoles()
+                ]);
+                setUsers(userData.batch);
+                setTotalUsers(userData.total);
+                setRoles(rolesData);
             } catch (error) {
-                console.error(error);
+                console.error("Error al cargar datos:", error);
             }
         };
 
-        loadUsers();
-    }, []);
+        loadData();
+    }, [page]);
 
     const columns: Column<User>[] = [
         { name: "Nombre", key: "name", width: 2 },
@@ -50,15 +63,16 @@ function AdminPage() {
 
     const dataGridData = {
         columns,
-        total: filteredUsers.length,
+        total: totalUsers,
         batch: filteredUsers,
     };
 
     const roleOptions = [
         { value: "", label: "Todos los roles" },
-        { value: "admin", label: "Admin" },
-        { value: "user", label: "Usuario" },
-        // Agrega más roles según sea necesario
+        ...roles.map(role => ({
+            value: role.nombre,
+            label: role.nombre
+        }))
     ];
 
     return (
