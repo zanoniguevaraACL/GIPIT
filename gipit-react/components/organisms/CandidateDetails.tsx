@@ -8,20 +8,22 @@ import Loader from "../atoms/Loader";
 import { useSession } from "next-auth/react";
 
 type CandidateDetails = {
+  candidateProcessId: number;
   name: string;
   match: number;
   email: string;
   phone: string;
   address: string;
   sumary: string;
-  techSkills: string;
-  softSkills: string;
   clientNote: {
+    techSkills: number;
+    softSkills: number;
     comment: string;
-  };
-  stage: string; // Nuevo campo para la etapa
+  } | null; // Actualizado para soportar notas opcionales
+  stage: string;
   total_experience: number;
 };
+
 
 
 function CandidateDetails({
@@ -86,7 +88,10 @@ function CandidateDetails({
         <h4>Habilidades Blandas</h4>
         <p className="text-14">{candidateDetails.softSkills}</p>
       </div> */}
-      {candidateDetails.clientNote && (
+{candidateDetails.clientNote &&
+  (candidateDetails.clientNote.techSkills ||
+    candidateDetails.clientNote.softSkills ||
+    candidateDetails.clientNote.comment) && (
         <CandidateClientNote note={candidateDetails.clientNote} isInternal={isInternal} />
       )}
       <div className="buttons-container">
@@ -101,13 +106,25 @@ function CandidateDetails({
         <div className="right-buttons-container">
           {!isInternal ? (
             <Button
-              text={candidateDetails.clientNote ? "Editar Nota" : "Crear Nota"}
+              text={
+                candidateDetails.clientNote &&
+                (candidateDetails.clientNote.techSkills ||
+                  candidateDetails.clientNote.softSkills ||
+                  candidateDetails.clientNote.comment)
+                  ? "Editar Nota"
+                  : "Crear Nota"
+              }
               href={`/process/${processId}/${id}/${
-                candidateDetails.clientNote ? "edit-note" : "new-note"
+                candidateDetails.clientNote &&
+                (candidateDetails.clientNote.techSkills ||
+                  candidateDetails.clientNote.softSkills ||
+                  candidateDetails.clientNote.comment)
+                  ? `edit-note?candidateProcessId=${candidateDetails.candidateProcessId}`
+                  : `new-note?candidateProcessId=${candidateDetails.candidateProcessId}`
               }`}
               type="secondary"
-            />
-          ) : (
+              />
+           ) : (
             <Button
               text="Editar Candidato"
               href={`/process/${processId}/${id}/edit-candidate`}

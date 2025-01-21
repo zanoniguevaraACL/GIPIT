@@ -5,7 +5,7 @@ function CandidateClientNote({
   note,
   isInternal,
 }: {
-  note: { tech?: number; soft?: number; comment: string };
+  note: { techSkills?: number; softSkills?: number; comment: string };
   isInternal: boolean;
 }) {
   return (
@@ -14,8 +14,8 @@ function CandidateClientNote({
         {!isInternal ? <h4>Tus Apuntes</h4> : <h4>Apuntes del cliente</h4>}
         <IconBulb />
       </div>
-      <p className="text-14">Conocimientos técnicos: {note.tech}</p>
-      <p className="text-14">Habilidades blandas: {note.soft}</p>
+      <p className="text-14">Conocimientos técnicos: {note.techSkills}</p>
+      <p className="text-14">Habilidades blandas: {note.softSkills}</p>
       <p className="text-14">
         <i>&quot; {note.comment} &quot;</i>
       </p>

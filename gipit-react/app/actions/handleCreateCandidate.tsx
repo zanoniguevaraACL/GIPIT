@@ -265,16 +265,16 @@ export const handleCreateCandidate = async (
     };
   }
   formData.append("process_id", processId.toString());
-  formData.append(
-    "technical_skills",
-    resultadoCompatibilidad?.evaluacion?.coincidencias?.habilidades || ""
-  );
-  formData.append(
-    "client_comments",
-    Array.isArray(resultadoCompatibilidad?.evaluacion?.faltas)
-      ? resultadoCompatibilidad.evaluacion.faltas.join(", ")
-      : ""
-  );
+  // formData.append(
+  //   "technical_skills",
+  //   resultadoCompatibilidad?.evaluacion?.coincidencias?.habilidades || ""
+  // );
+  // formData.append(
+  //   "client_comments",
+  //   Array.isArray(resultadoCompatibilidad?.evaluacion?.faltas)
+  //     ? resultadoCompatibilidad.evaluacion.faltas.join(", ")
+  //     : ""
+  // );
   formData.append(
     "total_experience",
     totalExperiencia.toString()
@@ -284,9 +284,9 @@ export const handleCreateCandidate = async (
     (resultadoCompatibilidad?.evaluacion?.puntuacion_general || 0).toString()
   );
   formData.append("interview_questions", interviewQuestions);
-  const softSkills =
-    resultadoCompatibilidad?.evaluacion?.coincidencias?.soft_skills ?? "";
-  formData.append("soft_skills", softSkills);
+  // const softSkills =
+  //   resultadoCompatibilidad?.evaluacion?.coincidencias?.soft_skills ?? "";
+  // formData.append("soft_skills", softSkills);
 
 
 
