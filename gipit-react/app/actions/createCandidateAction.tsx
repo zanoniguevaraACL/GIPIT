@@ -12,9 +12,9 @@ export const createCandidateAction = async (
     address: formData.get("address") as string,
     jsongpt_text: formData.get("jsongpt_text") as string,
     process_id: processId, // Pasamos el `processId` para asociar al candidato con el proceso.
-    technical_skills: formData.get("technical_skills") as string,
-    soft_skills: formData.get("soft_skills") as string,
-    client_comments: formData.get("client_comments") as string,
+    // technical_skills: formData.get("technical_skills") as string,
+    // soft_skills: formData.get("soft_skills") as string,
+    // client_comments: formData.get("client_comments") as string,
     match_percent: Number(formData.get("match_percent")),
     interview_questions: formData.get("interview_questions") as string,
     total_experience: Number(formData.get("total_experience") as string)

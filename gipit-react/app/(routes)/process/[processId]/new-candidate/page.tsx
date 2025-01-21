@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import Modal from "@/components/molecules/Modal";
 import { FormInputsRow } from "@/app/lib/types";
 import { handleCreateCandidate } from "@/app/actions/handleCreateCandidate";
-import Loader from "@/components/atoms/Loader";
+import LoaderNewCandidate from "@/components/atoms/LoaderNewCandidate";
 import { candidateSchema } from "@/app/lib/validationSchemas";
 import { useAppContext } from "../../../../../contexts/AppContext";
 
@@ -72,7 +72,7 @@ function Page({ params }: { params: { processId: string } }) {
 
   return (
     <div>
-      {isLoading && <Loader />}
+      {isLoading && <LoaderNewCandidate />}
         <Modal 
           rows={fields} 
           onSubmit={handleSubmit} 

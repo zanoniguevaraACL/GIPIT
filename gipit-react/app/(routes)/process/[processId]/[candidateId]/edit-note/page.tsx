@@ -1,7 +1,7 @@
 import Modal from "@/components/molecules/Modal";
 import { FormInputsRow } from "@/app/lib/types";
 import { handleDisqualify } from "@/app/actions/handleDisqualify";
-import { fetchCandidateDetails } from "@/app/actions/fakeApi";
+import { fetchCandidateDetails } from "@/app/actions/fetchCandidateDetails";
 
 async function Page({
   params,
@@ -12,6 +12,7 @@ async function Page({
   const routeToRedirect = `/process/${processId}/${candidateId}`;
 
   const previousValues = await fetchCandidateDetails(parseInt(candidateId));
+  const clientNote = previousValues.clientNote ?? '';
 
   const fields: FormInputsRow = [
     {
@@ -19,21 +20,21 @@ async function Page({
       placeholder: "Inserte un valor numérico",
       type: "number",
       name: "techSkills",
-      defaultValue: previousValues.clientNote.tech,
+      defaultValue: clientNote?.techSkills,
     },
     {
       label: "Habilidades blandas",
       placeholder: "Inserte un valor numérico",
       type: "number",
       name: "softSkills",
-      defaultValue: previousValues.clientNote.soft,
+      defaultValue: clientNote?.softSkills,
     },
     {
       label: "Comentario",
       placeholder: "Inserte una nota",
       type: "textarea",
       name: "comment",
-      defaultValue: previousValues.clientNote.comment,
+      defaultValue: clientNote?.comment,
     },
     [
       { type: "cancel", value: "Cancelar", href: routeToRedirect },

@@ -116,3 +116,15 @@ export const processSchema = z.object({
     .string()
     .min(1, "La descripción de la vacante es obligatoria"), // Solo valida que no esté vacío,
   });
+
+  export const noteSchema = z.object({
+    techSkills: z
+      .number()
+      .min(1, "Las habilidades técnicas son obligatorias y deben ser un número válido."),
+    softSkills: z
+      .number()
+      .min(1, "Las habilidades blandas son obligatorias y deben ser un número válido."),
+    comment: z
+      .string()
+      .min(1, "El comentario es obligatorio."),
+  });
