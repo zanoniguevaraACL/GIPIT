@@ -38,7 +38,9 @@ export interface FormInputProps {
   height?: string;
   options?: { name: string; value: number | string }[];
   minMax?: number[];
-  onChange?: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;}
+  onChange?: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
+  required?: boolean;
+}
 
 export type FormInputsRow = (FormInputProps | FormInputProps[])[];
 
@@ -142,4 +144,18 @@ export interface Column<T> {
     key: keyof T;
     width: number;
     render?: (value: T[keyof T]) => React.ReactNode;
+}
+
+export interface Evaluation {
+  id: number;
+  candidate_management_id: number;
+  benefit?: string;
+  client_comment?: string;
+  date?: Date;
+  eval_stack?: number;
+  eval_comunicacion?: number;
+  eval_motivacion?: number;
+  eval_cumplimiento?: number;
+  acciones_acl?: string;
+  proyecction?: string;
 }

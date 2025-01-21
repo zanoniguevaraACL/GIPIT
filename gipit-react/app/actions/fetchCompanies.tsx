@@ -81,6 +81,8 @@ export const fetchListCompanies = async (): Promise<
       managements: company.management, // Agregar las jefaturas asociadas
     }));
 
+    console.log("Lista companias --->", formattedCompanies)
+
     return formattedCompanies;
   } catch (error) {
     if (error instanceof Error) {

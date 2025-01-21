@@ -2,7 +2,7 @@ interface CandidateResponse {
   id: number;
   name: string;
   role: string;
-  client: string;
+  company: string;
   start: string | null;
   end: string | null;
   rate: number;
@@ -55,14 +55,18 @@ export const fetchCandidates = async ({
       const formatDate = (dateString: string | null) => {
         if (!dateString) return null;
         const date = new Date(dateString);
-        return date.toLocaleDateString();
+        return new Date(date.getTime() + date.getTimezoneOffset() * 0).toLocaleDateString('es-ES', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit'
+        });
       };
 
       return {
         id: candidate.id,
         name: candidate.name,
         role: candidate.role,
-        client: candidate.client,
+        company: candidate.company,
         start: formatDate(candidate.start),
         end: formatDate(candidate.end),
         rate: candidate.rate,
