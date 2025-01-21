@@ -1,17 +1,17 @@
-.max-container-create {
+.max-container-adedit {
   height: 100vh;
   background-color: var(--background);
   padding: 0;
 }
 
-.header-navigation-create {
+.header-navigation-adedit {
   padding: 16px 24px;
   background-color: white;
   border-bottom: 1px solid var(--border-color);
   margin-bottom: 16px;
 }
 
-.invoice-form-container-create {
+.invoice-form-container-adedit {
   max-width: 90rem;
   margin: 0 auto;
   padding: 32px;
@@ -19,33 +19,33 @@
   border-radius: 12px;
 }
 
-.form-grid-create {
+.form-grid-adedit {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 24px;
   margin-bottom: 32px;
 }
 
-.form-group-create {
+.form-group-adedit {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.form-group-create label {
+.form-group-adedit label {
   font-size: 12px;
   color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
-.form-group-create input {
+.form-group-adedit input {
   padding: 8px;
   border: 1px solid #ddd;
   border-radius: 4px;
 }
 
-.form-group-create select {
+.form-group-adedit select {
   padding: 8px;
   border: 1px solid #ddd;
   border-radius: 4px;
@@ -55,12 +55,12 @@
   transition: border-color 0.2s ease;
 }
 
-.form-group-create select:focus {
+.form-group-adedit select:focus {
   border-color: #E4003F;
   outline: none;
 }
 
-.button-container-create {
+.button-container-adedit {
   display: flex;
   justify-content: flex-end;
   gap: 16px;
@@ -81,4 +81,4 @@ button {
 
 button:hover {
   background-color: #C8003A;
-}
+} 

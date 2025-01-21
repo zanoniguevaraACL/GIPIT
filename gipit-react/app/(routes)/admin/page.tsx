@@ -27,24 +27,31 @@ function AdminPage() {
     const [roles, setRoles] = useState<Role[]>([]);
     const searchParams = useSearchParams();
     const page = parseInt(searchParams.get('page') || '1');
+    const query = searchParams.get('query') || '';
+    const role = searchParams.get('role') || '';
 
     useEffect(() => {
         const loadData = async () => {
             try {
-                const [userData, rolesData] = await Promise.all([
-                    fetchUsers(page),
-                    fetchRoles()
-                ]);
+                const userData = await fetchUsers(page, query, role);
                 setUsers(userData.batch);
                 setTotalUsers(userData.total);
-                setRoles(rolesData);
+                const roleData = await fetchRoles();
+                setRoles(roleData);
             } catch (error) {
                 console.error("Error al cargar datos:", error);
             }
         };
 
         loadData();
-    }, [page]);
+    }, [page, query, role]);
+
+    const handleSearch = (term: string) => {
+        const newSearchParams = new URLSearchParams(searchParams.toString());
+        newSearchParams.set('query', term);
+        newSearchParams.set('page', '1');
+        window.history.replaceState({}, '', `${window.location.pathname}?${newSearchParams}`);
+    };
 
     const columns: Column<User>[] = [
         { name: "Nombre", key: "name", width: 2 },
@@ -52,20 +59,6 @@ function AdminPage() {
         { name: "Cargo", key: "position", width: 1.5 },
         { name: "Rol", key: "roleName", width: 1.5 },
     ];
-
-    const filteredUsers = users.filter(user => {
-        const selectedRole = searchParams.get('role');
-        const searchQuery = searchParams.get('query')?.toLowerCase() || '';
-        const matchesRole = selectedRole ? user.roleName === selectedRole : true;
-        const matchesName = user.name.toLowerCase().includes(searchQuery);
-        return matchesRole && matchesName;
-    });
-
-    const dataGridData = {
-        columns,
-        total: totalUsers,
-        batch: filteredUsers,
-    };
 
     const roleOptions = [
         { value: "", label: "Todos los roles" },
@@ -85,9 +78,9 @@ function AdminPage() {
             <SearchBar 
                 roleOptions={roleOptions}
                 defaultRole=""
-                onSearch={(term) => console.log("Buscando:", term)}
+                onSearch={handleSearch}
             />
-            <DataGrid data={dataGridData} baseUrl="/admin" />
+            <DataGrid data={{ columns, total: totalUsers, batch: users }} baseUrl="/admin" />
         </div>
     );
 }
