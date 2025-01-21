@@ -5,6 +5,6 @@ import 'swagger-ui-react/swagger-ui.css';
 
 export default function ApiDocs() {
   return (
-    <SwaggerUI url="http://localhost:3001/api/docs" />
+    <SwaggerUI url={`${process.env.NEXT_PUBLIC_API_URL}/api/docs`} />
   );
 }

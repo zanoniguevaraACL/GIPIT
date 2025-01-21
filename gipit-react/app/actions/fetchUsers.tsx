@@ -8,10 +8,11 @@ interface User {
     };
 }
 
-export const fetchUsers = async (page: number, query?: string) => {
+export const fetchUsers = async (page: number, query?: string, role?: string) => {
     const params = new URLSearchParams();
     params.append('page', page.toString());
     if (query) params.append('query', query);
+    if (role) params.append('role', role);
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users?${params.toString()}`);
     if (!response.ok) {
