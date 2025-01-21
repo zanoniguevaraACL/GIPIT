@@ -13,7 +13,7 @@ interface CandidateDetails {
   email?: string;
   address?: string;
   role?: string;
-  client?: string;
+  company?: string; // Renombrado de 'client' a 'company'
   start?: string;
   end?: string;
   rate?: string;
@@ -29,7 +29,7 @@ interface Column<T> {
 
 interface ResponseData<T> {
   total: number;
-  columns: Column<T>[];
+  columns: Column<T>[]; 
   batch: T[];
 }
 
@@ -48,7 +48,7 @@ export default async function CandidatesPage({
     status?: string;
   };
 }) {
-  // Obtener la sesión de forma segura en el servidor
+  // Obtener la sesión del servidor
   const session = await getServerSession(authOptions);
   const userRole = session?.user?.role;
   const companyId = session?.user?.managements?.[0]?.company?.id;
@@ -57,6 +57,7 @@ export default async function CandidatesPage({
   const query = searchParams?.query?.toLowerCase() || "";
   const status = searchParams?.status || "";
 
+  // Fetch de candidatos
   const response = await fetchCandidates({ 
     page, 
     query, 
@@ -71,6 +72,7 @@ export default async function CandidatesPage({
         <div className="candidates-page-header">
           <SearchBar
             statusOptions={statusOptions}
+            companyFilter={true}
           />
         </div>
         <p>No se encontraron candidatos que coincidan con los criterios de búsqueda.</p>
@@ -88,7 +90,7 @@ export default async function CandidatesPage({
   const columns: Column<CandidateDetails>[] = [
     { name: "Nombre", key: "name", width: 1.5 },
     { name: "Rol", key: "role", width: 1.5 },
-    { name: "Cliente", key: "client", width: 1.5 },
+    { name: "Compañía", key: "company", width: 1.5 },
     { name: "Inicio", key: "start", width: 1.2 },
     { name: "Término", key: "end", width: 1.2 },
     { name: "Valor HH", key: "rate", width: 1.5 },
@@ -116,6 +118,9 @@ export default async function CandidatesPage({
       <div className="candidates-page-header">
         <SearchBar
           statusOptions={statusOptions}
+          companyFilter={true}
+          buttonLink="/pros/new-profesional"
+          buttonText="Nuevo Profesional"
         />
       </div>
       <div className="candidates-table-container">
