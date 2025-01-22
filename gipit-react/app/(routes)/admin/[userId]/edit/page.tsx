@@ -15,6 +15,7 @@ interface UserData {
   position: string;
   role_id: number | null;
   role_name: string;
+  is_active: boolean;
 }
 
 function EditUserPage() {
@@ -25,6 +26,7 @@ function EditUserPage() {
     position: "",
     role_id: null,
     role_name: "",
+    is_active: true,
   });
   const [roles, setRoles] = useState<Role[]>([]);
   const router = useRouter();
@@ -134,6 +136,17 @@ function EditUserPage() {
                 {roles.map(role => (
                   <option key={role.id} value={role.id}>{role.nombre}</option>
                 ))}
+              </select>
+            </div>
+            <div className="form-group-adedit">
+              <label>Estado</label>
+              <select
+                value={userData.is_active ? "activo" : "inactivo"}
+                onChange={(e) => setUserData({ ...userData, is_active: e.target.value === "activo" })}
+                required
+              >
+                <option value="activo">Activo</option>
+                <option value="inactivo">Inactivo</option>
               </select>
             </div>
           </div>

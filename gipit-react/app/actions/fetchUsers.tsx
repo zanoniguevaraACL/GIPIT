@@ -6,6 +6,11 @@ interface User {
     roles?: {
         nombre: string;
     };
+    users_company?: {
+        company: {
+            name: string;
+        };
+    }[];
 }
 
 export const fetchUsers = async (page: number, query?: string, role?: string) => {
@@ -22,11 +27,15 @@ export const fetchUsers = async (page: number, query?: string, role?: string) =>
     const data = await response.json();
     
     return {
-        total: data.total,
         batch: data.users.map((user: User) => ({
-            ...user,
-            roleName: user.roles?.nombre || "Sin rol"
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            position: user.position,
+            roleName: user.roles?.nombre || "Sin rol",
+            companyName: user.users_company?.[0]?.company?.name || "Sin compañía"
         })),
+        total: data.total
     };
 };
 

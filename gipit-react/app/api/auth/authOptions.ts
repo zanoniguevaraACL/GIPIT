@@ -37,19 +37,26 @@ export const authOptions: AuthOptions = {
           return false;
         }
 
-        const managementResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/users/management/${userInfo.id}` ); const managementInfo = await managementResponse.json();
+        if (!userInfo.is_active) {
+          console.error("El usuario está inactivo.");
+          return false;
+        }
 
-          user.role = userInfo.roles.nombre;
-          user.position = userInfo.position;
-          user.managements = managementInfo.map((um: { management: Management }) => ({
-            id: um.management.id,
-            name: um.management.name,
-            company: {
-              id: um.management.company.id,
-              name: um.management.company.name,
-            },
-          }));
+        const managementResponse = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/users/management/${userInfo.id}`
+        );
+        const managementInfo = await managementResponse.json();
+
+        user.role = userInfo.roles.nombre;
+        user.position = userInfo.position;
+        user.managements = managementInfo.map((um: { management: Management }) => ({
+          id: um.management.id,
+          name: um.management.name,
+          company: {
+            id: um.management.company.id,
+            name: um.management.company.name,
+          },
+        }));
 
         return true;
       } catch (error) {

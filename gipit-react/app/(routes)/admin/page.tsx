@@ -14,6 +14,7 @@ interface User {
     email: string;
     position: string;
     roleName: string;
+    companyName: string;
 }
 
 interface Role {
@@ -58,6 +59,7 @@ function AdminPage() {
         { name: "Email", key: "email", width: 2 },
         { name: "Cargo", key: "position", width: 1.5 },
         { name: "Rol", key: "roleName", width: 1.5 },
+        { name: "Compañía", key: "companyName", width: 1.5 },
     ];
 
     const roleOptions = [
