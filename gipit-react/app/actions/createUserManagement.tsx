@@ -3,26 +3,27 @@
 export const createUserManagement = async (
   formData: FormData,
   companyId: string,
-  managementId: string
+  managementId: string,
+  roleId?: number
 ): Promise<{ message: string; route: string; statusCode: number }> => {
   try {
-    // Convierte managementId a un número entero
-    const managementIdInt = parseInt(managementId, 10);
-    if (isNaN(managementIdInt)) {
-      throw new Error("ManagementId inválido. Debe ser un número.");
+    // Solo validar managementId si es Cliente-Gerente
+    let managementIdInt: number | null = null;
+    if (roleId === 6) {
+      managementIdInt = parseInt(managementId, 10);
+      if (isNaN(managementIdInt)) {
+        throw new Error("ManagementId inválido. Debe ser un número.");
+      }
     }
 
-    // Extrae los datos del formulario
     const userEmail = formData.get("email") as string;
     const userName = formData.get("name") as string;
     const userPosition = formData.get("position") as string;
 
-    // Valida que el correo electrónico esté presente
     if (!userEmail) {
       throw new Error("Email is required.");
     }
 
-    // Valida que no exista un user creado con ese correo
     const userResponse = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/users/byEmail/${userEmail}`,
       {
@@ -37,12 +38,21 @@ export const createUserManagement = async (
       throw new Error("Un Usuario ya existe con este correo electrónico");
     }
 
-    const payload = {
+    const payload: {
+      name: string;
+      position: string;
+      email: string;
+      role_id?: number;
+    } = {
       name: userName,
       position: userPosition,
       email: userEmail,
-      role: 1,
     };
+
+    // Solo agregar role_id si está presente
+    if (roleId !== undefined) {
+      payload.role_id = roleId;
+    }
 
     const newUser = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/users`,
@@ -58,30 +68,34 @@ export const createUserManagement = async (
     let newUserId: number = 0;
     if (!newUser.ok) {
       const messageText = await newUser.text();
-      throw new Error(`Error creando user-management: ${messageText}`);
+      throw new Error(`Error creando usuario: ${messageText}`);
     } else {
       const newUserData = await newUser.json();
       newUserId = newUserData.id;
     }
 
-    console.log("nuevo id ->> " + newUserId);
-    const payloadToUserManagement = {
-      user_id: newUserId,
-      management_id: managementIdInt,
-    };
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/user-management`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payloadToUserManagement),
-      }
-    );
+    // Solo crear user-management si es Cliente-Gerente o si se proporciona managementId
+    if ((roleId === 6 && managementIdInt !== null) || (!roleId && managementId)) {
+      const managementIdToUse = managementIdInt || parseInt(managementId, 10);
+      const payloadToUserManagement = {
+        user_id: newUserId,
+        management_id: managementIdToUse,
+      };
+      
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/user-management`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payloadToUserManagement),
+        }
+      );
 
-    if (!response.ok) {
-      throw new Error(`Error creando el nuevo usuario: ${response.text()}`);
+      if (!response.ok) {
+        throw new Error(`Error creando el user-management: ${response.text()}`);
+      }
     }
 
     return {
@@ -98,7 +112,7 @@ export const createUserManagement = async (
       };
     } else {
       return {
-        message: "An unknown error occurred",
+        message: "Un error ha ocurrido",
         route: `/company/${companyId}`,
         statusCode: 500,
       };

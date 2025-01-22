@@ -37,27 +37,6 @@ export default function UserDetailsPage() {
     loadUserData();
   }, [userId]);
 
-  const handleDisableUser = async () => {
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${userId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ is_active: false }), // Cambia el estado a false
-      });
-
-      if (response.ok) {
-        // Aquí puedes manejar la respuesta, como redirigir o mostrar un mensaje
-        console.log("Usuario deshabilitado con éxito");
-      } else {
-        const errorMessage = await response.text();
-        console.error("Error al deshabilitar el usuario:", errorMessage);
-      }
-    } catch (error) {
-      console.error("Error al deshabilitar el usuario:", error);
-    }
-  };
 
   const handleEditUser = () => {
     router.push(`/admin/${userId}/edit`); // Redirige a la página de edición
@@ -82,7 +61,6 @@ export default function UserDetailsPage() {
         <p><strong>Estado:</strong> {userData.is_active ? "Activo" : "Inactivo"}</p>
       </div>
       <div className="button-container-idadmin">
-        <Button text="Deshabilitar" type="secondary" onClick={handleDisableUser} />
         <Button text="Modificar" type="primary" onClick={handleEditUser} />
       </div>
     </div>
