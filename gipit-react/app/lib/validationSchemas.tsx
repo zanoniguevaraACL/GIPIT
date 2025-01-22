@@ -119,10 +119,10 @@ export const processSchema = z.object({
 
   export const noteSchema = z.object({
     techSkills: z
-      .number()
+      .string()
       .min(1, "Las habilidades técnicas son obligatorias y deben ser un número válido."),
     softSkills: z
-      .number()
+      .string()
       .min(1, "Las habilidades blandas son obligatorias y deben ser un número válido."),
     comment: z
       .string()

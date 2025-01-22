@@ -7,7 +7,7 @@ import { fetchListCompanies } from "@/app/actions/fetchCompanies";
 import { toast } from "react-toastify";
 import Loader from "@/components/atoms/Loader";
 import { processSchema } from "@/app/lib/validationSchemas";
-
+import { useSession } from 'next-auth/react';
 
 type Client = {
   id: number;
@@ -23,6 +23,8 @@ const Page = () => {
     []
   );
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { data: session } = useSession(); // Obtenemos la sesión del usuario
+
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -30,6 +32,20 @@ const Page = () => {
       try {
         const data = await fetchListCompanies();
         setClientsList(data);
+
+        // Si el usuario es un cliente, seleccionar automáticamente la compañía y la jefatura
+        // if (session?.user?.role === "cliente") {
+        //   const client = data.find((client) => client.id === session.user.company);
+        //   if (client) {
+        //     setSelectedClientId(client.id);
+
+        //     // Seleccionar automáticamente la primera jefatura si existe
+        //     if (client.managements.length > 0) {
+        //       setSelectedManagementId(client.managements[0].id);
+        //       setManagements(client.managements);
+        //     }
+        //   }
+        // }
       } catch (error) {
         if (error instanceof Error) {
           setError("Error al obtener la lista de compañías: " + error.message);
@@ -135,6 +151,8 @@ useEffect(() => {
           setSelectedClientId(Number(e.target.value)); // Aseguramos que es un <select>
         }
       },
+      disabled: session?.user?.role === "cliente", // Desactiva el campo si el usuario es cliente
+
     },
     {
       label: "Jefatura",
@@ -142,6 +160,7 @@ useEffect(() => {
       type: "select",
       name: "management_id",
       options: managementFieldOptions, // Opciones dinámicas basadas en el cliente seleccionado
+      disabled: session?.user?.role === "cliente", // Desactiva el campo si el usuario es cliente
     },
     {
       label: "Perfil buscado",

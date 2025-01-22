@@ -40,6 +40,7 @@ export interface FormInputProps {
   minMax?: number[];
   onChange?: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
   required?: boolean;
+  disabled?: boolean; // Agregado para soportar la propiedad disabled
 }
 
 export type FormInputsRow = (FormInputProps | FormInputProps[])[];
