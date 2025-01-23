@@ -85,13 +85,13 @@ export default function CreateUserPage() {
     e.preventDefault();
 
     // Validación de campos según el rol
-    if (roleId === null || (roleId === 2 && companyId === null)) {
+    if (roleId === null || (roleId === 6 && companyId === null)) {
       console.error("Todos los campos deben ser seleccionados.");
       return;
     }
 
-    // Solo requerir managementId si el rol es Cliente-Gerente
-    if (roleId === 6 && (companyId === null || managementId === null)) {
+    // Solo requerir managementId si el rol es Cliente
+    if (roleId === 2 && (companyId === null || managementId === null)) {
       console.error("Todos los campos deben ser seleccionados para Cliente-Gerente.");
       return;
     }
@@ -106,7 +106,7 @@ export default function CreateUserPage() {
     const result = await createUserManagement(
       formData,
       companyId?.toString() || "",
-      roleId === 6 ? (managementId !== null ? managementId.toString() : "0") : "", // No se pasa managementId si no es Cliente-Gerente
+      managementId?.toString() || "",
       roleId
     );
 
@@ -165,7 +165,7 @@ export default function CreateUserPage() {
                   ))}
                 </select>
               </div>
-              {roleId === 2 && ( // Si el rol es Cliente
+              {roleId === 6 && ( // Si el rol es Cliente
                 <div className="form-group-create">
                   <label>Compañía</label>
                   <select value={companyId || ""} onChange={(e) => setCompanyId(Number(e.target.value))} required>
@@ -176,7 +176,7 @@ export default function CreateUserPage() {
                   </select>
                 </div>
               )}
-              {roleId === 6 && ( // Si el rol es Cliente-Gerente
+              {roleId === 2 && ( // Si el rol es Cliente-Gerente
                 <>
                   <div className="form-group-create">
                     <label>Compañía</label>

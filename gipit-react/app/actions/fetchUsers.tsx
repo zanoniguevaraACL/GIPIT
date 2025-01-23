@@ -6,18 +6,21 @@ interface User {
     roles?: {
         nombre: string;
     };
-    users_company?: {
-        company: {
-            name: string;
+    users_management?: {
+        management: {
+            company: {
+                name: string;
+            };
         };
     }[];
 }
 
-export const fetchUsers = async (page: number, query?: string, role?: string) => {
+export const fetchUsers = async (page: number, query?: string, role?: string, companyId?: string) => {
     const params = new URLSearchParams();
     params.append('page', page.toString());
     if (query) params.append('query', query);
     if (role) params.append('role', role);
+    if (companyId) params.append('company', companyId);
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users?${params.toString()}`);
     if (!response.ok) {
@@ -33,7 +36,7 @@ export const fetchUsers = async (page: number, query?: string, role?: string) =>
             email: user.email,
             position: user.position,
             roleName: user.roles?.nombre || "Sin rol",
-            companyName: user.users_company?.[0]?.company?.name || "Sin compañía"
+            companyName: user.users_management?.[0]?.management?.company?.name || "Sin compañía"
         })),
         total: data.total
     };

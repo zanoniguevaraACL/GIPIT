@@ -7,9 +7,9 @@ export const createUserManagement = async (
   roleId?: number
 ): Promise<{ message: string; route: string; statusCode: number }> => {
   try {
-    // Solo validar managementId si es Cliente-Gerente
+    // Solo validar managementId si es Cliente
     let managementIdInt: number | null = null;
-    if (roleId === 6) {
+    if (roleId === 2 && managementId) {
       managementIdInt = parseInt(managementId, 10);
       if (isNaN(managementIdInt)) {
         throw new Error("ManagementId inválido. Debe ser un número.");
@@ -74,9 +74,36 @@ export const createUserManagement = async (
       newUserId = newUserData.id;
     }
 
-    // Solo crear user-management si es Cliente-Gerente o si se proporciona managementId
-    if ((roleId === 6 && managementIdInt !== null) || (!roleId && managementId)) {
-      const managementIdToUse = managementIdInt || parseInt(managementId, 10);
+    // Crear la relación users_company solo si es Cliente o Cliente-Gerente
+    if (roleId === 2 || roleId === 6) {
+      const companyPayload = {
+        user_id: newUserId,
+        company_id: parseInt(companyId, 10)
+      };
+
+      const companyResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/user-company`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(companyPayload),
+        }
+      );
+
+      if (!companyResponse.ok) {
+        throw new Error(`Error creando la relación usuario-compañía: ${await companyResponse.text()}`);
+      }
+    }
+
+    // Solo crear user-management si es Cliente-Gerente (roleId === 2) o si se proporciona managementId desde la vista de jefatura
+    if (roleId === 2 || (!roleId && managementId)) {
+      const managementIdToUse = parseInt(managementId, 10);
+      if (isNaN(managementIdToUse)) {
+        throw new Error("ManagementId inválido. Debe ser un número.");
+      }
+
       const payloadToUserManagement = {
         user_id: newUserId,
         management_id: managementIdToUse,
@@ -94,7 +121,8 @@ export const createUserManagement = async (
       );
 
       if (!response.ok) {
-        throw new Error(`Error creando el user-management: ${response.text()}`);
+        const errorText = await response.text();
+        throw new Error(`Error creando el user-management: ${errorText}`);
       }
     }
 
