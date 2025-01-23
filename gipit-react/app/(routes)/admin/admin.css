@@ -14,36 +14,6 @@
   margin-bottom: 20px; /* Ajusta el margen según sea necesario */
 }
 
-/* Estilos para el botón de crear usuario con colores específicos */
-.search-and-button-container .new-user-button {
-  margin-bottom: inherit;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  background-color: white; /* Fondo blanco */
-  color: #E4003F; /* Texto rojo */
-  border: 1px solid #E4003F; /* Borde rojo más fino */
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  max-width: 160px; /* Ancho máximo ajustable */
-  white-space: nowrap; /* Evita que el texto se divida en varias líneas */
-
-  /* Ajuste para la alineación vertical */
-  position: relative;
-  top: -2px; /* Ajusta este valor según sea necesario para alinear perfectamente */
-}
-
-.search-and-button-container .new-user-button:hover {
-  background-color: #fff5f7; /* Fondo rojo muy claro al pasar el cursor */
-  color: #E4003F; /* Mantener el texto rojo */
-  border-color: #c4173a; /* Borde rojo oscuro al pasar el cursor */
-}
-
 /* Otros estilos existentes */
 
 .admin-header {

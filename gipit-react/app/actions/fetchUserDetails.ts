@@ -5,6 +5,7 @@ export const fetchUserDetails = async (userId: string) => {
       headers: {
         'Content-Type': 'application/json',
       },
+      cache: 'no-store'
     });
 
     if (!response.ok) {
@@ -12,10 +13,13 @@ export const fetchUserDetails = async (userId: string) => {
     }
 
     const userDetails = await response.json();
+    console.log('Datos recibidos del servidor:', userDetails); // Para debug
 
     return {
       ...userDetails,
-      role: userDetails.roles?.nombre || "Sin rol",
+      roles: userDetails.roles || { nombre: "Sin rol" },
+      users_company: userDetails.users_company || [],
+      users_management: userDetails.users_management || []
     };
   } catch (error) {
     console.error('Error en fetchUserDetails:', error);

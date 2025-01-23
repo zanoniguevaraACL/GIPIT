@@ -29,24 +29,75 @@ function EditUserPage() {
     is_active: true,
   });
   const [roles, setRoles] = useState<Role[]>([]);
+  const [availableRoles, setAvailableRoles] = useState<Role[]>([]);
   const router = useRouter();
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${userId}`);
-      const data = await response.json();
-      setUserData(data);
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${userId}`);
+        const data = await response.json();
+        console.log("Datos del usuario cargados:", data);
+        setUserData(data);
+      } catch (error) {
+        console.error("Error al cargar datos del usuario:", error);
+      }
     };
 
     const fetchRoles = async () => {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/roles`);
-      const data = await response.json();
-      setRoles(data);
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/roles`);
+        const data = await response.json();
+        console.log("Roles cargados:", data);
+        setRoles(data);
+      } catch (error) {
+        console.error("Error al cargar roles:", error);
+      }
     };
 
     fetchUserData();
     fetchRoles();
   }, [userId]);
+
+  useEffect(() => {
+    const filterRoles = () => {
+      if (!roles.length) {
+        console.log("No hay roles disponibles");
+        return;
+      }
+
+      console.log("Rol actual:", userData.role_name);
+      console.log("Roles disponibles:", roles);
+
+      // Verificar si el usuario actual es cliente o cliente-gerente
+      const isClientRole = roles.find(role => 
+        role.id === userData.role_id && 
+        (role.nombre === 'client' || role.nombre === 'Cliente-Gerente')
+      );
+
+      console.log("¿Es rol de cliente?:", isClientRole);
+
+      if (isClientRole) {
+        // Si es cliente o cliente-gerente, solo mostrar estos roles
+        const filteredRoles = roles.filter(role => 
+          role.nombre === 'client' || role.nombre === 'Cliente-Gerente'
+        );
+        console.log("Mostrando roles de cliente:", filteredRoles);
+        setAvailableRoles(filteredRoles);
+      } else {
+        // Si no es cliente ni cliente-gerente, mostrar todos los roles excepto cliente y cliente-gerente
+        const filteredRoles = roles.filter(role => 
+          role.nombre !== 'client' && role.nombre !== 'Cliente-Gerente'
+        );
+        console.log("Mostrando roles no cliente:", filteredRoles);
+        setAvailableRoles(filteredRoles);
+      }
+    };
+
+    if (roles.length > 0) {
+      filterRoles();
+    }
+  }, [roles, userData.role_id]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -120,9 +171,7 @@ function EditUserPage() {
                 onChange={(e) => {
                   const selectedRoleId = Number(e.target.value);
                   const selectedRole = roles.find(role => role.id === selectedRoleId);
-                  console.log("Rol seleccionado ID:", selectedRoleId);
                   if (selectedRole) {
-                    console.log("Rol seleccionado nombre:", selectedRole.nombre);
                     setUserData({ 
                       ...userData, 
                       role_id: selectedRoleId,
@@ -133,7 +182,7 @@ function EditUserPage() {
                 required
               >
                 <option value="" disabled>Selecciona un rol</option>
-                {roles.map(role => (
+                {availableRoles.map(role => (
                   <option key={role.id} value={role.id}>{role.nombre}</option>
                 ))}
               </select>

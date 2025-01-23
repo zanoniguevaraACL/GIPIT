@@ -14,6 +14,16 @@ interface UserData {
   role: string;
   is_active: boolean;
   roles?: { nombre: string };
+  companyName?: string;
+  managementName?: string;
+  users_management?: {
+    management: {
+      name: string;
+      company: {
+        name: string;
+      };
+    };
+  }[];
 }
 
 export default function UserDetailsPage() {
@@ -59,6 +69,16 @@ export default function UserDetailsPage() {
         <p><strong>Cargo:</strong> {userData.position}</p>
         <p><strong>Rol:</strong> {userData.roles?.nombre || "Sin rol"}</p>
         <p><strong>Estado:</strong> {userData.is_active ? "Activo" : "Inactivo"}</p>
+        
+        {/* Mostrar compañía si el rol es Cliente (6) o Cliente-Gerente (2) */}
+        {(userData.roles?.nombre === "client" || userData.roles?.nombre === "Cliente-Gerente") && (
+          <p><strong>Compañía:</strong> {userData.users_management?.[0]?.management?.company?.name || "Sin compañía"}</p>
+        )}
+        
+        {/* Mostrar jefatura solo si el rol es Cliente (6) */}
+        {userData.roles?.nombre === "client" && (
+          <p><strong>Jefatura:</strong> {userData.users_management?.[0]?.management?.name || "Sin jefatura"}</p>
+        )}
       </div>
       <div className="button-container-idadmin">
         <Button text="Modificar" type="primary" onClick={handleEditUser} />

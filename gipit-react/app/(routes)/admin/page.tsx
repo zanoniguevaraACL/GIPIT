@@ -30,11 +30,12 @@ function AdminPage() {
     const page = parseInt(searchParams.get('page') || '1');
     const query = searchParams.get('query') || '';
     const role = searchParams.get('role') || '';
+    const companyId = searchParams.get('companyId') || '';
 
     useEffect(() => {
         const loadData = async () => {
             try {
-                const userData = await fetchUsers(page, query, role);
+                const userData = await fetchUsers(page, query, role, companyId);
                 setUsers(userData.batch);
                 setTotalUsers(userData.total);
                 const roleData = await fetchRoles();
@@ -45,11 +46,14 @@ function AdminPage() {
         };
 
         loadData();
-    }, [page, query, role]);
+    }, [page, query, role, companyId]);
 
-    const handleSearch = (term: string) => {
+    const handleSearch = (term: string, selectedCompanyId?: string) => {
         const newSearchParams = new URLSearchParams(searchParams.toString());
         newSearchParams.set('query', term);
+        if (selectedCompanyId) {
+            newSearchParams.set('companyId', selectedCompanyId);
+        }
         newSearchParams.set('page', '1');
         window.history.replaceState({}, '', `${window.location.pathname}?${newSearchParams}`);
     };
@@ -72,19 +76,18 @@ function AdminPage() {
 
     return (
         <div className="admin-container">
-            <div className="admin-header">
-                <div className="admin-header-content">
-                    <Button text="Crear Usuario" href="/admin/create" type="primary" />
-                </div>
+            <div className="search-and-button-container">
+                <SearchBar 
+                    roleOptions={roleOptions}
+                    companyFilter={true}
+                    defaultRole=""
+                    onSearch={handleSearch}
+                />
+                <Button text="Crear Usuario" href="/admin/create" type="secondary" />
             </div>
-            <SearchBar 
-                roleOptions={roleOptions}
-                defaultRole=""
-                onSearch={handleSearch}
-            />
             <DataGrid data={{ columns, total: totalUsers, batch: users }} baseUrl="/admin" />
         </div>
     );
 }
 
-export default AdminPage;   
+export default AdminPage;
