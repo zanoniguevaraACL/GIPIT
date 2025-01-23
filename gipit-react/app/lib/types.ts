@@ -6,7 +6,7 @@ export interface RouteItem {
   text: string;
   href: string;
   selected?: boolean;
-  roles: ("client" | "kam" | "gest" | "mkt" | "admin")[];
+  roles: ("client" | "kam" | "gest" | "mkt" | "admin" | "Cliente-Gerente")[];
 }
 
 export interface UserInfoProps {
