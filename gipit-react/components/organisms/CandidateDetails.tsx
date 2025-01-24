@@ -104,7 +104,8 @@ function CandidateDetails({
          )}
 
         <div className="right-buttons-container">
-          {!isInternal ? (
+          {/* cambio temporal */}
+          {isInternal ? (
             <Button
               text={
                 candidateDetails.clientNote &&

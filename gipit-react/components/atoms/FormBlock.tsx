@@ -77,6 +77,7 @@ function FormItem({ field }: { field: FormInputProps }) {
             name={field.name} 
             defaultValue={field.defaultValue || ""}
             onChange={field.onChange} // Aseguramos que el onChange se pase correctamente
+            disabled={field.disabled}
           >
             {field.options?.map((option, index) => (
               <option key={index} value={option.value}>
@@ -152,7 +153,7 @@ function FormBlock({ rows, onSubmit, validationSchema }: FormBlockProps) {
               validationErrors.push(error.message);
               console.log(error);
             });
-            
+
             validationErrors.forEach((e) => {
               toast.error(e);
             });
