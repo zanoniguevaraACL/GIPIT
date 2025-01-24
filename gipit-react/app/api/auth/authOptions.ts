@@ -47,6 +47,7 @@ export const authOptions: AuthOptions = {
         );
         const managementInfo = await managementResponse.json();
 
+        user.id = userInfo.id;
         user.role = userInfo.roles.nombre;
         user.position = userInfo.position;
         user.managements = managementInfo.map((um: { management: Management }) => ({
@@ -67,6 +68,7 @@ export const authOptions: AuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         console.log('User role in JWT:', user.role);
+        token.id = user.id;
         token.role = user.role;
         token.position = user.position ;
         token.managements = user.managements ;
@@ -74,6 +76,7 @@ export const authOptions: AuthOptions = {
       return token;
     },
     async session({ token, session }) {
+      session.user.id = token.id as number;
       if (typeof token.role === "string") {
         session.user.role = token.role;
       } else {
