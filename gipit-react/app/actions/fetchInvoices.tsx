@@ -24,16 +24,39 @@ export const fetchAllPreInvoices = async (page: number, query?: string, status?:
       role: session?.user?.role,
       managements: session?.user?.managements
     });
+    
     const isClient = session?.user?.role === 'client';
     // Solo aplicamos el filtro de compañía si el usuario es cliente
     const companyId = session?.user?.role === 'client' ? 
       session?.user?.managements?.[0]?.company?.id : 
       null;
+    const isClientManager = session?.user?.role === 'Cliente-Gerente';
+
+    let effectiveCompanyId = null;
+    let managementId = null;
     
     console.log('Session:', session); 
     console.log('Role:', session?.user?.role);
     console.log('Is Client:', isClient);
     console.log('Company ID:', companyId);
+
+    try {
+      if (isClientManager) {
+        // Para Cliente-Gerente, obtener la compañía de users_company
+        const userCompaniesResponse = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/users/companies/${session?.user?.id}`
+        );
+        
+        const userCompanies = await userCompaniesResponse.json();
+        
+        effectiveCompanyId = userCompanies[0]?.company_id;
+      } else if (isClient) {
+        // Para client, obtener el ID de su management
+        managementId = session?.user?.managements?.[0]?.id;
+      }
+    } catch (companyFetchError) {
+      console.error('Error fetching company:', companyFetchError);
+    }
     
     const params = new URLSearchParams();
     params.append('page', page.toString());
@@ -44,8 +67,10 @@ export const fetchAllPreInvoices = async (page: number, query?: string, status?:
       params.append('userRole', session.user.role);
     }
     
-    if (session?.user?.role === 'client' && session?.user?.managements?.[0]?.company?.id) {
-      params.append('companyId', session.user.managements[0].company.id.toString());
+    if (isClientManager && effectiveCompanyId) {
+      params.append('companyId', effectiveCompanyId.toString());
+    } else if (isClient && managementId) {
+      params.append('managementId', managementId.toString());
     }
 
     const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/preinvoices?${params.toString()}`;
