@@ -117,14 +117,38 @@ export const processSchema = z.object({
     .min(1, "La descripción de la vacante es obligatoria"), // Solo valida que no esté vacío,
   });
 
-  export const noteSchema = z.object({
-    techSkills: z
-      .string()
-      .min(1, "Las habilidades técnicas son obligatorias y deben ser un número válido."),
-    softSkills: z
-      .string()
-      .min(1, "Las habilidades blandas son obligatorias y deben ser un número válido."),
-    comment: z
-      .string()
-      .min(1, "El comentario es obligatorio."),
-  });
+// Esquema para creación de notas (todos los campos obligatorios)
+export const createNoteSchema = z.object({
+  techSkills: z
+    .string()
+    .refine((val) => {
+      const num = parseFloat(val);
+      return !isNaN(num) && num >= 1 && num <= 7;
+    }, "Las habilidades técnicas deben ser un número entre 1 y 7."),
+  softSkills: z
+    .string()
+    .refine((val) => {
+      const num = parseFloat(val);
+      return !isNaN(num) && num >= 1 && num <= 7;
+    }, "Las habilidades blandas deben ser un número entre 1 y 7."),
+  comment: z.string().min(1, "El comentario es obligatorio."),
+});
+
+// Esquema para edición de notas (campos opcionales)
+export const editNoteSchema = z.object({
+  techSkills: z
+    .string()
+    .optional()
+    .refine(
+      (val) => !val || (!isNaN(parseFloat(val)) && parseFloat(val) >= 1 && parseFloat(val) <= 7),
+      "Las habilidades técnicas deben ser un número entre 1 y 7."
+    ),
+  softSkills: z
+    .string()
+    .optional()
+    .refine(
+      (val) => !val || (!isNaN(parseFloat(val)) && parseFloat(val) >= 1 && parseFloat(val) <= 7),
+      "Las habilidades blandas deben ser un número entre 1 y 7."
+    ),
+  comment: z.string().optional(),
+});

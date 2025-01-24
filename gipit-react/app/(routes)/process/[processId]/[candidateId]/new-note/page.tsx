@@ -3,7 +3,7 @@ import Modal from "@/components/molecules/Modal";
 import { FormInputsRow } from "@/app/lib/types";
 import { handleCreateNote } from "@/app/actions/handleCreateNote";
 import { usePathname, useSearchParams } from "next/navigation";
-import { noteSchema } from "@/app/lib/validationSchemas";
+import { createNoteSchema } from "@/app/lib/validationSchemas";
 
 function Page() {
   const actualRoute = usePathname();
@@ -17,13 +17,13 @@ function Page() {
     {
       label: "Conocimientos técnicos",
       placeholder: "Inserte un valor numérico",
-      type: "number",
+      type: "text",
       name: "techSkills",
     },
     {
       label: "Habilidades blandas",
       placeholder: "Inserte un valor numérico",
-      type: "number",
+      type: "text",
       name: "softSkills",
     },
     {
@@ -52,7 +52,7 @@ function Page() {
     return await handleCreateNote(formData, actualRoute, Number(candidateProcessId));
   };
 
-  return <Modal rows={fields} onSubmit={onSubmit} title="Nueva Nota" validationSchema={noteSchema}/>;
+  return <Modal rows={fields} onSubmit={onSubmit} title="Nueva Nota" validationSchema={createNoteSchema}/>;
 }
 
 export default Page;
