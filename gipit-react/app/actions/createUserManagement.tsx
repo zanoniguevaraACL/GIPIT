@@ -75,7 +75,7 @@ export const createUserManagement = async (
     }
 
     // Crear la relación users_company solo si es Cliente o Cliente-Gerente
-    if (roleId === 2 || roleId === 6) {
+    if (roleId === 6) {
       const companyPayload = {
         user_id: newUserId,
         company_id: parseInt(companyId, 10)
@@ -97,8 +97,8 @@ export const createUserManagement = async (
       }
     }
 
-    // Solo crear user-management si es Cliente-Gerente (roleId === 2) o si se proporciona managementId desde la vista de jefatura
-    if (roleId === 2 || (!roleId && managementId)) {
+    // Crear la relación users_management si hay un managementId
+    if (managementId) {
       const managementIdToUse = parseInt(managementId, 10);
       if (isNaN(managementIdToUse)) {
         throw new Error("ManagementId inválido. Debe ser un número.");

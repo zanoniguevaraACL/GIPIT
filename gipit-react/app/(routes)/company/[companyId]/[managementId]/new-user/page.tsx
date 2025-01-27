@@ -9,6 +9,7 @@ function Page() {
   const params = useParams();
   const managementId = params.managementId as string;
   const companyId = params.companyId as string;
+  const roleId = 6; // Rol de cliente
   
   const fields: FormInputsRow = [
     {
@@ -43,7 +44,7 @@ function Page() {
     <Modal
       rows={fields}
       onSubmit={(formData) =>
-        createUserManagement(formData, companyId, managementId)
+        createUserManagement(formData, companyId, managementId, roleId)
       }
       validationSchema={userSchema}
     />
