@@ -13,6 +13,11 @@ interface User {
             };
         };
     }[];
+    users_company?: {
+        company: {
+            name: string;
+        };
+    }[];
 }
 
 export const fetchUsers = async (page: number, query?: string, role?: string, companyId?: string) => {
@@ -30,14 +35,27 @@ export const fetchUsers = async (page: number, query?: string, role?: string, co
     const data = await response.json();
     
     return {
-        batch: data.users.map((user: User) => ({
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            position: user.position,
-            roleName: user.roles?.nombre || "Sin rol",
-            companyName: user.users_management?.[0]?.management?.company?.name || "Sin compañía"
-        })),
+        batch: data.users.map((user: User) => {
+            let companyName = "Sin compañía";
+            
+            // Verificar primero users_company (Cliente)
+            if (user.users_company && user.users_company.length > 0) {
+                companyName = user.users_company[0].company.name;
+            }
+            // Si no tiene users_company, verificar users_management (Cliente-Gerente)
+            else if (user.users_management && user.users_management.length > 0) {
+                companyName = user.users_management[0].management.company.name;
+            }
+
+            return {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                position: user.position,
+                roleName: user.roles?.nombre || "Sin rol",
+                companyName: companyName
+            };
+        }),
         total: data.total
     };
 };
