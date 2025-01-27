@@ -18,6 +18,17 @@ interface UserData {
   is_active: boolean;
 }
 
+interface Management {
+  id: number;
+  name: string;
+  company_id: number;
+}
+
+interface Company {
+  id: number;
+  name: string;
+}
+
 function EditUserPage() {
   const { userId } = useParams();
   const [userData, setUserData] = useState<UserData>({
@@ -30,6 +41,11 @@ function EditUserPage() {
   });
   const [roles, setRoles] = useState<Role[]>([]);
   const [availableRoles, setAvailableRoles] = useState<Role[]>([]);
+  const [companies, setCompanies] = useState<Company[]>([]);
+  const [managements, setManagements] = useState<Management[]>([]);
+  const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
+  const [selectedManagementId, setSelectedManagementId] = useState<string | null>(null);
+  const [filteredManagements, setFilteredManagements] = useState<Management[]>([]);
   const router = useRouter();
 
   useEffect(() => {
@@ -99,17 +115,45 @@ function EditUserPage() {
     }
   }, [roles, userData.role_id]);
 
+  // Efecto para cargar compañías y jefaturas
+  useEffect(() => {
+    const loadCompaniesAndManagements = async () => {
+      try {
+        const companiesResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/company`);
+        const companiesData = await companiesResponse.json();
+        setCompanies(companiesData);
+
+        const managementsResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/management`);
+        const managementsData = await managementsResponse.json();
+        setManagements(managementsData);
+      } catch (error) {
+        console.error("Error cargando datos:", error);
+      }
+    };
+
+    loadCompaniesAndManagements();
+  }, []);
+
+  // Efecto para filtrar jefaturas cuando se selecciona una compañía
+  useEffect(() => {
+    if (selectedCompanyId) {
+      const filtered = managements.filter(management => 
+        management.company_id === parseInt(selectedCompanyId)
+      );
+      setFilteredManagements(filtered);
+    } else {
+      setFilteredManagements([]);
+    }
+  }, [selectedCompanyId, managements]);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
-    const { role_name, ...userDataWithoutRoleName } = userData;
-
     const dataToSend = {
-      ...userDataWithoutRoleName,
-      roles: { nombre: role_name },
+      ...userData,
+      company_id: selectedCompanyId,
+      management_id: selectedManagementId
     };
-
-    console.log("Datos a enviar:", dataToSend);
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${userId}`, {
       method: "PUT",
@@ -177,7 +221,7 @@ function EditUserPage() {
                       role_id: selectedRoleId,
                       role_name: selectedRole.nombre
                     });
-                  }
+                  } 
                 }}
                 required
               >
@@ -198,6 +242,58 @@ function EditUserPage() {
                 <option value="inactivo">Inactivo</option>
               </select>
             </div>
+            {userData.role_id === 6 && ( // Cliente
+              <div className="form-group-adedit">
+                <label>Compañía</label>
+                <select 
+                  value={selectedCompanyId || ""} 
+                  onChange={(e) => setSelectedCompanyId(e.target.value)}
+                  required
+                >
+                  <option value="">Seleccione una compañía</option>
+                  {companies.map((company) => (
+                    <option key={company.id} value={company.id}>
+                      {company.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+            {userData.role_id === 2 && ( // Cliente-Gerente
+              <>
+                <div className="form-group-adedit">
+                  <label>Compañía</label>
+                  <select 
+                    value={selectedCompanyId || ""} 
+                    onChange={(e) => setSelectedCompanyId(e.target.value)}
+                    required
+                  >
+                    <option value="">Seleccione una compañía</option>
+                    {companies.map((company) => (
+                      <option key={company.id} value={company.id}>
+                        {company.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="form-group-adedit">
+                  <label>Jefatura</label>
+                  <select 
+                    value={selectedManagementId || ""} 
+                    onChange={(e) => setSelectedManagementId(e.target.value)}
+                    required
+                    disabled={!selectedCompanyId}
+                  >
+                    <option value="">Seleccione una jefatura</option>
+                    {filteredManagements.map((management) => (
+                      <option key={management.id} value={management.id}>
+                        {management.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </>
+            )}
           </div>
           <div className="button-container-adedit">
             <button type="submit">Actualizar</button>
