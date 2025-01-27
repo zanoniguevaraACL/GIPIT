@@ -2,7 +2,7 @@
 
 import Modal from "@/components/molecules/Modal";
 import { FormInputsRow, FormResponse } from "@/app/lib/types";
-import { updateProfessionalEvaluation } from "@/app/actions/updateProfessionalEvaluation";
+import { updateProfessionalEvaluation } from "@/app/actions/createProfessionalEvaluation";
 import { fetchProfessionalDetails } from "@/app/actions/fetchProfessionalDetails";
 
 export default function Page({ params }: { params: { proId: string } }) {
@@ -26,10 +26,10 @@ export default function Page({ params }: { params: { proId: string } }) {
 
       const evaluationData = {
         candidate_management_id: managementId,
-        eval_stack: parseInt(formData.get('eval_stack') as string) || 0,
-        eval_comunicacion: parseInt(formData.get('eval_comunicacion') as string) || 0,
-        eval_motivacion: parseInt(formData.get('eval_motivacion') as string) || 0,
-        eval_cumplimiento: parseInt(formData.get('eval_cumplimiento') as string) || 0,
+        eval_stack: parseFloat(formData.get('eval_stack') as string) || 0,
+        eval_comunicacion: parseFloat(formData.get('eval_comunicacion') as string) || 0,
+        eval_motivacion: parseFloat(formData.get('eval_motivacion') as string) || 0,
+        eval_cumplimiento: parseFloat(formData.get('eval_cumplimiento') as string) || 0,
         date: new Date(formData.get('date') as string).toISOString(),
         benefit: formData.get('benefit') as string || '',
         client_comment: formData.get('client_comment') as string || '',
@@ -74,6 +74,7 @@ export default function Page({ params }: { params: { proId: string } }) {
         type: "number",
         name: "eval_stack",
         minMax: [0, 7],
+        step: "0.1", // Permite decimales
       },
       {
         label: "Habilidades de comunicación",
@@ -81,6 +82,7 @@ export default function Page({ params }: { params: { proId: string } }) {
         type: "number",
         name: "eval_comunicacion",
         minMax: [0, 7],
+        step: "0.1",
       },
     ],
     [
@@ -90,6 +92,7 @@ export default function Page({ params }: { params: { proId: string } }) {
         type: "number",
         name: "eval_cumplimiento",
         minMax: [0, 7],
+        step: "0.1",
       },
       {
         label: "Proactividad y motivación",
@@ -97,6 +100,7 @@ export default function Page({ params }: { params: { proId: string } }) {
         type: "number",
         name: "eval_motivacion",
         minMax: [0, 7],
+        step: "0.1",
       },
     ],
     [
@@ -150,4 +154,3 @@ export default function Page({ params }: { params: { proId: string } }) {
     />
   );
 }
-
