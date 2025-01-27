@@ -8,21 +8,18 @@ import './userid.css'; // Importa el CSS
 
 // Define la interfaz para los datos del usuario
 interface UserData {
+  id: number;
   name: string;
   email: string;
   position: string;
-  role: string;
   is_active: boolean;
-  roles?: { nombre: string };
-  companyName?: string;
-  managementName?: string;
-  users_management?: {
-    management: {
-      name: string;
-      company: {
-        name: string;
-      };
-    };
+  roles: { nombre: string };
+  companies: { companyId: number; companyName: string }[];
+  managements: {
+    managementId: number;
+    managementName: string;
+    companyId: number;
+    companyName: string;
   }[];
 }
 
@@ -36,7 +33,17 @@ export default function UserDetailsPage() {
     const loadUserData = async () => {
       try {
         const data = await fetchUserDetails(userId as string);
-        setUserData(data);
+        console.log("Datos del usuario cargados:", {
+          nombre: data.name,
+          email: data.email,
+          cargo: data.position,
+          rol: data.roles?.nombre,
+          estado: data.is_active,
+          compañía: data.companies?.[0]?.company?.name,
+          jefatura: data.managements?.[0]?.management?.name
+        });
+        console.log("users_company:", data.companies);
+        setUserData(data );
       } catch (error) {
         console.error("Error al cargar los detalles del usuario:", error);
       } finally {
@@ -71,13 +78,16 @@ export default function UserDetailsPage() {
         <p><strong>Estado:</strong> {userData.is_active ? "Activo" : "Inactivo"}</p>
         
         {/* Mostrar compañía si el rol es Cliente (6) o Cliente-Gerente (2) */}
-        {(userData.roles?.nombre === "client" || userData.roles?.nombre === "Cliente-Gerente") && (
-          <p><strong>Compañía:</strong> {userData.users_management?.[0]?.management?.company?.name || "Sin compañía"}</p>
+        {(userData.roles?.nombre === "Cliente-Gerente") && (
+          <p><strong>Compañía:</strong> {userData.companies?.[0]?.companyName || "Sin compañía"}</p>
         )}
         
         {/* Mostrar jefatura solo si el rol es Cliente (6) */}
         {userData.roles?.nombre === "client" && (
-          <p><strong>Jefatura:</strong> {userData.users_management?.[0]?.management?.name || "Sin jefatura"}</p>
+          <>
+            <p><strong>Compañía:</strong> {userData.managements?.[0]?.companyName || "Sin compañía"}</p> 
+            <p><strong>Jefatura:</strong> {userData.managements?.[0]?.managementName || "Sin jefatura"}</p>
+          </>
         )}
       </div>
       <div className="button-container-idadmin">
