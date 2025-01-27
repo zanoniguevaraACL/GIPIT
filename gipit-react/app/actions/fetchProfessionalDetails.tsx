@@ -1,4 +1,3 @@
-
 // Función para formatear las fechas en formato DD/MM/YYYY
 const formatDate = (dateString: string | null): string | null => {
     if (!dateString) return null;
@@ -51,6 +50,7 @@ const formatDate = (dateString: string | null): string | null => {
   
       // Extraer específicamente los valores de evaluación si están disponibles
       const evaluationData = {
+        id: postSalesActivities?.id || null,
         date: formattedDate, // Fecha formateada
         eval_stack: postSalesActivities?.eval_stack || null,
         eval_comunicacion: postSalesActivities?.eval_comunicacion || null,
@@ -61,6 +61,7 @@ const formatDate = (dateString: string | null): string | null => {
       // Devuelvo los detalles del profesional junto con las evaluaciones
       return {
         ...professionalDetails,
+        candidateName: professionalDetails?.candidates?.name || null, // Accedemos correctamente al nombre del candidato
         evaluationData, // Incluimos los datos de la evaluación con fecha formateada
       };
   

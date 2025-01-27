@@ -211,7 +211,7 @@ export default function Page() {
       {
         label: "teléfono",
         placeholder: "teléfono",
-        type: "text",
+        type: "number",
         name: "phone",
         required: true, 
       },

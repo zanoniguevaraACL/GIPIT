@@ -35,6 +35,9 @@ export interface FormInputProps {
   value?: string | number;
   defaultValue?: string | number;
   href?: string;
+  step?: string;
+  min?: string;
+  max?: string;
   height?: string;
   options?: { name: string; value: number | string }[];
   minMax?: number[];
@@ -159,4 +162,14 @@ export interface Evaluation {
   eval_cumplimiento?: number;
   acciones_acl?: string;
   proyecction?: string;
+}
+
+export interface ProfessionalDetails {
+  id: number;
+  candidate_id: number;
+  management_id: number;
+  status: string;
+  start_date: string;
+  candidateName?: string; // Asegúrate de incluir esta propiedad si la usas
+  // ... otras propiedades que necesites ...
 }

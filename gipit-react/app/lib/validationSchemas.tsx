@@ -49,7 +49,6 @@ export const managementSchema = z.object({
     }),
 });
 
-
 export const candidateSchema = z.object({
   name: z
     .string()
@@ -67,12 +66,12 @@ export const candidateSchema = z.object({
     }),
   address: z.string().min(5, "La dirección debe tener mínimo 5 caracteres"),
   cv: z
-  .custom<File | null>((value) => value instanceof File, {
-    message: "Debe subir un archivo de CV",
-  })
-  .refine((file) => file !== null && file.size > 0 && file.name.trim() !== "", {
-    message: "Debe subir un archivo válido de CV",
-  }),
+    .custom<File | null>((value) => value instanceof File, {
+      message: "Debe subir un archivo de CV",
+    })
+    .refine((file) => file !== null && file.size > 0 && file.name.trim() !== "", {
+      message: "Debe subir un archivo válido de CV",
+    }),
 });
 
 export const editCandidateSchema = z.object({
@@ -100,7 +99,7 @@ export const processSchema = z.object({
     .refine((val) => !isNaN(val), {
       message: "Selecciona un cliente válido",
     }),
-    management_id: z
+  management_id: z
     .string()
     .refine((val) => val !== "", {
       message: "Selecciona una jefatura válida", // Mensaje claro para el usuario
@@ -115,7 +114,7 @@ export const processSchema = z.object({
   jobOfferDescription: z
     .string()
     .min(1, "La descripción de la vacante es obligatoria"), // Solo valida que no esté vacío,
-  });
+});
 
 // Esquema para creación de notas (todos los campos obligatorios)
 export const createNoteSchema = z.object({
@@ -151,4 +150,34 @@ export const editNoteSchema = z.object({
       "Las habilidades blandas deben ser un número entre 1 y 7."
     ),
   comment: z.string().optional(),
+});
+
+export const evaluationSchema = z.object({
+
+  eval_comunicacion: z
+    .string()
+    .refine((val) => {
+      const isValidNumber = /^[0-7](\.[0-9])?$/g.test(val); // Acepta enteros del 0 al 7 o un decimal
+      return isValidNumber;
+    }, "El valor debe ser un número entre 0 y 7 con hasta 1 decimal, usando solo punto como separador"),
+
+  eval_motivacion: z
+    .string()
+    .refine((val) => {
+      const isValidNumber = /^[0-7](\.[0-9])?$/g.test(val); // Acepta enteros del 0 al 7 o un decimal
+      return isValidNumber;
+    }, "El valor debe ser un número entre 0 y 7 con hasta 1 decimal, usando solo punto como separador"),
+
+  eval_cumplimiento: z
+    .string()
+    .refine((val) => {
+      const isValidNumber = /^[0-7](\.[0-9])?$/g.test(val); // Acepta enteros del 0 al 7 o un decimal
+      return isValidNumber;
+    }, "El valor debe ser un número entre 0 y 7 con hasta 1 decimal, usando solo punto como separador"),
+
+  benefit: z.string().optional(),
+  client_comment: z.string().optional(),
+  acciones_acl: z.string().optional(),
+  proyecction: z.string().optional(),
+  date: z.string(),
 });
