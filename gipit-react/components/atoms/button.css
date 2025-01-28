@@ -47,4 +47,13 @@
       color: var(--primary);
     }
   }
+
+  &.delete {
+    background-color: var(--danger);
+    color: white;
+  }
+
+  &.delete:hover {
+    background-color: var(--dark-danger);
+  }
 }
