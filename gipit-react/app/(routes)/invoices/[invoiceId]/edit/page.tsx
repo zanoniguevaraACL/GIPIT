@@ -222,6 +222,10 @@ export default function Page({ params }: { params: { invoiceId: string } }) {
     );
   };
 
+  const handleRemoveProfessional = (id: number) => {
+    setAddedProfessionals(prevPros => prevPros.filter(pro => pro.id !== id));
+  };
+
   const calculateTotal = () => {
     return addedProfessionals.reduce((total, pro) => {
         const subtotal = pro.subtotal || 0;
@@ -366,6 +370,7 @@ export default function Page({ params }: { params: { invoiceId: string } }) {
                     <th>VAT</th>
                     <th>Total</th>
                     <th>Nota</th>
+                    <th>Acciones</th> {/* Nueva columna para acciones */}
                   </tr>
                 </thead>
                 <tbody>
@@ -394,6 +399,13 @@ export default function Page({ params }: { params: { invoiceId: string } }) {
                           type="text"
                           value={pro.notes || ''}
                           onChange={(e) => handleNotesChange(pro.id, e.target.value)}
+                        />
+                      </td>
+                      <td>
+                        <Button 
+                          text="Eliminar" 
+                          type="secondary" 
+                          onClick={() => handleRemoveProfessional(pro.id)} 
                         />
                       </td>
                     </tr>
