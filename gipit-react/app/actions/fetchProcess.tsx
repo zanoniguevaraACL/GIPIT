@@ -1,5 +1,7 @@
 "use server";
 
+import { Session } from "next-auth";
+
 type Proceso = {
   id: number;
   name: string;
@@ -14,7 +16,7 @@ type Proceso = {
   company: string;
 };
 
-export const fetchProcess = async (page: number, query?: string, status?: string, companyId?: number) => {
+export const fetchProcess = async (page: number, query?: string, status?: string, companyId?: number, session?: Session) => {
   try {
     
     if (page < 1) {
@@ -33,6 +35,12 @@ export const fetchProcess = async (page: number, query?: string, status?: string
     }
     if (companyId) {
       url.searchParams.set("companyId", companyId.toString());
+    }
+    if (session?.user?.role) {
+      url.searchParams.set("userRole", session.user.role);
+    }
+    if (session?.user?.managements?.[0]?.company?.id) {
+      url.searchParams.set("userCompanyId", session.user.managements[0].company.id.toString());
     }
 
     const response = await fetch(url.toString(), {

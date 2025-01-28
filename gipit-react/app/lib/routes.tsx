@@ -15,7 +15,7 @@ export const routes: RouteItem[] = [
     icon: <IconLayoutDashboard />,
     text: "Dashboard",
     href: "/dashboard",
-    roles: ["client"],
+    roles: ["client", "Cliente-Gerente"],
   },
   {
     // solo para profesionales internos autorizados
@@ -28,25 +28,25 @@ export const routes: RouteItem[] = [
     icon: <IconUserSearch />,
     text: "Procesos",
     href: "/process",
-    roles: ["client", "kam", "gest", "mkt", "admin"],
+    roles: ["client", "kam", "gest", "mkt", "admin", "Cliente-Gerente"],
   },
   {
     icon: <IconUserScan />,
     text: "Profesionales",
     href: "/pros",
-    roles: ["client", "kam", "gest", "mkt", "admin"],
+    roles: ["client", "kam", "gest", "mkt", "admin", "Cliente-Gerente"],
   },
   {
     icon: <IconReceipt2 />,
     text: "Facturación",
     href: "/invoices",
-    roles: ["client", "kam", "gest", "mkt", "admin"],
+    roles: ["client", "kam", "gest", "mkt", "admin", "Cliente-Gerente"],
   },
   {
     icon: <IconSpeakerphone />,
     text: "Noticias",
     href: "/news",
-    roles: ["client", "kam", "gest", "mkt", "admin"],
+    roles: ["client", "kam", "gest", "mkt", "admin", "Cliente-Gerente"],
   },
   {
     // solo para el admin
@@ -60,6 +60,6 @@ export const routes: RouteItem[] = [
   {
     text: "Notificaciones",
     href: "/notifications",
-    roles: ["client", "kam", "gest", "mkt", "admin"],
+    roles: ["client", "kam", "gest", "mkt", "admin", "Cliente-Gerente"],
   },
 ];

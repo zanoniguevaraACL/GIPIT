@@ -1,43 +1,55 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import ConfirmationModal from "@/components/molecules/ConfirmationModal";
 
 export default function DeleteInvoicePage({ params }: { params: { invoiceId: string } }) {
   const router = useRouter();
   const { invoiceId } = params;
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(true);
 
-  useEffect(() => {
-    const deleteInvoice = async () => {
-      try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/preinvoices/${invoiceId}`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ action: 'reject' }),
-        });
+  const handleDeleteInvoice = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/preinvoices/${invoiceId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ action: 'reject' }),
+      });
 
-        if (response.ok) {
-          const data = await response.json();
-          console.log(data.message);
-          // Redirigir a la página de facturas
-          setLoading(false);
-          window.location.href = '/invoices';
-        } else {
-          const errorData = await response.json();
-          console.error('Error al rechazar la factura:', errorData.error);
-          setLoading(false);
-        }
-      } catch (error) {
-        console.error('Error al rechazar la factura:', error);
-        setLoading(false);
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data.message);
+        router.push('/invoices');
+      } else {
+        const errorData = await response.json();
+        console.error('Error al rechazar la factura:', errorData.error);
       }
-    };
+    } catch (error) {
+      console.error('Error al rechazar la factura:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    deleteInvoice();
-  }, [invoiceId, router]);
+  const handleConfirm = async () => {
+    await handleDeleteInvoice();
+    setIsModalOpen(false);
+  };
 
-  return <div>{loading ? 'Rechazando factura, por favor espera...' : 'Factura rechazada.'}</div>;
+  return (
+    <>
+      <ConfirmationModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={handleConfirm}
+        message="¿Estás seguro que deseas rechazar esta factura?"
+      />
+      {loading && <div>Rechazando factura, por favor espera...</div>}
+    </>
+  );
 }

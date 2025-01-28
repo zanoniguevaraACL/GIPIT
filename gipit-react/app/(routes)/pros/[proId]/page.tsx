@@ -23,16 +23,18 @@ interface CandidateDetails {
   position: string;
   rate?: string;
   post_sales_activities: Array<{
+    id: number;
     date: string;
     eval_stack: number;
     eval_comunicacion: number;
     eval_motivacion: number;
-    eval_cumplimiento: number;
+    eval_cumplimiento: number | string; // Accept both until fixed in API
   }>;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface EvaluationItem {
+  id: number;
   date: string;
   eval_stack: number;
   eval_comunicacion: number;
@@ -60,7 +62,7 @@ const dashboardData: DashboardData = {
     hasChart: true,
     chartData: {
       labels: ["Enero", "Febrero", "Marzo", "Abril", "Mayo"],
-      values: [5, 6, 7, 4, 5],
+      values: [],
       diferencia: null
     },
     icon: <IconAward />,
@@ -125,9 +127,16 @@ export default async function Page(props: {
   }
 
   // Obtenemos los datos de evaluación y los ordenamos por fecha
-  const evaluationData = [...professionalDetails.post_sales_activities].sort(
-    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-  );
+  const evaluationData = [...professionalDetails.post_sales_activities]
+    .map(item => ({
+      ...item,
+      // Ensure all evaluation fields are numbers
+      eval_stack: Number(item.eval_stack),
+      eval_comunicacion: Number(item.eval_comunicacion),
+      eval_motivacion: Number(item.eval_motivacion),
+      eval_cumplimiento: Number(item.eval_cumplimiento)
+    }))
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
   // Calculamos los promedios
   const eval_motivacionPromedio = evaluationData.length > 0
@@ -169,6 +178,22 @@ export default async function Page(props: {
 
   // Calculamos el promedio general para cada evaluación
   if (evaluationData.length > 0) {
+    // Primero, calculamos los promedios individuales
+    const valoresPorEvaluacion = evaluationData.map(item => 
+      parseFloat(((item.eval_stack + 
+        item.eval_comunicacion + 
+        item.eval_cumplimiento + 
+        item.eval_motivacion) / 4).toFixed(1))
+    );
+
+    // Calcular el promedio de los promedios
+    const totalPromedios = valoresPorEvaluacion.reduce((sum, value) => sum + value, 0);
+    const promedioGeneral = (totalPromedios / valoresPorEvaluacion.length); // Mantener como número
+    
+    console.log("Valores por evaluación:", valoresPorEvaluacion);
+    console.log("Promedio general:", promedioGeneral);
+
+    // Asignamos los valores calculados a la tarjeta
     dashboardData.card1.chartData = {
       labels: evaluationData.map(item => 
         new Date(item.date).toLocaleDateString("es-ES", {
@@ -177,15 +202,11 @@ export default async function Page(props: {
           year: "numeric",
         })
       ),
-      values: evaluationData.map(item => 
-        parseFloat(((
-          item.eval_stack + 
-          item.eval_comunicacion + 
-          item.eval_cumplimiento + 
-          item.eval_motivacion
-        ) / 4).toFixed(1))
-      )
+      values: valoresPorEvaluacion, // Asignamos los promedios individuales
     };
+
+    // Asignar el promedio general a la tarjeta
+    dashboardData.card1.chartData.diferencia = promedioGeneral.toFixed(1); // Esto ahora es un string
   }
 
   // Datos para la tabla
@@ -205,13 +226,19 @@ export default async function Page(props: {
         month: "2-digit",
         year: "numeric",
       }),
+      id: item.id,
       stack: item.eval_stack,
       comunicacion: item.eval_comunicacion,
       motivacion: item.eval_motivacion,
       cumplimiento: item.eval_cumplimiento,
-      promedio: (
-        (item.eval_comunicacion + item.eval_motivacion + item.eval_cumplimiento + item.eval_stack) / 4
-      ).toFixed(1),
+      promedio: Number(
+        (
+          (item.eval_stack + 
+          item.eval_comunicacion + 
+          item.eval_motivacion + 
+          item.eval_cumplimiento) / 4
+        ).toFixed(1)
+      ),
     })),
   };
 
@@ -219,7 +246,6 @@ export default async function Page(props: {
     <div className="max-container">
       <div className="pro-details-container">
         <div className="pro-header">
-
           <div>
             <h4>{professionalDetails?.candidates.name || "Nombre no disponible"}</h4>
             <p>{professionalDetails?.candidates.email || "(correo@ejemplo.com)"}</p>
@@ -235,17 +261,13 @@ export default async function Page(props: {
         
         <div className="pro-buttons-container pro-header">
           <div className="">
-          <p className="section-title text-14">Historial de evaluaciones</p>
+            <p className="section-title text-14">Historial de evaluaciones</p>
           </div>
-
-        <div className="pro-buttons-container">
-
+          <div className="pro-buttons-container">
             <Button text="Nueva Evaluación" href={`/pros/${proId}/new-evaluation`} type="primary" />
           </div>
-          </div>
-        <DataGrid  data={dataGridData} 
-  baseUrl={`/pros/${proId}`}
- />
+        </div>
+        <DataGrid data={dataGridData} baseUrl={`/pros/${proId}`} />
       </div>
     </div>
   );

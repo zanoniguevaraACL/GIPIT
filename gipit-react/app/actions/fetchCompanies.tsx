@@ -50,10 +50,11 @@ export const fetchAllCompanies = async () => {
 interface Company {
   id: number;
   name: string;
+  management: { id: number; name: string }[]; // Jefaturas asociadas
 }
 
 export const fetchListCompanies = async (): Promise<
-  { id: number; name: string }[]
+  { id: number; name: string; managements: { id: number; name: string }[] }[]
 > => {
   try {
     const response = await fetch(
@@ -73,10 +74,14 @@ export const fetchListCompanies = async (): Promise<
 
     const companiesList: Company[] = await response.json();
 
-    const formattedCompanies = companiesList.map((company: Company) => ({
+    // Mapeo para retornar el formato esperado
+    const formattedCompanies = companiesList.map((company) => ({
       id: company.id,
       name: company.name,
+      managements: company.management, // Agregar las jefaturas asociadas
     }));
+
+    console.log("Lista companias --->", formattedCompanies)
 
     return formattedCompanies;
   } catch (error) {

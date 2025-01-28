@@ -1,5 +1,5 @@
-"use client";
-
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/authOptions";
 import { fetchCandidates } from "@/app/actions/fetchCandidates";
 import DataGrid from "@/components/molecules/DataGrid";
 import SearchBar from "@/components/molecules/SearchBar";
@@ -13,7 +13,7 @@ interface CandidateDetails {
   email?: string;
   address?: string;
   role?: string;
-  client?: string;
+  company?: string; // Renombrado de 'client' a 'company'
   start?: string;
   end?: string;
   rate?: string;
@@ -24,12 +24,12 @@ interface Column<T> {
   name: string;
   key: keyof T;
   width: number;
-  render?: (value: T[keyof T]) => React.ReactNode; // Aquí está el cambio principal
+  render?: (value: T[keyof T]) => React.ReactNode;
 }
 
 interface ResponseData<T> {
   total: number;
-  columns: Column<T>[];
+  columns: Column<T>[]; 
   batch: T[];
 }
 
@@ -39,25 +39,45 @@ const statusOptions = [
   { value: "desvinculado", label: "Desvinculado" },
 ];
 
-export default async function CandidatesPage(
-  props: {
-    searchParams?: {
-      query?: string;
-      page?: string;
-      status?: string;
-    };
-  }
-) {
-  const searchParams = props.searchParams || {};
-  const page = searchParams.page ? parseInt(searchParams.page) : 1;
-  const query = searchParams.query?.toLowerCase() || "";
-  const status = searchParams.status || "";
+export default async function CandidatesPage({
+  searchParams
+}: {
+  searchParams?: {
+    query?: string;
+    page?: string;
+    status?: string;
+    companyId?: string;
+  };
+}) {
+  // Obtener la sesión del servidor
+  const session = await getServerSession(authOptions);
+  const userRole = session?.user?.role;
+  const companyId = searchParams?.companyId ? parseInt(searchParams.companyId) : undefined;
 
-  const response = await fetchCandidates({ page, query, status });
+  const page = searchParams?.page ? parseInt(searchParams.page) : 1;
+  const query = searchParams?.query?.toLowerCase() || "";
+  const status = searchParams?.status || "";
+
+  // Fetch de candidatos
+  const response = await fetchCandidates({ 
+    page, 
+    query, 
+    status,
+    userRole,
+    companyId
+  });
+
   if (!response || !response.batch) {
-    console.error("Respuesta inválida de fetchCandidates:", response);
     return (
-      <SearchBar />
+      <div className="inner-page-container">
+        <div className="candidates-page-header">
+          <SearchBar
+            statusOptions={statusOptions}
+            companyFilter={true}
+          />
+        </div>
+        <p>No se encontraron candidatos que coincidan con los criterios de búsqueda.</p>
+      </div>
     );
   }
 
@@ -68,16 +88,12 @@ export default async function CandidatesPage(
     status: <StatusButton status={String(candidate.status)} />,
   }));
 
-  const filteredCandidates = candidatesList.filter((candidate: CandidateDetails) =>
-    candidate.name?.toLowerCase().includes(query)
-  );
-
   const columns: Column<CandidateDetails>[] = [
     { name: "Nombre", key: "name", width: 1.5 },
-    { name: "Rol", key: "role", width: 1.5 },
-    { name: "Cliente", key: "client", width: 1.5 },
-    { name: "Inicio", key: "start", width: 1.2 },
-    { name: "Término", key: "end", width: 1.2 },
+    { name: "Jefatura", key: "role", width: 1.5 },
+    { name: "Cliente", key: "company", width: 1.5 },
+    { name: "Fecha Inicio", key: "start", width: 1.2 },
+    { name: "Fecha Término", key: "end", width: 1.2 },
     { name: "Valor HH", key: "rate", width: 1.5 },
     { 
       name: "Estado", 
@@ -98,24 +114,14 @@ export default async function CandidatesPage(
     batch: candidatesList,
   };
 
-  if (filteredCandidates.length === 0) {
-    return (
-      <div className="inner-page-container">
-        <div className="candidates-page-header">
-          <SearchBar
-            statusOptions={statusOptions}
-          />
-        </div>
-        <p>No se encontraron candidatos que coincidan con los criterios de búsqueda.</p>
-      </div>
-    );
-  }
-
   return (
     <div className="inner-page-container">
       <div className="candidates-page-header">
         <SearchBar
           statusOptions={statusOptions}
+          companyFilter={true}
+          buttonLink="/pros/new-profesional"
+          buttonText="Nuevo Profesional"
         />
       </div>
       <div className="candidates-table-container">

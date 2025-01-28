@@ -8,6 +8,7 @@ import './invoiceEdit.css';
 import { fetchProfessionalsBySelectedCompany } from "@/app/actions/fetchProfessionalsByCompany";
 import AddProfessionalModal from "@/components/molecules/AddProfessionalModal";
 import { fetchInvoiceDetails } from '@/app/actions/fetchInvoiceDetails';
+import ConfirmationModal from "@/components/molecules/ConfirmationModal";
 
 interface Client {
   name: string;
@@ -61,6 +62,7 @@ export default function Page({ params }: { params: { invoiceId: string } }) {
   const [endMonth, setEndMonth] = useState<string>('');
   const [issueDate, setIssueDate] = useState<string>('');
   const [expirationDate, setExpirationDate] = useState<string>('');
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
   useEffect(() => {
     const loadClients = async () => {
@@ -202,6 +204,28 @@ export default function Page({ params }: { params: { invoiceId: string } }) {
     );
   };
 
+  const handleVatChange = (id: number, vat: number) => {
+    setAddedProfessionals(prevPros => 
+        prevPros.map(pro => {
+            if (pro.id === id) {
+                const subtotal = pro.subtotal || 0;
+                const vatAmount = (subtotal * (vat / 100));
+                const total = subtotal + vatAmount;
+                return { 
+                    ...pro, 
+                    vat, 
+                    total 
+                };
+            }
+            return pro;
+        })
+    );
+  };
+
+  const handleRemoveProfessional = (id: number) => {
+    setAddedProfessionals(prevPros => prevPros.filter(pro => pro.id !== id));
+  };
+
   const calculateTotal = () => {
     return addedProfessionals.reduce((total, pro) => {
         const subtotal = pro.subtotal || 0;
@@ -263,6 +287,11 @@ export default function Page({ params }: { params: { invoiceId: string } }) {
     }
   };
 
+  const handleConfirmSaveInvoice = async () => {
+    await handleSaveInvoice();
+    setIsConfirmModalOpen(false);
+  };
+
   return (
     <div className="max-container">
       <div className="invoice-form-container">
@@ -270,7 +299,7 @@ export default function Page({ params }: { params: { invoiceId: string } }) {
           <h2>Editar Factura</h2>
           <div className="button-container">
             <Button text="Cancelar" href="/invoices" type="tertiary" />
-            <Button text="Guardar Factura" type="primary" onClick={handleSaveInvoice} />
+            <Button text="Guardar Factura" type="primary" onClick={() => setIsConfirmModalOpen(true)} />
           </div>
         </div>
         <div className="form-content">
@@ -341,6 +370,7 @@ export default function Page({ params }: { params: { invoiceId: string } }) {
                     <th>VAT</th>
                     <th>Total</th>
                     <th>Nota</th>
+                    <th>Acciones</th> {/* Nueva columna para acciones */}
                   </tr>
                 </thead>
                 <tbody>
@@ -356,13 +386,26 @@ export default function Page({ params }: { params: { invoiceId: string } }) {
                         />
                       </td>
                       <td>{pro.subtotal ? pro.subtotal.toFixed(2) : '0.00'} UF</td>
-                      <td>{pro.vat ? pro.vat.toFixed(2) : '0.00'} %</td>
+                      <td>
+                        <input 
+                          type="number" 
+                          value={pro.vat || 0}
+                          onChange={(e) => handleVatChange(pro.id, parseFloat(e.target.value) || 0)}
+                        />
+                      </td>
                       <td>{pro.total ? pro.total.toFixed(2) : '0.00'} UF</td>
                       <td>
                         <input 
                           type="text"
                           value={pro.notes || ''}
                           onChange={(e) => handleNotesChange(pro.id, e.target.value)}
+                        />
+                      </td>
+                      <td>
+                        <Button 
+                          text="Eliminar" 
+                          type="secondary" 
+                          onClick={() => handleRemoveProfessional(pro.id)} 
                         />
                       </td>
                     </tr>
@@ -393,6 +436,13 @@ export default function Page({ params }: { params: { invoiceId: string } }) {
         onClose={handleCloseModal}
         onSave={handleSaveProfessional}
         availableProfessionals={professionals}
+      />
+
+      <ConfirmationModal 
+        isOpen={isConfirmModalOpen} 
+        onClose={() => setIsConfirmModalOpen(false)} 
+        onConfirm={handleConfirmSaveInvoice} 
+        message="¿Estás seguro de que deseas guardar esta factura?" 
       />
     </div>
   );

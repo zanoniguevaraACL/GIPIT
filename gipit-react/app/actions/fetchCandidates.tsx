@@ -2,19 +2,33 @@ interface CandidateResponse {
   id: number;
   name: string;
   role: string;
-  client: string;
+  company: string;
   start: string | null;
   end: string | null;
   rate: number;
   status: string;
 }
 
-export const fetchCandidates = async ({ page, query, status }: { page: number; query?: string; status?: string }) => {
+export const fetchCandidates = async ({ 
+  page, 
+  query, 
+  status,
+  userRole,
+  companyId
+}: { 
+  page: number; 
+  query?: string; 
+  status?: string;
+  userRole?: string;
+  companyId?: number;
+}) => {
   try {
     const params = new URLSearchParams();
     params.append('page', page.toString());
     if (query) params.append('query', query);
     if (status) params.append('status', status);
+    if (userRole) params.append('userRole', userRole);
+    if (companyId) params.append('companyId', companyId.toString());
 
     const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/candidate_pros_management?${params.toString()}`;
     
@@ -41,14 +55,18 @@ export const fetchCandidates = async ({ page, query, status }: { page: number; q
       const formatDate = (dateString: string | null) => {
         if (!dateString) return null;
         const date = new Date(dateString);
-        return date.toLocaleDateString();
+        return new Date(date.getTime() + date.getTimezoneOffset() * 0).toLocaleDateString('es-ES', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit'
+        });
       };
 
       return {
         id: candidate.id,
         name: candidate.name,
         role: candidate.role,
-        client: candidate.client,
+        company: candidate.company,
         start: formatDate(candidate.start),
         end: formatDate(candidate.end),
         rate: candidate.rate,

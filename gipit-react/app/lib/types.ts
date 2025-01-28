@@ -6,7 +6,7 @@ export interface RouteItem {
   text: string;
   href: string;
   selected?: boolean;
-  roles: ("client" | "kam" | "gest" | "mkt" | "admin")[];
+  roles: ("client" | "kam" | "gest" | "mkt" | "admin" | "Cliente-Gerente")[];
 }
 
 export interface UserInfoProps {
@@ -24,6 +24,7 @@ export interface FormInputProps {
   type:
     | "text"
     | "number"
+    |"text-display"
     | "date"
     | "submit"
     | "email"
@@ -35,9 +36,15 @@ export interface FormInputProps {
   value?: string | number;
   defaultValue?: string | number;
   href?: string;
+  step?: string;
+  min?: string;
+  max?: string;
   height?: string;
-  options?: { name: string; value: number }[];
+  options?: { name: string; value: number | string }[];
   minMax?: number[];
+  onChange?: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
+  required?: boolean;
+  disabled?: boolean; // Agregado para soportar la propiedad disabled
 }
 
 export type FormInputsRow = (FormInputProps | FormInputProps[])[];
@@ -135,4 +142,35 @@ export interface Professional {
   email: string;
   phone: string;
   total_experience: number;
+}
+
+export interface Column<T> {
+    name: string;
+    key: keyof T;
+    width: number;
+    render?: (value: T[keyof T]) => React.ReactNode;
+}
+
+export interface Evaluation {
+  id: number;
+  candidate_management_id: number;
+  benefit?: string;
+  client_comment?: string;
+  date?: Date;
+  eval_stack?: number;
+  eval_comunicacion?: number;
+  eval_motivacion?: number;
+  eval_cumplimiento?: number;
+  acciones_acl?: string;
+  proyecction?: string;
+}
+
+export interface ProfessionalDetails {
+  id: number;
+  candidate_id: number;
+  management_id: number;
+  status: string;
+  start_date: string;
+  candidateName?: string; // Asegúrate de incluir esta propiedad si la usas
+  // ... otras propiedades que necesites ...
 }

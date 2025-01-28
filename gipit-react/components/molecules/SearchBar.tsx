@@ -25,6 +25,9 @@ interface SearchBarProps {
   defaultYear?: string;
   noSearch?: boolean;
   companyFilter?: boolean;
+  roleOptions?: StatusOption[];
+  defaultRole?: string;
+  onSearch?: (term: string) => void;
 }
 
 export default function SearchBar({ 
@@ -34,7 +37,10 @@ export default function SearchBar({
   defaultStatus,
   yearOptions,
   defaultYear,
-  companyFilter = false
+  companyFilter = false,
+  roleOptions,
+  defaultRole,
+  onSearch
 }: SearchBarProps) {
   const [clients, setClients] = useState<Client[]>([]);
   const [selectedCompany, setSelectedCompany] = useState<number | null>(null);
@@ -74,12 +80,12 @@ export default function SearchBar({
   const handleSearch = (term: string) => {
     const params = new URLSearchParams(searchParams);
     if (term) {
-      params.set('query', term);
-      console.log("Actualizando URL con parámetros:", params.toString());
+        params.set('query', term);
     } else {
-      params.delete('query');
+        params.delete('query');
     }
     router.replace(`${pathname}?${params.toString()}`);
+    if (onSearch) onSearch(term);
   };
 
 
@@ -108,6 +114,16 @@ export default function SearchBar({
       params.set('year', year);
     } else {
       params.delete('year');
+    }
+    router.replace(`${pathname}?${params.toString()}`);
+  };
+
+  const handleRoleChange = (role: string) => {
+    const params = new URLSearchParams(searchParams);
+    if (role) {
+      params.set('role', role);
+    } else {
+      params.delete('role');
     }
     router.replace(`${pathname}?${params.toString()}`);
   };
@@ -159,6 +175,20 @@ export default function SearchBar({
             className="status-select"
           >
             {yearOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        )}
+
+        {roleOptions && (
+          <select
+            onChange={(e) => handleRoleChange(e.target.value)}
+            defaultValue={searchParams.get('role')?.toString() || defaultRole}
+            className="status-select"
+          >
+            {roleOptions.map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}
               </option>

@@ -17,7 +17,7 @@ function Page({ params }: { params: { processId: string; candidateId: string } }
   const fields: FormInputsRow = [
     [
       { type: "cancel", value: "Cancelar", href: routeToRedirect },
-      { type: "submit", value: "Descalificar" },
+      { type: "submit", value: "Descartar" },
     ],
   ];
 

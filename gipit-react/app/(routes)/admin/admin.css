@@ -1,0 +1,121 @@
+/* Contenedor general */
+.admin-container {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  gap: 20px;
+}
+
+/* Contenedor que alinea la barra de búsqueda y el botón */
+.search-and-button-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px; /* Ajusta el margen según sea necesario */
+}
+
+/* Otros estilos existentes */
+
+.admin-header {
+display: flex;
+justify-content: space-between; /* Distribuye los elementos a los extremos */
+align-items: center; /* Centra verticalmente */
+margin: 0; /* Elimina cualquier margen */
+padding: 0; /* Elimina cualquier padding */
+}
+
+.admin-header-content {
+display: flex;
+align-items: center; /* Centra verticalmente */
+gap: 16px; /* Espacio entre el título y el botón */
+}
+
+.admin-title {
+font-size: 1.5rem;
+font-weight: bold;
+color: #333;
+margin: 0;
+margin-bottom: 16px;
+}
+
+.admin-button {
+font-size: 1rem;
+font-weight: 600;
+color: #e11b48;
+background: none;
+border: none;
+text-decoration: underline;
+cursor: pointer;
+transition: color 0.3s ease;
+}
+
+.admin-button:hover {
+color: #c4173a;
+}
+
+/* Layout de columnas */
+.admin-row {
+display: flex;
+gap: 20px;
+}
+
+.admin-col-3 {
+flex: 3;
+max-width: 30%;
+}
+
+.admin-col-9 {
+flex: 7;
+max-width: 70%;
+}
+
+/* Tarjeta de usuario */
+.admin-card {
+  background-color: #F9E1E6;
+  padding: 20px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+}
+
+/* Ejemplo: Tabla de administración */
+.admin-table {
+  width: 100%; /* Asegura que la tabla ocupe todo el ancho */
+  table-layout: fixed; /* Distribuye las columnas equitativamente */
+}
+
+.admin-table td {
+  text-align: center; /* Centra el texto por defecto */
+}
+
+.admin-table td:first-child {
+  text-align: left; /* Primer TD alineado a la izquierda */
+}
+
+.admin-table td:last-child {
+  text-align: right; /* Último TD alineado a la derecha */
+}
+
+.admin-card h2 {
+  font-size: 2rem;
+  margin: 0;
+  color: #131432;
+}
+
+.admin-text {
+  margin: 5px 0;
+  font-size: 1rem;
+  color: #555;
+}
+
+.admin-icon-container {
+  background-color: #ababab;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 48px;
+  height: 48px;
+}

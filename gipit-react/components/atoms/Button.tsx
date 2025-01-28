@@ -15,8 +15,8 @@ export default function Button({ href, text, type = "primary", onClick }: Button
   if (href) {
     // Si se proporciona href, actúa como un enlace
     return (
-      <Link href={href}>
-        <div className={`button ${type}`}>{text}</div>
+      <Link href={href} className={`button ${type}`}>
+        {text}
       </Link>
     );
   }

@@ -105,7 +105,6 @@ export default function Layout({
 
   // Actualiza `filteredCandidates` cuando cambian los candidatos o la etapa seleccionada
   useEffect(() => {
-    console.log("CandidatosTabs ---->", candidatesTabs);
     if (candidatesTabs) {
       const filtered = candidatesTabs.filter(
         (candidate) => candidate.stage === selectedStage
@@ -246,7 +245,12 @@ export default function Layout({
             <button
               key={stage}
               className={`pill ${selectedStage === stage ? "active" : ""}`}
-              onClick={() => setSelectedStage(stage)}
+              onClick={() => {
+                setSelectedStage(stage);
+                // Limpiar y refrescar candidatos al cambiar de etapa
+                resetCandidates();
+                refreshCandidates(Number(processId), stage);
+              }}
             >
               {stage.charAt(0).toUpperCase() + stage.slice(1)}
             </button>

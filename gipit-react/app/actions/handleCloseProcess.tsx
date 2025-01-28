@@ -16,7 +16,8 @@ export async function handleCloseProcess(
   }
 
   try {
-    const response = await fetch(
+    // 1. Cierra el proceso y crea candidate_management para candidatos seleccionados
+    const closeProcessResponse = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/process/${processId}`,
       {
         method: "PUT",
@@ -25,25 +26,26 @@ export async function handleCloseProcess(
         },
         body: JSON.stringify({
           action: "close",
-					processId
         }),
       }
     );
 
-    if (!response.ok) {
-      throw new Error(`Error al cerrar el proceso: ${response.statusText}`);
-    }		
+    if (!closeProcessResponse.ok) {
+      const errorData = await closeProcessResponse.json();
+      throw new Error(errorData.error || 'Error al cerrar el proceso');
+    }
 
-    const result = await response.json();
+    const result = await closeProcessResponse.json();
+
     return {
-      message: result.message,
-      route: result.route || `/process`,
-      statusCode: response.status,
+      message: result.message || "Proceso cerrado exitosamente y candidatos convertidos a profesionales",
+      route: result.route || "/process",
+      statusCode: 200,
     };
   } catch (error) {
-    console.error("Error al cerrar el proceso:", error);
+    console.error("Error al manejar el cierre del proceso:", error);
     return {
-      message: "Error inesperado al cerrar el proceso.",
+      message: error instanceof Error ? error.message : "Error inesperado al cerrar el proceso",
       route: actualRoute,
       statusCode: 500,
     };

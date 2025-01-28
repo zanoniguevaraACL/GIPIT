@@ -1,0 +1,84 @@
+.max-container-create {
+  height: 100vh;
+  background-color: var(--background);
+  padding: 0;
+}
+
+.header-navigation-create {
+  padding: 16px 24px;
+  background-color: white;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 16px;
+}
+
+.invoice-form-container-create {
+  max-width: 90rem;
+  margin: 0 auto;
+  padding: 32px;
+  background-color: white;
+  border-radius: 12px;
+}
+
+.form-grid-create {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.form-group-create {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group-create label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-group-create input {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.form-group-create select {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  width: 100%;
+  background-color: white;
+  transition: border-color 0.2s ease;
+}
+
+.form-group-create select:focus {
+  border-color: #E4003F;
+  outline: none;
+}
+
+.button-container-create {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 32px;
+}
+
+button {
+  background-color: #E4003F;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  background-color: #C8003A;
+}

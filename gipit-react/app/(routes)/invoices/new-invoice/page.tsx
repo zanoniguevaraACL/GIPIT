@@ -7,8 +7,9 @@ import { fetchListCompanies } from "@/app/actions/fetchCompanies";
 import './new-invoice.css';
 import { fetchProfessionalsBySelectedCompany } from "@/app/actions/fetchProfessionalsByCompany";
 import AddProfessionalModal from "@/components/molecules/AddProfessionalModal";
-import { useRouter } from 'next/navigation';
-
+import ConfirmationModal from "@/components/molecules/ConfirmationModal";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface Client {
   name: string;
@@ -41,17 +42,37 @@ const months = [
   { value: '12', label: 'Diciembre' }
 ];
 
+interface InvoiceData {
+  total_value: number;
+  description: string;
+  status: string;
+  professionals: {
+    id: number;
+    hoursWorked: number | undefined;
+    notes: string | undefined;
+    subtotal: number;
+    vat: number;
+    hourValue: number;
+    total: number;
+  }[];
+  period: string;
+  estimated_date: string;
+  expiration_date: string;
+  company_id: number | null;
+}
+
 export default function Page() {
   const [clients, setClients] = useState<Client[]>([]);
   const [professionals, setProfessionals] = useState<Professional[]>([]);
   const [selectedCompany, setSelectedCompany] = useState<number | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAddProfessionalModalOpen, setIsAddProfessionalModalOpen] = useState(false);
   const [addedProfessionals, setAddedProfessionals] = useState<Professional[]>([]);
   const [startMonth, setStartMonth] = useState<string>('');
   const [endMonth, setEndMonth] = useState<string>('');
   const [issueDate, setIssueDate] = useState<string>('2024-12-24');
   const [expirationDate, setExpirationDate] = useState<string>('2024-12-24');
-  const router = useRouter();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [invoiceData, setInvoiceData] = useState<InvoiceData | null>(null);
 
   useEffect(() => {
     const loadClients = async () => {
@@ -91,11 +112,11 @@ export default function Page() {
   }, [selectedCompany]);
 
   const handleAddProfessional = () => {
-    setIsModalOpen(true);
+    setIsAddProfessionalModalOpen(true);
   };
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
+  const handleCloseAddProfessionalModal = () => {
+    setIsAddProfessionalModalOpen(false);
   };
 
   const handleSaveProfessional = (professional: Professional) => {
@@ -114,7 +135,7 @@ export default function Page() {
 
     setAddedProfessionals(prev => [...prev, professionalWithRate]);
     setProfessionals(prev => prev.filter(pro => pro.id !== professional.id));
-    setIsModalOpen(false);
+    handleCloseAddProfessionalModal();
   };
 
   const handleHoursChange = (id: number, hours: number) => {
@@ -162,38 +183,41 @@ export default function Page() {
   };
 
   const handleSaveInvoice = async () => {
-    console.log('ID de la compañía antes de enviar:', selectedCompany);
-    
-    const professionalsData = addedProfessionals.map(pro => {
-      const subtotal = pro.subtotal || 0;
-      const vat = pro.vat || 0;
-      const total = subtotal + (subtotal * (vat / 100));
-      console.log(`Subtotal: ${subtotal}, VAT: ${vat}, Total: ${total}`);
-      
-      return {
-        id: pro.id,
-        hoursWorked: pro.hoursWorked,
-        notes: pro.notes,
-        subtotal: subtotal,
-        vat: vat,
-        hourValue: pro.hourValue,
-        total: total,
-      };
-    });
+    if (addedProfessionals.length === 0) {
+      toast.error("Debes agregar al menos un profesional antes de guardar la factura.");
+      return;
+    }
 
-    const invoiceData = {
-      total_value: calculateTotal(),
-      description: "Descripción de la compañia " + selectedCompany,
-      status: "pendiente",
-      professionals: professionalsData,
-      period: `${startMonth} - ${endMonth}`,
-      estimated_date: issueDate,
-      expiration_date: expirationDate,
-      company_id: selectedCompany,
+    const preparedInvoiceData: InvoiceData = {
+        total_value: calculateTotal(),
+        description: "Descripción de la compañia " + selectedCompany,
+        status: "pendiente",
+        professionals: addedProfessionals.map(pro => {
+            const subtotal = pro.subtotal || 0;
+            const vat = pro.vat || 0;
+            const total = subtotal + (subtotal * (vat / 100));
+            console.log(`Subtotal: ${subtotal}, VAT: ${vat}, Total: ${total}`);
+            
+            return {
+                id: pro.id,
+                hoursWorked: pro.hoursWorked,
+                notes: pro.notes,
+                subtotal: subtotal,
+                vat: vat,
+                hourValue: pro.hourValue,
+                total: total,
+            };
+        }),
+        period: `${startMonth} - ${endMonth}`,
+        estimated_date: issueDate,
+        expiration_date: expirationDate,
+        company_id: selectedCompany,
     };
+    setInvoiceData(preparedInvoiceData);
+    setIsModalOpen(true);
+  };
 
-    console.log('Datos de la factura a enviar:', invoiceData);
-
+  const handleConfirmSave = async () => {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/preinvoices`, {
         method: 'POST',
@@ -209,14 +233,35 @@ export default function Page() {
 
       const result = await response.json();
       console.log('Factura creada con éxito:', result);
-      router.push(`/invoices/${result.id}`);  
+      window.location.href = `/invoices/${result.id}`;
     } catch (error) {
       console.error('Error al crear la factura:', error);
+    } finally {
+      setIsModalOpen(false);
     }
+  };
+
+  const handleVatChange = (id: number, vat: number) => {
+    setAddedProfessionals(prevPros => 
+        prevPros.map(pro => {
+            if (pro.id === id) {
+                const subtotal = pro.subtotal || 0;
+                const vatAmount = (subtotal * (vat / 100));
+                const total = subtotal + vatAmount;
+                return { 
+                    ...pro, 
+                    vat, 
+                    total 
+                };
+            }
+            return pro;
+        })
+    );
   };
 
   return (
     <div className="max-container">
+      <ToastContainer />
       <div className="invoice-form-container">
         <div className="header-section">
           <h2>Nueva Factura</h2>
@@ -319,7 +364,13 @@ export default function Page() {
                         />
                       </td>
                       <td>{pro.subtotal ? pro.subtotal.toFixed(2) : '0.00'} UF</td>
-                      <td>{pro.vat ? pro.vat.toFixed(2) : '0.00'} %</td>
+                      <td>
+                        <input 
+                          type="number" 
+                          value={pro.vat || 0}
+                          onChange={(e) => handleVatChange(pro.id, parseFloat(e.target.value) || 0)}
+                        />
+                      </td>
                       <td>{pro.total ? pro.total.toFixed(2) : '0.00'} UF</td>
                       <td>
                         <input 
@@ -352,10 +403,17 @@ export default function Page() {
       </div>
 
       <AddProfessionalModal 
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
+        isOpen={isAddProfessionalModalOpen}
+        onClose={handleCloseAddProfessionalModal}
         onSave={handleSaveProfessional}
         availableProfessionals={professionals}
+      />
+
+      <ConfirmationModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={handleConfirmSave}
+        message="¿Estás seguro de que deseas guardar esta factura?"
       />
     </div>
   );

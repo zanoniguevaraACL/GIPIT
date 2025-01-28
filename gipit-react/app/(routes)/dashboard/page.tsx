@@ -40,9 +40,12 @@ interface Invoice {
 }
 
 async function DashboardPage() {
-  const stats = await fetchDashboardStats();
-  const invoicesList = await fetchAllPreInvoices(1);
   const session = await getServerSession(authOptions);
+
+  const stats = await fetchDashboardStats(); // Pasa el companyId a la función de stats
+  
+  // Modificar la llamada a fetchAllPreInvoices para incluir el companyId
+  const invoicesList = await fetchAllPreInvoices(1, undefined, 'pendiente', undefined);
   
   // Obtenemos solo las facturas pendientes
   const pendingInvoices = invoicesList.batch
