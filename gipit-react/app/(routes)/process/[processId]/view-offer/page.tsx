@@ -47,7 +47,7 @@ function Page() {
             setPreviousValues([
               {
                 label: "Vacante",
-                type: "text-display",
+                type: "text",
                 name: "jobOffer",
                 defaultValue: details.jobOffer,
                 height: "40svh",

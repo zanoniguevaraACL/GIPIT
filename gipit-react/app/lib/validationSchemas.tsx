@@ -152,29 +152,12 @@ export const editNoteSchema = z.object({
   comment: z.string().optional(),
 });
 
+
 export const evaluationSchema = z.object({
-
-  eval_comunicacion: z
-    .string()
-    .refine((val) => {
-      const isValidNumber = /^[0-7](\.[0-9])?$/g.test(val); // Acepta enteros del 0 al 7 o un decimal
-      return isValidNumber;
-    }, "El valor debe ser un número entre 0 y 7 con hasta 1 decimal, usando solo punto como separador"),
-
-  eval_motivacion: z
-    .string()
-    .refine((val) => {
-      const isValidNumber = /^[0-7](\.[0-9])?$/g.test(val); // Acepta enteros del 0 al 7 o un decimal
-      return isValidNumber;
-    }, "El valor debe ser un número entre 0 y 7 con hasta 1 decimal, usando solo punto como separador"),
-
-  eval_cumplimiento: z
-    .string()
-    .refine((val) => {
-      const isValidNumber = /^[0-7](\.[0-9])?$/g.test(val); // Acepta enteros del 0 al 7 o un decimal
-      return isValidNumber;
-    }, "El valor debe ser un número entre 0 y 7 con hasta 1 decimal, usando solo punto como separador"),
-
+  eval_cumplimiento: z.number().min(0).max(7),
+  eval_stack: z.number().min(0).max(7),
+  eval_comunicacion: z.number().min(0).max(7),
+  eval_motivacion: z.number().min(0).max(7),
   benefit: z.string().optional(),
   client_comment: z.string().optional(),
   acciones_acl: z.string().optional(),

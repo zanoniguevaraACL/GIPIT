@@ -1,6 +1,6 @@
 'use client'
 
-import Modal from "@/components/molecules/Modal";
+import Modal from "@/components/molecules/ModalDecimal";
 import { FormInputsRow, FormResponse } from "@/app/lib/types";
 import { updateProfessionalEvaluation } from "@/app/actions/createProfessionalEvaluation";
 import { fetchProfessionalDetails } from "@/app/actions/fetchProfessionalDetails";
