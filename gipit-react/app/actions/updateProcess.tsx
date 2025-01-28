@@ -2,17 +2,17 @@
 
 export const updateProcess = async (formData: FormData, processId: string) => {
   try {
-    const name = formData.get("name") as string | null;
     const jobOffer = formData.get("jobOffer") as string | null;
 
-    if (!name || !jobOffer) {
-      throw new Error("Faltan campos requeridos: name y jobOffer");
+    if (!jobOffer) {
+      throw new Error("Falta el campo requerido: jobOffer");
     }
 
+    const jobOfferDescription = jobOffer;
+
     const payload = {
-      name: name,
       job_offer: jobOffer,
-      job_offer_description: jobOffer,
+      job_offer_description: jobOfferDescription,
     };
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/process/${processId}`, {
@@ -25,17 +25,17 @@ export const updateProcess = async (formData: FormData, processId: string) => {
 
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(`Error al actualizar el proceso: ${errorText}`);
+      throw new Error(`Error al actualizar la oferta de trabajo: ${errorText}`);
     }
 
     return {
-      message: "Proceso actualizado exitosamente",
+      message: "Oferta de trabajo actualizada con éxito",
       route: `/process/${processId}`,
     };
   } catch (error) {
     if (error instanceof Error) {
       return {
-        message: `Error al actualizar el proceso: ${error.message}`,
+        message: `Error al actualizar la oferta de trabajo: ${error.message}`,
         route: `/process/${processId}`,
       };
     } else {

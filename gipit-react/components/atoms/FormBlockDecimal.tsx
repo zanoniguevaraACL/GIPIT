@@ -6,6 +6,7 @@ import Link from "next/link";
 import { FormEvent, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import DecimalInput from "@/components/atoms/DecimalInput";
 
 function FormRow({ row }: { row: FormInputProps[] }) {
   return row.map((row, index: number) => {
@@ -86,6 +87,18 @@ function FormItem({ field }: { field: FormInputProps }) {
             ))}
           </select>
         </label>
+      );
+    case "number":
+      return (
+        <DecimalInput
+          key={field.label}
+          label={field.label || "Número"}
+          name={field.name}
+          defaultValue={field.defaultValue || ''}
+          min={0}
+          max={7}
+          step="0.1"
+        />
       );
     default:
       return (

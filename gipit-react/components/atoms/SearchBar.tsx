@@ -1,5 +1,3 @@
-// searchBar.tsx
-
 "use client";
 import "./searchBar.css";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
@@ -10,11 +8,6 @@ interface StatusOption {
   label: string;
 }
 
-interface CompanyOption {
-  value: number;
-  label: string;
-}
-
 interface SearchBarProps {
   buttonLink?: string;
   buttonText?: string;
@@ -22,13 +15,9 @@ interface SearchBarProps {
   defaultStatus?: string;
   yearOptions?: StatusOption[];
   defaultYear?: string;
-  companyOptions?: CompanyOption[];
-  defaultCompany?: number;
   noSearch?: boolean;
   onSearch?: (term: string) => void;
   onStatusChange?: (status: string) => void;
-  onCompanyChange?: (companyId: number) => void;
-  companyFilter?: boolean;
 }
 
 export default function SearchBar({ 
@@ -36,12 +25,10 @@ export default function SearchBar({
   buttonText, 
   statusOptions, 
   defaultStatus,
-  companyOptions,
-  defaultCompany,
+  yearOptions,
+  defaultYear,
   onSearch,
-  onStatusChange,
-  onCompanyChange,
-  companyFilter = true
+  onStatusChange
 }: SearchBarProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -69,15 +56,14 @@ export default function SearchBar({
     if (onStatusChange) onStatusChange(status);
   };
 
-  const handleCompanyChange = (companyId: number) => {
+  const handleYearChange = (year: string) => {
     const params = new URLSearchParams(searchParams);
-    if (companyId) {
-      params.set('companyId', companyId.toString());
+    if (year) {
+      params.set('year', year);
     } else {
-      params.delete('companyId');
+      params.delete('year');
     }
     router.replace(`${pathname}?${params.toString()}`);
-    if (onCompanyChange) onCompanyChange(companyId);
   };
 
   return (
@@ -103,14 +89,13 @@ export default function SearchBar({
             ))}
           </select>
         )}
-        {companyFilter && companyOptions && (
+        {yearOptions && (
           <select
-            onChange={(e) => handleCompanyChange(parseInt(e.target.value))}
-            defaultValue={searchParams.get('companyId')?.toString() || defaultCompany?.toString()}
+            onChange={(e) => handleYearChange(e.target.value)}
+            defaultValue={searchParams.get('year')?.toString() || defaultYear}
             className="status-select"
           >
-            <option key={0} value={0}>Todas las compañías</option>
-            {companyOptions.map((option) => (
+            {yearOptions.map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}
               </option>

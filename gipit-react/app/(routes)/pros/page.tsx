@@ -46,12 +46,13 @@ export default async function CandidatesPage({
     query?: string;
     page?: string;
     status?: string;
+    companyId?: string;
   };
 }) {
   // Obtener la sesión del servidor
   const session = await getServerSession(authOptions);
   const userRole = session?.user?.role;
-  const companyId = session?.user?.managements?.[0]?.company?.id;
+  const companyId = searchParams?.companyId ? parseInt(searchParams.companyId) : undefined;
 
   const page = searchParams?.page ? parseInt(searchParams.page) : 1;
   const query = searchParams?.query?.toLowerCase() || "";
@@ -63,7 +64,7 @@ export default async function CandidatesPage({
     query, 
     status,
     userRole,
-    companyId: companyId ? Number(companyId) : undefined
+    companyId
   });
 
   if (!response || !response.batch) {
@@ -91,8 +92,8 @@ export default async function CandidatesPage({
     { name: "Nombre", key: "name", width: 1.5 },
     { name: "Jefatura", key: "role", width: 1.5 },
     { name: "Cliente", key: "company", width: 1.5 },
-    { name: "Inicio", key: "start", width: 1.2 },
-    { name: "Término", key: "end", width: 1.2 },
+    { name: "Fecha Inicio", key: "start", width: 1.2 },
+    { name: "Fecha Término", key: "end", width: 1.2 },
     { name: "Valor HH", key: "rate", width: 1.5 },
     { 
       name: "Estado", 

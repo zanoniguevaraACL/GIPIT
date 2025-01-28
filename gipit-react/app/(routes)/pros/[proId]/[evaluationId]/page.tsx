@@ -1,20 +1,17 @@
 "use client";
 
-
-import Modal from "@/components/molecules/Modal";
+import Modal from "@/components/molecules/ModalDecimal";
 import { FormInputsRow, Evaluation, ProfessionalDetails } from "@/app/lib/types";
 import { fetchEvaluationById } from "@/app/actions/fetchEvaluationById";
 import { fetchProfessionalDetails } from "@/app/actions/fetchProfessionalDetails";
 import { handleUpdateEvaluation } from "@/app/actions/handleUpdateEvaluation";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { evaluationSchema } from "@/app/lib/validationSchemas";
+import { toast } from "react-toastify";
 
-function Page({
-  params,
-}: {
-  params: { proId: string; evaluationId: string };
-}) {
+
+
+function Page({ params }: { params: { proId: string; evaluationId: string } }) {
   const { proId, evaluationId } = params;
 
   console.log("Pro ID:", proId);
@@ -53,37 +50,27 @@ function Page({
       name: "date",
       defaultValue: evaluationData?.date ? new Date(evaluationData.date).toISOString().split("T")[0] : "",
     },
-    [
-      {
-        label: "Dominio del stack tecnológico",
-        placeholder: "Número de 0-7",
-        type: "number",
-        name: "stack",
-        step: "0.1", // Permitir decimales
-        min: "0",
-        max: "7",
-        defaultValue: evaluationData?.eval_stack,
-      },
-      {
-        label: "Habilidades de comunicación",
-        placeholder: "Número de 0-7",
-        type: "number",
-        name: "comunicacion",
-        step: "0.1", // Permitir decimales
-        min: "0",
-        max: "7",
-        defaultValue: evaluationData?.eval_comunicacion,
-      },
-    ],
+    {
+      label: "Dominio del stack tecnológico",
+      placeholder: "Número de 0-7",
+      type: "number",
+      name: "eval_stack",
+      defaultValue: evaluationData?.eval_stack,
+      //isEvaluationPage: true,
+    },
+    {
+      label: "Habilidades de comunicación",
+      placeholder: "Número de 0-7",
+      type: "number",
+      name: "comunicacion",
+      defaultValue: evaluationData?.eval_comunicacion,
+    },
     [
       {
         label: "Responsabilidad y cumplimiento",
         placeholder: "Número de 0-7",
         type: "number",
         name: "cumplimiento",
-        step: "0.1", // Permitir decimales
-        min: "0",
-        max: "7",
         defaultValue: evaluationData?.eval_cumplimiento,
       },
       {
@@ -91,9 +78,6 @@ function Page({
         placeholder: "Número de 0-7",
         type: "number",
         name: "motivacion",
-        step: "0.1", // Permitir decimales
-        min: "0",
-        max: "7",
         defaultValue: evaluationData?.eval_motivacion,
       },
     ],
@@ -124,14 +108,21 @@ function Page({
     ],
   ];
 
-  const handleUpdate = async (
-    formData: FormData,
-    actualRoute: string
-  ): Promise<{
-    message: string;
-    route: string;
-    statusCode: number;
-  }> => {
+  const handleSubmit = async (formData: FormData): Promise<{ message: string; route: string; statusCode: number }> => {
+    const evalCumplimiento = parseFloat(formData.get("cumplimiento") as string);
+    const evalStack = parseFloat(formData.get("eval_stack") as string);
+    const evalComunicacion = parseFloat(formData.get("comunicacion") as string);
+    const evalMotivacion = parseFloat(formData.get("motivacion") as string);
+
+    if (isNaN(evalCumplimiento) || isNaN(evalStack) || isNaN(evalComunicacion) || isNaN(evalMotivacion)) {
+      toast.error("Por favor, asegúrate de que todos los campos numéricos estén completos y sean válidos.");
+      return {
+        message: "Error al actualizar la evaluación",
+        route: routeToRedirect,
+        statusCode: 500,
+      };
+    }
+
     try {
       const formattedData: {
         date: string | null;
@@ -144,10 +135,10 @@ function Page({
         proyecction: FormDataEntryValue | null;
       } = {
         date: formData.get("date") ? new Date(formData.get("date") as string).toISOString() : null,
-        eval_stack: formData.get("stack") ? parseFloat(formData.get("stack") as string) : null, // Cambiar parseInt por parseFloat
-        eval_comunicacion: formData.get("comunicacion") ? parseFloat(formData.get("comunicacion") as string) : null,
-        eval_motivacion: formData.get("motivacion") ? parseFloat(formData.get("motivacion") as string) : null,
-        eval_cumplimiento: formData.get("cumplimiento") ? parseFloat(formData.get("cumplimiento") as string) : null,
+        eval_stack: evalStack,
+        eval_comunicacion: evalComunicacion,
+        eval_motivacion: evalMotivacion,
+        eval_cumplimiento: evalCumplimiento,
         client_comment: formData.get("comment") ?? null,
         acciones_acl: formData.get("acciones") ?? null,
         proyecction: formData.get("proyecction") ?? null,
@@ -174,7 +165,7 @@ function Page({
       console.error("Error al actualizar:", error);
       return {
         message: "Error al actualizar la evaluación",
-        route: actualRoute,
+        route: routeToRedirect,
         statusCode: 500,
       };
     }
@@ -183,12 +174,9 @@ function Page({
   return (
     <Modal
       rows={fields}
-      onSubmit={handleUpdate}
+      onSubmit={handleSubmit}
       title={`Evaluación de ${candidateName}`}
-      validationSchema={evaluationSchema}
     />
-
-
   );
 }
 

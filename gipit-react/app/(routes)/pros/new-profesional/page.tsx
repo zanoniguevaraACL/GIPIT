@@ -53,7 +53,6 @@ export default function Page() {
         throw new Error(cvProcessResult.message);
       }
 
-      // Se crea el candidato con el jsongpt_text procesado
       const candidateData = {
         name: formData.get("name"),
         email: formData.get("email"),
@@ -61,10 +60,8 @@ export default function Page() {
         address: formData.get("address"),
         jsongpt_text: cvProcessResult.jsongpt_text,
         total_experience: parseInt(formData.get("total_experience") as string),
-        stage: "activo"
+        stage: formData.get("end_date") ? "activo" : "desvinculado"
       };
-
-      console.log('Datos del candidato a crear:', candidateData);
 
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/candidates`, {
         method: 'POST',
@@ -76,33 +73,24 @@ export default function Page() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.error('Error response:', errorData);
         throw new Error(errorData.message || 'Error al crear el candidato');
       }
 
       const result = await response.json();
-      console.log('Respuesta de creación de candidato:', result);
 
       if (!result.candidate?.id) {
         throw new Error('No se pudo obtener el ID del candidato creado');
       }
 
-      // Se crea la relación con management
       const managementData = {
         candidate_id: result.candidate.id,
         management_id: parseInt(formData.get('management_id') as string),
-        status: 'activo',
+        status: "activo",
         start_date: new Date(formData.get('start_date') as string).toISOString(),
-        end_date: new Date(formData.get('end_date') as string).toISOString(),
+        end_date: formData.get('end_date') ? new Date(formData.get('end_date') as string).toISOString() : null,
         position: formData.get('position') as string,
         rate: parseFloat(formData.get('rate') as string)
       };
-
-      console.log('Datos de management a crear:', managementData);
-
-      if (!managementData.start_date || !managementData.end_date || !managementData.position || !managementData.rate) {
-        throw new Error('Todos los campos de management son requeridos');
-      }
 
       const managementResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/candidate_management`, {
         method: 'POST',
@@ -114,9 +102,6 @@ export default function Page() {
 
       if (!managementResponse.ok) {
         const managementError = await managementResponse.json();
-        console.error('Error en management:', managementError);
-        
-        // Si falla la creación de management, eliminamos el candidato creado
         await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/candidates/${result.candidate.id}`, {
           method: 'DELETE'
         });
@@ -179,41 +164,32 @@ export default function Page() {
       },
       {
         label: "Fecha de término",
-        placeholder: "Fecha de término",
+        placeholder: "Fecha de término (opcional)",
         type: "date",
         name: "end_date",
-        required: true,
       }
     ],
-    [
-      {
-        label: "Valor HH",
-        placeholder: "Valor hora",
-        type: "number",
-        name: "rate",
-        required: true,
-      },
-      {
-        type: "text",
-        name: "status",
-        defaultValue: "activo",
-        label: "Estado"
-      },
-    ],
+    {
+      label: "Valor HH",
+      placeholder: "Valor hora",
+      type: "number",
+      name: "rate",
+      required: true,
+    },
     [
       {
         label: "correo electrónico",
         placeholder: "correo",
         type: "text",
         name: "email",
-        required: true, 
+        required: true,
       },
       {
         label: "teléfono",
         placeholder: "teléfono",
         type: "number",
         name: "phone",
-        required: true, 
+        required: true,
       },
       {
         label: "Años de experiencia",
@@ -225,7 +201,7 @@ export default function Page() {
     ],
     {
       label: "Adjuntar CV",
-      type: "file", 
+      type: "file",
       name: "cv",
       required: true,
     },
