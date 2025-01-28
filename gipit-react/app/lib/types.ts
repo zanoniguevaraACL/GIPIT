@@ -24,6 +24,8 @@ export interface FormInputProps {
   type:
     | "text"
     | "number"
+    | "textarea"
+    | "text-display"
     | "date"
     | "submit"
     | "email"
@@ -44,6 +46,7 @@ export interface FormInputProps {
   onChange?: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
   required?: boolean;
   disabled?: boolean; // Agregado para soportar la propiedad disabled
+  readonly?: boolean; // Agregamos esta propiedad
 }
 
 export type FormInputsRow = (FormInputProps | FormInputProps[])[];

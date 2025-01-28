@@ -1,3 +1,5 @@
+// page.tsx
+
 import { fetchProcess } from "@/app/actions/fetchProcess";
 import { authOptions } from "@/app/api/auth/authOptions";
 import DataGrid from "@/components/molecules/DataGrid";
@@ -24,8 +26,8 @@ type Proceso = {
 
 interface Column<T> {
   name: string;
-  key: keyof T; // Clave que referencia la propiedad del objeto T
-  width: number; // Ancho de la columna
+  key: keyof T;
+  width: number;
 }
 
 interface ResponseData<T> {
@@ -44,12 +46,17 @@ export default async function Page(props: {
 }) {
   const searchParams = await props.searchParams;
   const page = searchParams?.page ? parseInt(searchParams?.page) : 1;
-  const query = searchParams?.query || ""; // Obtener el filtro de búsqueda
+  const query = searchParams?.query || ""; 
   const status = searchParams?.status || "";
   const companyId = searchParams?.companyId || "";
   const session = await getServerSession(authOptions);
   if (!session) throw new Error('No se pudo obtener la sesión del servidor');
-  // const company = searchParams?.company || "";
+
+  let showCompanyFilter = true;
+  if (session.user.role === 'client' || session.user.role === 'Cliente-Gerente') {
+    showCompanyFilter = false;
+  }
+
   const process = await fetchProcess(page, query, status, Number(companyId), session);
 
   const data: ResponseData<Proceso> = {
@@ -77,14 +84,13 @@ export default async function Page(props: {
     { value: "cerrado", label: "Cerrado" }
   ];
 
-
   return (
     <div className="inner-page-container">
       <SearchBar 
         buttonLink="/process/new-process" 
         buttonText="Nuevo Proceso" 
         statusOptions={statusOptions}
-        companyFilter={true}
+        companyFilter={showCompanyFilter}
       />
       {process.total === 0 ? ( 
           <EmptyState
@@ -95,7 +101,6 @@ export default async function Page(props: {
       ) : (
         <DataGrid data={data} baseUrl="/process" />
       )}
-
     </div>
   );
 }
