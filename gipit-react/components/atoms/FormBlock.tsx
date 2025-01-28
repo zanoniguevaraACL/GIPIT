@@ -43,6 +43,25 @@ function FormItem({ field }: { field: FormInputProps }) {
           />
         </label>
       );
+      case "text-display":
+        return (
+          <label key={field.label}>
+            <div>{field.label}</div>
+            <div 
+              className="text-display-field"
+              style={{ 
+                height: field.height,
+                padding: '8px',
+                backgroundColor: '#f5f5f5',
+                border: '1px solid #ddd',
+                borderRadius: '4px',
+                overflowY: 'auto'
+              }}
+            >
+              {field.defaultValue}
+            </div>
+          </label>
+        );
     case "chips":
       return (
         <label key={field.label}>
