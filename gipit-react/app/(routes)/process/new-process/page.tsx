@@ -18,13 +18,9 @@ type Client = {
 const Page = () => {
   const [clientsList, setClientsList] = useState<Client[]>([]);
   const [selectedClientId, setSelectedClientId] = useState<number | null>(null);
-
-  const [managements, setManagements] = useState<{ id: number; name: string }[]>(
-    []
-  );
+  const [managements, setManagements] = useState<{ id: number; name: string }[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const { data: session } = useSession(); // Obtenemos la sesión del usuario
-
+  const { data: session } = useSession();
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -32,20 +28,14 @@ const Page = () => {
       try {
         const data = await fetchListCompanies();
         setClientsList(data);
-
-        // Si el usuario es un cliente, seleccionar automáticamente la compañía y la jefatura
-        // if (session?.user?.role === "cliente") {
-        //   const client = data.find((client) => client.id === session.user.company);
-        //   if (client) {
-        //     setSelectedClientId(client.id);
-
-        //     // Seleccionar automáticamente la primera jefatura si existe
-        //     if (client.managements.length > 0) {
-        //       setSelectedManagementId(client.managements[0].id);
-        //       setManagements(client.managements);
-        //     }
-        //   }
-        // }
+        
+        // Seleccionar la primera compañía por defecto
+        if (data.length > 0) {
+          const firstCompany = data[0];
+          setSelectedClientId(firstCompany.id);
+          // Establecer las jefaturas de la primera compañía
+          setManagements(firstCompany.managements || []);
+        }
       } catch (error) {
         if (error instanceof Error) {
           setError("Error al obtener la lista de compañías: " + error.message);
@@ -60,19 +50,19 @@ const Page = () => {
     getClients();
   }, []);
 
-    // Actualizar las jefaturas al seleccionar un cliente
-useEffect(() => {
-  console.log("Cliente seleccionado:", selectedClientId);
-  if (selectedClientId) {
-    const selectedClient = clientsList.find(
-      (client) => client.id === selectedClientId
-    );
-    console.log("Jefaturas del cliente seleccionado:", selectedClient?.managements);
-    setManagements(selectedClient?.managements || []);
-  } else {
-    setManagements([]);
-  }
-}, [selectedClientId, clientsList]);
+  // Actualizar las jefaturas al seleccionar un cliente
+  useEffect(() => {
+    console.log("Cliente seleccionado:", selectedClientId);
+    if (selectedClientId) {
+      const selectedClient = clientsList.find(
+        (client) => client.id === selectedClientId
+      );
+      console.log("Jefaturas del cliente seleccionado:", selectedClient?.managements);
+      setManagements(selectedClient?.managements || []);
+    } else {
+      setManagements([]);
+    }
+  }, [selectedClientId, clientsList]);
 
   if (isLoading) {
     return <div><Loader /></div>;

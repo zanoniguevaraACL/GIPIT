@@ -9,6 +9,20 @@ export default function ApiDocs() {
     : 'https://gipit-back.vercel.app';
 
   return (
-    <SwaggerUI url={`${baseUrl}/api/docs`} />
+    <div className="swagger-container">
+      <SwaggerUI 
+        url={`${baseUrl}/api/docs`}
+        tryItOutEnabled={true}
+        docExpansion="list"
+        persistAuthorization={true}
+      />
+      <style jsx global>{`
+        .swagger-container {
+          margin: 0 auto;
+          max-width: 1200px;
+          padding: 20px;
+        }
+      `}</style>
+    </div>
   );
 }
