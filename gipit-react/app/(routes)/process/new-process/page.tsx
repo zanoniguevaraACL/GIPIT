@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import Modal from "@/components/molecules/Modal";
 import { FormInputsRow } from "@/app/lib/types";
 import { handleCreateProcess } from "@/app/actions/handleCreateProcess";
-import { fetchListCompanies } from "@/app/actions/fetchCompanies";
+import { fetchListCompanies, fetchUserCompanies } from "@/app/actions/fetchCompanies";
 import { toast } from "react-toastify";
 import Loader from "@/components/atoms/Loader";
 import { processSchema } from "@/app/lib/validationSchemas";
@@ -16,39 +16,65 @@ type Client = {
 };
 
 const Page = () => {
+  const { data: session } = useSession();
   const [clientsList, setClientsList] = useState<Client[]>([]);
   const [selectedClientId, setSelectedClientId] = useState<number | null>(null);
   const [managements, setManagements] = useState<{ id: number; name: string }[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const { data: session } = useSession();
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const getClients = async () => {
+      setIsLoading(true);
       try {
-        const data = await fetchListCompanies();
-        setClientsList(data);
+        let companies;
         
-        // Seleccionar la primera compañía por defecto
-        if (data.length > 0) {
-          const firstCompany = data[0];
-          setSelectedClientId(firstCompany.id);
-          // Establecer las jefaturas de la primera compañía
-          setManagements(firstCompany.managements || []);
+        if (session?.user?.id && session?.user?.role) {
+          if (session.user.role === 'client') {
+            // Para usuarios client, usar sus managements del session
+            companies = session.user.managements?.map(m => ({
+              id: m.company.id,
+              name: m.company.name,
+              managements: [{
+                id: m.id,
+                name: m.name
+              }]
+            })) || [];
+          } else if (session.user.role === 'Cliente-Gerente') {
+            // Para Cliente-Gerente, obtener su compañía y todas sus jefaturas
+            const userCompanies = await fetchUserCompanies(session.user.id, session.user.role);
+            companies = userCompanies;
+            
+            // Obtener todas las jefaturas de la compañía
+            if (companies.length > 0) {
+              const response = await fetch(
+                `${process.env.NEXT_PUBLIC_API_URL}/api/management?company_id=${companies[0].id}`
+              );
+              const managementsData = await response.json();
+              companies[0].managements = managementsData;
+            }
+          } else {
+            // Para otros roles, obtener todas las compañías
+            companies = await fetchListCompanies();
+          }
+          
+          setClientsList(companies);
+          
+          // Seleccionar la primera compañía por defecto
+          if (companies.length > 0) {
+            setSelectedClientId(companies[0].id);
+            setManagements(companies[0].managements || []);
+          }
         }
       } catch (error) {
-        if (error instanceof Error) {
-          setError("Error al obtener la lista de compañías: " + error.message);
-        } else {
-          setError("Error al obtener la lista de compañías.");
-        }
+        setError("Error al obtener la lista de compañías: " + (error instanceof Error ? error.message : 'Error desconocido'));
       } finally {
         setIsLoading(false);
       }
     };
 
     getClients();
-  }, []);
+  }, [session]);
 
   // Actualizar las jefaturas al seleccionar un cliente
   useEffect(() => {
