@@ -190,3 +190,51 @@ export const fetchCompanyDetails = async (id: number) => {
     }
   }
 };
+
+interface UserCompany {
+  company: {
+    id: number;
+    name: string;
+  };
+}
+
+export const fetchUserCompanies = async (userId: number, role: string) => {
+  try {
+    let endpoint = '';
+    
+    // Si es cliente o cliente-gerente, obtener sus compañías específicas
+    if (role === 'client' || role === 'Cliente-Gerente') {
+      endpoint = `${process.env.NEXT_PUBLIC_API_URL}/api/users/companies/${userId}`;
+    } else {
+      // Para otros roles, obtener todas las compañías
+      endpoint = `${process.env.NEXT_PUBLIC_API_URL}/api/company`;
+    }
+
+    const response = await fetch(endpoint, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      cache: "no-store",
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al obtener las compañías");
+    }
+
+    const data = await response.json();
+    
+    // Formatear los datos según el endpoint usado
+    if (role === 'client' || role === 'Cliente-Gerente') {
+      return data.map((uc: UserCompany) => ({
+        id: uc.company.id,
+        name: uc.company.name,
+        managements: [] // Se llenarán después si es necesario
+      }));
+    }
+
+    return data;
+  } catch (error) {
+    throw new Error(`Error al obtener las compañías del usuario: ${error}`);
+  }
+};
