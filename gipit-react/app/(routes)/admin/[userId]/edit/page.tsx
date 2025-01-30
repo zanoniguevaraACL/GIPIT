@@ -55,6 +55,31 @@ function EditUserPage() {
         const data = await response.json();
         console.log("Datos del usuario cargados:", data);
         setUserData(data);
+
+        // Obtener el nombre de la compañía y la jefatura según las relaciones
+        let companyName = "No disponible";
+        let managementName = "No disponible";
+
+        if (data.role_id === 2) { // Cliente
+          if (data.users_management && data.users_management.length > 0) {
+            companyName = data.users_management[0]?.management?.company?.name || "No disponible";
+            managementName = data.users_management[0]?.management?.name || "No disponible";
+            setSelectedCompanyId(data.users_management[0]?.management?.company?.id.toString() || null);
+            setSelectedManagementId(data.users_management[0]?.management?.id.toString() || null);
+          }
+        } else if (data.role_id === 6) { // Cliente-Gerente
+          if (data.users_company && data.users_company.length > 0) {
+            companyName = data.users_company[0]?.company?.name || "No disponible";
+            setSelectedCompanyId(data.users_company[0]?.company?.id.toString() || null);
+          }
+          if (data.users_management && data.users_management.length > 0) {
+            managementName = data.users_management[0]?.management?.name || "No disponible";
+            setSelectedManagementId(data.users_management[0]?.management?.id.toString() || null);
+          }
+        }
+
+        console.log("Compañía actual:", companyName);
+        console.log("Jefatura actual:", managementName);
       } catch (error) {
         console.error("Error al cargar datos del usuario:", error);
       }
@@ -242,13 +267,14 @@ function EditUserPage() {
                 <option value="inactivo">Inactivo</option>
               </select>
             </div>
-            {userData.role_id === 6 && ( // Cliente
+            {userData.role_id === 6 && ( // Cliente-gerente
               <div className="form-group-adedit">
                 <label>Compañía</label>
                 <select 
                   value={selectedCompanyId || ""} 
                   onChange={(e) => setSelectedCompanyId(e.target.value)}
                   required
+                  disabled
                 >
                   <option value="">Seleccione una compañía</option>
                   {companies.map((company) => (
@@ -259,7 +285,7 @@ function EditUserPage() {
                 </select>
               </div>
             )}
-            {userData.role_id === 2 && ( // Cliente-Gerente
+            {userData.role_id === 2 && ( // Cliente
               <>
                 <div className="form-group-adedit">
                   <label>Compañía</label>
@@ -267,6 +293,7 @@ function EditUserPage() {
                     value={selectedCompanyId || ""} 
                     onChange={(e) => setSelectedCompanyId(e.target.value)}
                     required
+                    disabled
                   >
                     <option value="">Seleccione una compañía</option>
                     {companies.map((company) => (
