@@ -2,6 +2,7 @@
 import Button from "@/components/atoms/Button";
 import "./processHeading.css";
 import { useSession } from "next-auth/react";
+import { useState } from "react";
 
 
 function ProcessInternalHeading({
@@ -31,6 +32,13 @@ function ProcessInternalHeading({
   | "mkt"
   | "admin";
 
+  const isProcessClosed = process.status.toLowerCase() === "cerrado";
+  const [contracted] = useState(false);
+  console.log("Proceso seleccionado --->", process)
+  console.log("Estado del proceso seleccionad", process.status);
+
+
+
   return (
     <div className={`header-macro-container contracted`}>
       {/* Cabecera */}
@@ -42,7 +50,7 @@ function ProcessInternalHeading({
           </h3>
         </div>
         {/* Botones de accion oculto para los clientes */}
-        {userRole !== "client" && (
+        { (!isProcessClosed && userRole !== 'client' )  ? (
         <div className="buttons-container">
 
         <Button
@@ -64,6 +72,15 @@ function ProcessInternalHeading({
           />
 
         </div>
+        ): (
+
+          <div className="buttons-container">
+            <Button
+              text="Revisar Vacante"
+              type={contracted ? "secondary" : "tertiary"}
+              href={`/process/${process.id}/view-offer`}
+            />
+          </div>
         )}
       </div>
     </div>
