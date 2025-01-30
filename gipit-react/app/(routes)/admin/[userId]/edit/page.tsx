@@ -277,7 +277,7 @@ function EditUserPage() {
                   disabled
                 >
                   <option value="">Seleccione una compañía</option>
-                  {companies.map((company) => (
+                  {Array.isArray(companies) && companies.map((company) => (
                     <option key={company.id} value={company.id}>
                       {company.name}
                     </option>
@@ -296,7 +296,7 @@ function EditUserPage() {
                     disabled
                   >
                     <option value="">Seleccione una compañía</option>
-                    {companies.map((company) => (
+                    {Array.isArray(companies) && companies.map((company) => (
                       <option key={company.id} value={company.id}>
                         {company.name}
                       </option>
@@ -331,4 +331,4 @@ function EditUserPage() {
   );
 }
 
-export default EditUserPage; 
+export default EditUserPage;
