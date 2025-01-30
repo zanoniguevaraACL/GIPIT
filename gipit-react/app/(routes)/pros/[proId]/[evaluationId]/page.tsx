@@ -8,8 +8,7 @@ import { handleUpdateEvaluation } from "@/app/actions/handleUpdateEvaluation";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-
-
+import Loader from "@/components/atoms/Loader";
 
 function Page({ params }: { params: { proId: string; evaluationId: string } }) {
   const { proId, evaluationId } = params;
@@ -21,11 +20,14 @@ function Page({ params }: { params: { proId: string; evaluationId: string } }) {
 
   const [evaluationData, setEvaluationData] = useState<Evaluation | null>(null);
   const [professionalDetails, setProfessionalDetails] = useState<ProfessionalDetails | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
 
   const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoading(true);
       try {
         const evalData = await fetchEvaluationById(parseInt(evaluationId));
         setEvaluationData(evalData);
@@ -34,6 +36,8 @@ function Page({ params }: { params: { proId: string; evaluationId: string } }) {
         setProfessionalDetails(proDetails);
       } catch (error) {
         console.error("Error al obtener datos:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -109,21 +113,22 @@ function Page({ params }: { params: { proId: string; evaluationId: string } }) {
   ];
 
   const handleSubmit = async (formData: FormData): Promise<{ message: string; route: string; statusCode: number }> => {
-    const evalCumplimiento = parseFloat(formData.get("cumplimiento") as string);
-    const evalStack = parseFloat(formData.get("eval_stack") as string);
-    const evalComunicacion = parseFloat(formData.get("comunicacion") as string);
-    const evalMotivacion = parseFloat(formData.get("motivacion") as string);
-
-    if (isNaN(evalCumplimiento) || isNaN(evalStack) || isNaN(evalComunicacion) || isNaN(evalMotivacion)) {
-      toast.error("Por favor, asegúrate de que todos los campos numéricos estén completos y sean válidos.");
-      return {
-        message: "Error al actualizar la evaluación",
-        route: routeToRedirect,
-        statusCode: 500,
-      };
-    }
-
+    setIsSaving(true);
     try {
+      const evalCumplimiento = parseFloat(formData.get("cumplimiento") as string);
+      const evalStack = parseFloat(formData.get("eval_stack") as string);
+      const evalComunicacion = parseFloat(formData.get("comunicacion") as string);
+      const evalMotivacion = parseFloat(formData.get("motivacion") as string);
+
+      if (isNaN(evalCumplimiento) || isNaN(evalStack) || isNaN(evalComunicacion) || isNaN(evalMotivacion)) {
+        toast.error("Por favor, asegúrate de que todos los campos numéricos estén completos y sean válidos.");
+        return {
+          message: "Error al actualizar la evaluación",
+          route: routeToRedirect,
+          statusCode: 500,
+        };
+      }
+
       const formattedData: {
         date: string | null;
         eval_stack: number | null;
@@ -168,8 +173,13 @@ function Page({ params }: { params: { proId: string; evaluationId: string } }) {
         route: routeToRedirect,
         statusCode: 500,
       };
+    } finally {
+      setIsSaving(false);
     }
   };
+
+  if (isLoading) return <Loader />;
+  if (isSaving) return <Loader />;
 
   return (
     <Modal

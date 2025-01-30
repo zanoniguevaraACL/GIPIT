@@ -1,26 +1,36 @@
-'use client';
-
-import React, { useState, useEffect } from 'react';
+"use client";
+import { useState, useEffect } from "react";
 import Modal from "@/components/molecules/Modal";
 import { FormInputsRow } from "@/app/lib/types";
-import Loader from "@/components/atoms/Loader";
+import { useRouter } from "next/navigation";
 import { fetchListCompanies } from "@/app/actions/fetchCompanies";
+import LoaderNewCandidate from "@/components/atoms/LoaderNewCandidate";
 import { handleCreateNewProfesional } from "@/app/actions/handleCreateNewProfesional";
 
-
-type Company = {
+// Tipos de datos para las compañías y jefaturas
+interface Company { 
   id: number;
   name: string;
-};
-
+  managements: Management[];
+}
+// Tipos de datos para las jefaturas
+interface Management {
+  id: number;
+  name: string;
+}
+// Componente principal para crear un nuevo profesional
 export default function Page() {
   const [companies, setCompanies] = useState<Company[]>([]);
+  const [managements, setManagements] = useState<Management[]>([]);
+  const [selectedClientId, setSelectedClientId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const router = useRouter();
 
+  // Obtener lista de compañías
   useEffect(() => {
     const getCompanies = async () => {
-      setIsLoading(true);
       try {
         const result = await fetchListCompanies();
         setCompanies(result);
@@ -35,9 +45,19 @@ export default function Page() {
     getCompanies();
   }, []);
 
-  if (isLoading) return <div><Loader /></div>;
-  if (error) return <div className="text-red-500">{error}</div>;
+  // Actualizar jefaturas cuando se selecciona una compañía
+  useEffect(() => {
+    if (selectedClientId) {
+      const selectedCompany = companies.find(
+        (company) => company.id === selectedClientId
+      );
+      setManagements(selectedCompany?.managements || []);
+    } else {
+      setManagements([]);
+    }
+  }, [selectedClientId, companies]);
 
+  // Opciones de compañías
   const companyOptions = [
     { name: "Seleccionar Compañía", value: "" },
     ...companies.map((company) => ({
@@ -46,13 +66,29 @@ export default function Page() {
     }))
   ];
 
+  // Opciones de jefaturas
+  const managementOptions = [
+    { name: "Selecciona una jefatura", value: "" },
+    ...managements.map((management) => ({
+      name: management.name,
+      value: management.id,
+    }))
+  ];
+
+  // Función para manejar el envío del formulario
   const handleSubmit = async (formData: FormData) => {
+    setIsSubmitting(true);
     try {
       const cvProcessResult = await handleCreateNewProfesional(formData);
       if (!cvProcessResult.success) {
         throw new Error(cvProcessResult.message);
       }
 
+      // Determinar el estado inicial basado en la fecha de término
+      const endDate = formData.get("end_date");
+      const initialStatus = endDate ? "activo" : "desvinculado";
+
+      // Datos del candidato
       const candidateData = {
         name: formData.get("name"),
         email: formData.get("email"),
@@ -60,7 +96,23 @@ export default function Page() {
         address: formData.get("address"),
         jsongpt_text: cvProcessResult.jsongpt_text,
         total_experience: parseInt(formData.get("total_experience") as string),
-        stage: formData.get("end_date") ? "activo" : "desvinculado"
+        stage: "activo",
+        management_id: parseInt(formData.get("management_id") as string),
+        start_date: formData.get("start_date") ? (() => {
+          const date = new Date(formData.get("start_date") as string);
+          date.setDate(date.getDate() + 2);
+          date.setHours(12, 0, 0);
+          return date.toISOString();
+        })() : null,
+        end_date: endDate ? (() => {
+          const date = new Date(endDate as string);
+          date.setDate(date.getDate() + 2);
+          date.setHours(12, 0, 0);
+          return date.toISOString();
+        })() : null,
+        position: formData.get("position"),
+        rate: parseFloat(formData.get("rate") as string),
+        status: initialStatus,
       };
 
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/candidates`, {
@@ -73,41 +125,10 @@ export default function Page() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Error al crear el candidato');
+        throw new Error(errorData.message || 'Error al crear el profesional');
       }
 
-      const result = await response.json();
-
-      if (!result.candidate?.id) {
-        throw new Error('No se pudo obtener el ID del candidato creado');
-      }
-
-      const managementData = {
-        candidate_id: result.candidate.id,
-        management_id: parseInt(formData.get('management_id') as string),
-        status: "activo",
-        start_date: new Date(formData.get('start_date') as string).toISOString(),
-        end_date: formData.get('end_date') ? new Date(formData.get('end_date') as string).toISOString() : null,
-        position: formData.get('position') as string,
-        rate: parseFloat(formData.get('rate') as string)
-      };
-
-      const managementResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/candidate_management`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(managementData)
-      });
-
-      if (!managementResponse.ok) {
-        const managementError = await managementResponse.json();
-        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/candidates/${result.candidate.id}`, {
-          method: 'DELETE'
-        });
-        throw new Error(`Error al crear la relación con management: ${managementError.message || 'Error desconocido'}`);
-      }
-
+      router.push('/pros');
       return {
         message: 'Profesional creado exitosamente',
         route: '/pros',
@@ -117,38 +138,54 @@ export default function Page() {
     } catch (error) {
       console.error('Error completo:', error);
       return {
-        message: error instanceof Error ? error.message : 'Error al crear el candidato',
+        message: error instanceof Error ? error.message : 'Error al crear el profesional',
         route: '/pros',
         statusCode: 500
       };
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
+  // Campos del formulario
   const fields: FormInputsRow = [
     {
-      label: "Nombre",
+      label: "Nombre*",
       placeholder: "Nombre del Profesional",
       type: "text",
       name: "name",
       required: true,
     },
     {
-      label: "Cargo",
+      label: "Cargo*",
       placeholder: "Cargo del Profesional",
       type: "text",
       name: "position",
       required: true,
     },
     {
-      label: "Compañía",
+      label: "Compañía*",
       placeholder: "Seleccionar compañía",
       type: "select",
-      name: "management_id",
+      name: "company",
       options: companyOptions,
+      onChange: (e) => {
+        if (e.target instanceof HTMLSelectElement) {
+          setSelectedClientId(Number(e.target.value));
+        }
+      },
       required: true,
     },
     {
-      label: "Dirección",
+      label: "Jefatura*",
+      placeholder: "Seleccionar jefatura",
+      type: "select",
+      name: "management_id",
+      options: managementOptions,
+      required: true,
+    },
+    {
+      label: "Dirección*",
       placeholder: "Ingrese la dirección",
       type: "text",
       name: "address",
@@ -156,7 +193,7 @@ export default function Page() {
     },
     [
       {
-        label: "Fecha de inicio",
+        label: "Fecha de inicio*",
         placeholder: "Fecha de inicio",
         type: "date",
         name: "start_date",
@@ -167,10 +204,11 @@ export default function Page() {
         placeholder: "Fecha de término (opcional)",
         type: "date",
         name: "end_date",
+        required: false,
       }
     ],
     {
-      label: "Valor HH",
+      label: "Valor HH*",
       placeholder: "Valor hora",
       type: "number",
       name: "rate",
@@ -178,21 +216,21 @@ export default function Page() {
     },
     [
       {
-        label: "correo electrónico",
+        label: "Correo electrónico*",
         placeholder: "correo",
-        type: "text",
+        type: "email",
         name: "email",
         required: true,
       },
       {
-        label: "teléfono",
+        label: "Teléfono*",
         placeholder: "teléfono",
-        type: "number",
+        type: "text",
         name: "phone",
         required: true,
       },
       {
-        label: "Años de experiencia",
+        label: "Años de experiencia*",
         placeholder: "Años de experiencia",
         type: "number",
         name: "total_experience",
@@ -200,7 +238,7 @@ export default function Page() {
       }
     ],
     {
-      label: "Adjuntar CV",
+      label: "Adjuntar CV*",
       type: "file",
       name: "cv",
       required: true,
@@ -209,13 +247,23 @@ export default function Page() {
       { type: "cancel", value: "Cancelar", href: "/pros" },
       { type: "submit", value: "Guardar" },
     ],
-  ];  
+  ];
 
+// Formato de fecha para el calendario de react-datepicker
+
+
+  if (isLoading) return <LoaderNewCandidate />;
+  if (error) return <div className="text-red-500">{error}</div>;
+
+  // Renderizar el modal con los campos y la función de envío
   return (
-    <Modal
-      rows={fields}
-      onSubmit={handleSubmit}
-      title="Nuevo Profesional"
-    />
+    <>
+      {isSubmitting && <LoaderNewCandidate />}
+      <Modal
+        rows={fields}
+        onSubmit={handleSubmit}
+        title="Nuevo Profesional"
+      />
+    </>
   );
 }
