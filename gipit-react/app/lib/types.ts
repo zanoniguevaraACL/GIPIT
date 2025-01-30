@@ -24,7 +24,6 @@ export interface FormInputProps {
   type:
     | "text"
     | "number"
-    |"text-display"
     | "date"
     | "submit"
     | "email"
@@ -44,7 +43,7 @@ export interface FormInputProps {
   minMax?: number[];
   onChange?: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
   required?: boolean;
-  disabled?: boolean; // Agregado para soportar la propiedad disabled
+  disabled?: boolean;
 }
 
 export type FormInputsRow = (FormInputProps | FormInputProps[])[];

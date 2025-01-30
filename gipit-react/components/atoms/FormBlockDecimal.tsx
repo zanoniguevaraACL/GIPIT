@@ -8,6 +8,8 @@ import { usePathname, useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import DecimalInput from "@/components/atoms/DecimalInput";
 
+
+
 function FormRow({ row }: { row: FormInputProps[] }) {
   return row.map((row, index: number) => {
     return <FormItem field={row} key={index} />;

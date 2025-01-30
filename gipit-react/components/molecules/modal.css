@@ -1,5 +1,5 @@
 .modal-overlay {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -9,12 +9,17 @@
   justify-content: center;
   background-color: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(40px);
+  overflow-y: auto;
+  padding: 20px;
 
   .form-container {
     background-color: white;
     min-width: 30svw;
+    max-height: 90vh;
     border-radius: 12px;
     padding: 24px;
+    overflow-y: auto;
+    margin: auto;
 
     h4 {
       margin-bottom: 24px;

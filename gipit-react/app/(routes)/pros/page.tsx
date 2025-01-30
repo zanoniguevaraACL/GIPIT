@@ -6,6 +6,7 @@ import SearchBar from "@/components/molecules/SearchBar";
 import StatusButton from "@/components/molecules/StatusButton";
 import "./pros.css";
 
+
 interface CandidateDetails {
   id: number;
   name: string;
@@ -91,7 +92,7 @@ export default async function CandidatesPage({
   const columns: Column<CandidateDetails>[] = [
     { name: "Nombre", key: "name", width: 1.5 },
     { name: "Jefatura", key: "role", width: 1.5 },
-    { name: "Cliente", key: "company", width: 1.5 },
+    { name: "Compañia", key: "company", width: 1.5 },
     { name: "Fecha Inicio", key: "start", width: 1.2 },
     { name: "Fecha Término", key: "end", width: 1.2 },
     { name: "Valor HH", key: "rate", width: 1.5 },
