@@ -10,6 +10,8 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import Loader from "@/components/atoms/Loader";
 
+
+
 function Page({ params }: { params: { proId: string; evaluationId: string } }) {
   const { proId, evaluationId } = params;
 
@@ -53,12 +55,15 @@ function Page({ params }: { params: { proId: string; evaluationId: string } }) {
       type: "date",
       name: "date",
       defaultValue: evaluationData?.date ? new Date(evaluationData.date).toISOString().split("T")[0] : "",
+      required: true,
     },
+    [
     {
       label: "Dominio del stack tecnológico",
       placeholder: "Número de 0-7",
       type: "number",
       name: "eval_stack",
+      required: true,
       defaultValue: evaluationData?.eval_stack,
       //isEvaluationPage: true,
     },
@@ -67,14 +72,19 @@ function Page({ params }: { params: { proId: string; evaluationId: string } }) {
       placeholder: "Número de 0-7",
       type: "number",
       name: "comunicacion",
+      required: true,
       defaultValue: evaluationData?.eval_comunicacion,
     },
+  ],
     [
       {
-        label: "Responsabilidad y cumplimiento",
+        label: "Responsabilidad",
         placeholder: "Número de 0-7",
         type: "number",
         name: "cumplimiento",
+        required: true,
+        min: "0",
+        max: "7",
         defaultValue: evaluationData?.eval_cumplimiento,
       },
       {
@@ -82,14 +92,20 @@ function Page({ params }: { params: { proId: string; evaluationId: string } }) {
         placeholder: "Número de 0-7",
         type: "number",
         name: "motivacion",
+        required: true,
+        min: "0",
+        max: "7",
         defaultValue: evaluationData?.eval_motivacion,
       },
     ],
+    [
     {
       label: "Comentario de la jefatura",
       placeholder: "Comentario de la jefatura",
       type: "textarea",
       name: "comment",
+      required: true,
+      minLength: 10,
       defaultValue: evaluationData?.client_comment,
     },
     {
@@ -97,15 +113,31 @@ function Page({ params }: { params: { proId: string; evaluationId: string } }) {
       placeholder: "Acciones ACL",
       type: "textarea",
       name: "acciones",
+      required: true,
+      minLength: 10,
       defaultValue: evaluationData?.acciones_acl,
     },
+  ],
+  [
     {
       label: "Proyección del servicio",
       placeholder: "Proyección del servicio",
       type: "textarea",
       name: "proyecction",
+      required: true,
+      minLength: 10,
       defaultValue: evaluationData?.proyecction,
     },
+    {
+      label: "Beneficios",
+      placeholder: "Beneficios del profesional",
+      type: "textarea",
+      name: "benefit",
+      required: true,
+      minLength: 10,
+      defaultValue: evaluationData?.proyecction,
+    },
+  ],
     [
       { type: "cancel", value: "Cancelar", href: routeToRedirect },
       { type: "submit", value: "Guardar Nota" },

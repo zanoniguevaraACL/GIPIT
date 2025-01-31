@@ -38,6 +38,7 @@ export interface FormInputProps {
   step?: string;
   min?: string;
   max?: string;
+  minLength?: number;
   height?: string;
   options?: { name: string; value: number | string }[];
   minMax?: number[];
