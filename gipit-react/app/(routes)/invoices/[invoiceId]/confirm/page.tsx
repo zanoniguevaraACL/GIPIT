@@ -2,9 +2,8 @@ import Modal from "@/components/molecules/Modal";
 import { FormInputsRow } from "@/app/lib/types";
 import { handleCreateCompany } from "@/app/actions/handleCreateCompany";
 
-async function Page({ params }: { params: { invoiceId: string } }) {
-  const { invoiceId } = params;
-  const routeToRedirect = `/invoices/${invoiceId}`;
+async function Page({ }: { params: { invoiceId: string } }) {
+  const routeToRedirect = `/invoices/`;
 
   const fields: FormInputsRow = [
     {
