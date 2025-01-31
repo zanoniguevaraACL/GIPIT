@@ -1,5 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
+import { toast } from "react-toastify";
+
 
 import Button from "@/components/atoms/Button";
 import "./create.css";
@@ -43,7 +45,7 @@ export default function CreateUserPage() {
         console.log("Roles recuperados:", data);
         setRoles(data);
       } catch (error) {
-        console.error("Error al recuperar roles:", error);
+        toast.error(`Error al cargar roles: ${String(error)}`);
       }
     };
 
@@ -53,7 +55,7 @@ export default function CreateUserPage() {
         console.log("Compañías recuperadas:", data);
         setCompanies(data);
       } catch (error) {
-        console.error("Error al recuperar compañías:", error);
+        toast.error(`Error al recuperar compañías: ${String(error)}`);
       }
     };
 
@@ -63,7 +65,7 @@ export default function CreateUserPage() {
         console.log("Jefaturas recuperadas:", data);
         setManagements(data);
       } catch (error) {
-        console.error("Error al recuperar jefaturas:", error);
+        toast.error(`Error al recuperar jefaturas: ${String(error)}`);
       }
     };
 
@@ -86,13 +88,13 @@ export default function CreateUserPage() {
 
     // Validación de campos según el rol
     if (roleId === null || (roleId === 6 && companyId === null)) {
-      console.error("Todos los campos deben ser seleccionados.");
+      toast.error("Todos los campos deben ser seleccionados.");
       return;
     }
 
     // Solo requerir managementId si el rol es Cliente
     if (roleId === 2 && (companyId === null || managementId === null)) {
-      console.error("Todos los campos deben ser seleccionados para Cliente-Gerente.");
+      toast.error("Todos los campos deben ser seleccionados para Cliente-Gerente.");
       return;
     }
 
@@ -113,7 +115,7 @@ export default function CreateUserPage() {
     if (result.statusCode === 200) {
       window.location.href = "/admin";
     } else {
-      console.error("Error al crear el usuario:", result.message);
+      toast.error(`Error al crear el usuario: ${result.message}`);
     }
   };
 
@@ -208,4 +210,4 @@ export default function CreateUserPage() {
       </div>
     </div>
   );
-} 
+}

@@ -1,11 +1,9 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import ConfirmationModal from "@/components/molecules/ConfirmationModal";
 
 export default function DeleteInvoicePage({ params }: { params: { invoiceId: string } }) {
-  const router = useRouter();
   const { invoiceId } = params;
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(true);
@@ -24,7 +22,7 @@ export default function DeleteInvoicePage({ params }: { params: { invoiceId: str
       if (response.ok) {
         const data = await response.json();
         console.log(data.message);
-        router.push('/invoices');
+        window.location.href = '/invoices';
       } else {
         const errorData = await response.json();
         console.error('Error al rechazar la factura:', errorData.error);
