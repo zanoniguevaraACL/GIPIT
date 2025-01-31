@@ -87,7 +87,7 @@ export default function Page({ params }: { params: { proId: string } }) {
     ],
     [
       {
-        label: "Responsabilidad y cumplimiento",
+        label: "Responsabilidad ",
         placeholder: "Número de 0-7",
         type: "number",
         name: "eval_cumplimiento",
@@ -110,6 +110,7 @@ export default function Page({ params }: { params: { proId: string } }) {
         type: "textarea",
         name: "benefit",
       },
+
       {
         label: "Comentarios del cliente",
         placeholder: "Comentarios del cliente",
